@@ -1,6 +1,6 @@
 ﻿namespace RetroLibrary;
 
-public class ParallaxScrollerLayer(
+public class MiniParallaxScrollerLayer(
     string texturePath,
     float scrollSpeed,
     int yOffset)

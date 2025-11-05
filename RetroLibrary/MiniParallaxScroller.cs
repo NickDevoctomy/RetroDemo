@@ -5,12 +5,12 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary;
 
-public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
+public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDisposable
 {
-    private ParallaxScrollerOptions _options = options;
+    private MiniParallaxScrollerOptions _options = options;
     private bool _layerTexturesCached = false;
 
-    private Dictionary<ParallaxScrollerLayer, ParallaxScrollerLayerState> _layerOffsets = [];
+    private Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = [];
     private bool disposedValue;
 
     public void Draw(SpriteBatch spriteBatch)
@@ -45,7 +45,9 @@ public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
 
             if (state.Texture == null)
             {
-                state.Texture = Texture2D.FromFile(spriteBatch.GraphicsDevice, layer.TexturePath);
+                state.Texture = Texture2D.FromFile(
+                    spriteBatch.GraphicsDevice,
+                    layer.TexturePath);
 
                 using var image = Image.Load<Rgba32>(layer.TexturePath);
                 image.Mutate(ctx =>
@@ -63,13 +65,17 @@ public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
 
             var copiesRequired = (int)Math.Ceiling(((decimal)rect.Width + fullSize.X) / fullSize.X) + 1;
 
+            // We really need to cache the result of this, based on copiesRequired and FirstFlipped state
             var flip = state.FirstFlipped;
             for (var x = 0; x < copiesRequired - 1; x++)
             {
                 var image = flip ? state.TextureFlipped : state.Texture;
                 var curOffsetX = offsetPixelsX + (x * fullSize.X);
 
-                spriteBatch.Draw(image, new Microsoft.Xna.Framework.Rectangle((int)curOffsetX, startYOffset.GetValueOrDefault() - layer.YOffset, fullSize.X, fullSize.Y), Microsoft.Xna.Framework.Color.White);
+                spriteBatch.Draw(
+                    image,
+                    new Microsoft.Xna.Framework.Rectangle((int)curOffsetX, startYOffset.GetValueOrDefault() - layer.YOffset, fullSize.X, fullSize.Y),
+                    Microsoft.Xna.Framework.Color.White);
 
                 flip = !flip;
             }
@@ -95,7 +101,9 @@ public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
 
             if (state.Texture == null)
             {
-                state.Texture = Texture2D.FromFile(spriteBatch.GraphicsDevice, layer.TexturePath);
+                state.Texture = Texture2D.FromFile(
+                    spriteBatch.GraphicsDevice,
+                    layer.TexturePath);
 
                 using var image = Image.Load<Rgba32>(layer.TexturePath);
                 image.Mutate(ctx =>
@@ -110,11 +118,11 @@ public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
         }
     }
 
-    private void UpdateLayerOffsets(ParallaxScrollerLayer layer)
+    private void UpdateLayerOffsets(MiniParallaxScrollerLayer layer)
     {
         if(!_layerOffsets.TryGetValue(layer, out var state))
         {
-            state = new ParallaxScrollerLayerState();
+            state = new MiniParallaxScrollerLayerState();
             _layerOffsets.Add(layer, state);
             return;
         }
@@ -149,7 +157,7 @@ public class ParallaxScroller(ParallaxScrollerOptions options) : IDisposable
         }
     }
 
-    ~ParallaxScroller()
+    ~MiniParallaxScroller()
     {
         Dispose(disposing: false);
     }

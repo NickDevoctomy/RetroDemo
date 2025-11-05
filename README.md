@@ -18,6 +18,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Customisable center point and radius
 * Parallax Scroller
   - Customisable layers with individual speed settings
+  - Only meant for simple horizontal scrolling layers, not as a game background system with horizontal movement.
 
 ### Screenshots
 

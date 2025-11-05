@@ -27,7 +27,10 @@ public class LinearRetroGradientTexture2D : IDisposable
             width,
             height,
             options);
-        spriteBatch.Draw(texture, bounds, Microsoft.Xna.Framework.Color.White);
+        spriteBatch.Draw(
+            texture,
+            bounds,
+            Microsoft.Xna.Framework.Color.White);
     }
 
     private Texture2D BuildTexture(

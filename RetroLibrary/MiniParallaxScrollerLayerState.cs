@@ -2,7 +2,7 @@
 
 namespace RetroLibrary;
 
-public class ParallaxScrollerLayerState : IDisposable
+public class MiniParallaxScrollerLayerState : IDisposable
 {
     private bool disposedValue;
 
@@ -30,7 +30,7 @@ public class ParallaxScrollerLayerState : IDisposable
         }
     }
 
-    ~ParallaxScrollerLayerState()
+    ~MiniParallaxScrollerLayerState()
     {
         Dispose(disposing: false);
     }

@@ -1,8 +1,8 @@
 ﻿namespace RetroLibrary;
 
-public class ParallaxScrollerOptions
+public class MiniParallaxScrollerOptions
 {
-    public List<ParallaxScrollerLayer> Layers { get; set; } = [];
+    public List<MiniParallaxScrollerLayer> Layers { get; set; } = [];
 
     public int ViewportWidth { get; set; } = 800;
 
