@@ -12,12 +12,17 @@ public class SmartButtonTexture2D(
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
+    ~SmartButtonTexture2D()
+    {
+        Dispose(disposing: false);
+    }
+
     public Texture2D BuildTexture(
         GraphicsDevice graphicsDevice,
         int width,
         int height)
     {
-        if(_cachedTexture != null &&
+        if (_cachedTexture != null &&
            _cachedWidth == width &&
            _cachedHeight == height)
         {
@@ -115,6 +120,12 @@ public class SmartButtonTexture2D(
         return renderTarget;
     }
 
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -129,16 +140,5 @@ public class SmartButtonTexture2D(
 
             disposedValue = true;
         }
-    }
-
-    ~SmartButtonTexture2D()
-    {
-        Dispose(disposing: false);
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

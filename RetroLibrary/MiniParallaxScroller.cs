@@ -7,37 +7,40 @@ namespace RetroLibrary;
 
 public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDisposable
 {
-    private MiniParallaxScrollerOptions _options = options;
+    private readonly Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState>();
     private bool _layerTexturesCached = false;
-
-    private Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = [];
     private bool disposedValue;
+
+    ~MiniParallaxScroller()
+    {
+        Dispose(disposing: false);
+    }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        var rect = new Microsoft.Xna.Framework.Rectangle(0, 0, _options.ViewportWidth, _options.ViewportHeight);
+        var rect = new Microsoft.Xna.Framework.Rectangle(0, 0, options.ViewportWidth, options.ViewportHeight);
 
-        if(!_layerTexturesCached)
+        if (!_layerTexturesCached)
         {
             CacheLayerTextures(spriteBatch);
             _layerTexturesCached = true;
         }
 
         var startYOffset = (int?)null;
-        var firstLayer = _options.Layers.FirstOrDefault();
-        if(firstLayer != null)
+        var firstLayer = options.Layers.FirstOrDefault();
+        if (firstLayer != null)
         {
             if (!_layerOffsets.TryGetValue(firstLayer, out var state))
             {
                 throw new Exception("Layer state not found for first layer.");
             }
 
-            startYOffset = _options.ViewportHeight - state.Texture!.Bounds.Height;
+            startYOffset = options.ViewportHeight - state.Texture!.Bounds.Height;
         }
 
-        for (var i = _options.Layers.Count - 1; i >= 0; i--)
+        for (var i = options.Layers.Count - 1; i >= 0; i--)
         {
-            var layer = _options.Layers[i];
+            var layer = options.Layers[i];
             if (!_layerOffsets.TryGetValue(layer, out var state))
             {
                 continue;
@@ -84,15 +87,40 @@ public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDispos
 
     public void Update()
     {
-        foreach (var layer in _options.Layers)
+        foreach (var layer in options.Layers)
         {
             UpdateLayerOffsets(layer);
         }
     }
 
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // TODO: dispose managed state (managed objects)
+            }
+
+            foreach (var layerState in _layerOffsets.Values)
+            {
+                layerState.Dispose();
+            }
+
+            _layerOffsets.Clear();
+            disposedValue = true;
+        }
+    }
+
     private void CacheLayerTextures(SpriteBatch spriteBatch)
     {
-        foreach (var layer in _options.Layers)
+        foreach (var layer in options.Layers)
         {
             if (!_layerOffsets.TryGetValue(layer, out var state))
             {
@@ -120,51 +148,21 @@ public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDispos
 
     private void UpdateLayerOffsets(MiniParallaxScrollerLayer layer)
     {
-        if(!_layerOffsets.TryGetValue(layer, out var state))
+        if (!_layerOffsets.TryGetValue(layer, out var state))
         {
             state = new MiniParallaxScrollerLayerState();
             _layerOffsets.Add(layer, state);
             return;
         }
 
-        var percentPerPixel = 1f / _options.ViewportWidth;
+        var percentPerPixel = 1f / options.ViewportWidth;
 
         if (state.Offset < -1f)
         {
-            state.Offset = state.Offset + 1f;
+            state.Offset += 1f;
             state.FirstFlipped = !state.FirstFlipped;
         }
 
         state.Offset -= layer.ScrollSpeed * percentPerPixel;
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects)
-            }
-
-            foreach (var layerState in _layerOffsets.Values)
-            {
-                layerState.Dispose();
-            }
-            _layerOffsets.Clear();
-
-            disposedValue = true;
-        }
-    }
-
-    ~MiniParallaxScroller()
-    {
-        Dispose(disposing: false);
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

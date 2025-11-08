@@ -32,8 +32,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         SmartButtonTexture2D? upSmartButtonTexture = null,
         SmartButtonTexture2D? downSmartButtonTexture = null,
         SpriteFont? font = null,
-        bool buffered = true) :
-        base(
+        bool buffered = true)
+        : base(
             name,
             position,
             size,
@@ -62,6 +62,15 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         propertyNames.Add(nameof(IsHovered));
     }
 
+    public override void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        UpSmartButtonTexture?.Dispose();
+        UpSmartButtonTexture = null;
+        DownSmartButtonTexture?.Dispose();
+        DownSmartButtonTexture = null;
+    }
+
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
         Point location)
@@ -83,9 +92,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
             var yOffset = IsPressed ? 2 : 0;
             Vector2 textSize = Font.MeasureString(Text);
             Vector2 textPosition = new Vector2(
-                location.X + (Size.X - textSize.X) / 2,
-                location.Y + yOffset + (Size.Y - textSize.Y) / 2
-            );
+                location.X + ((Size.X - textSize.X) / 2),
+                location.Y + yOffset + ((Size.Y - textSize.Y) / 2));
 
             spriteBatch.DrawString(
                 Font,
@@ -93,13 +101,5 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
                 textPosition,
                 ForegroundColor);
         }
-    }
-
-    public override void Dispose()
-    {
-        UpSmartButtonTexture?.Dispose();
-        UpSmartButtonTexture = null;
-        DownSmartButtonTexture?.Dispose();
-        DownSmartButtonTexture = null;
     }
 }

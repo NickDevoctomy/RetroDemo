@@ -6,10 +6,24 @@ public class MiniParallaxScrollerLayerState : IDisposable
 {
     private bool disposedValue;
 
+    ~MiniParallaxScrollerLayerState()
+    {
+        Dispose(disposing: false);
+    }
+
     public Texture2D? Texture { get; set; }
+
     public Texture2D? TextureFlipped { get; set; }
+
     public float Offset { get; set; }
+
     public bool FirstFlipped { get; set; }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
     protected virtual void Dispose(bool disposing)
     {
@@ -28,16 +42,5 @@ public class MiniParallaxScrollerLayerState : IDisposable
 
             disposedValue = true;
         }
-    }
-
-    ~MiniParallaxScrollerLayerState()
-    {
-        Dispose(disposing: false);
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

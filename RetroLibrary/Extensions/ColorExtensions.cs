@@ -11,7 +11,11 @@ public static class ColorExtensions
 
         for (int i = 0; i < colors.Count; i++)
         {
-            var curColor = SixLabors.ImageSharp.Color.FromRgba(colors[i].R, colors[i].G, colors[i].B, colors[i].A);    
+            var curColor = SixLabors.ImageSharp.Color.FromRgba(
+                colors[i].R,
+                colors[i].G,
+                colors[i].B,
+                colors[i].A);
             float bandStart = (float)i / colors.Count;
             float bandEnd = (float)(i + 1) / colors.Count;
             colorStops.Add(new ColorStop(bandStart, curColor));
@@ -38,6 +42,7 @@ public static class ColorExtensions
             double colorPosition = (double)i / (gradientStops - 1);
             colors.Add(InterpolateColor(from, to, colorPosition));
         }
+
         colors.Add(to);
 
         return colors;
@@ -50,10 +55,10 @@ public static class ColorExtensions
     {
         position = Math.Max(0, Math.Min(1, position));
 
-        byte r = (byte)(from.R + (to.R - from.R) * position);
-        byte g = (byte)(from.G + (to.G - from.G) * position);
-        byte b = (byte)(from.B + (to.B - from.B) * position);
-        byte a = (byte)(from.A + (to.A - from.A) * position);
+        byte r = (byte)(from.R + ((to.R - from.R) * position));
+        byte g = (byte)(from.G + ((to.G - from.G) * position));
+        byte b = (byte)(from.B + ((to.B - from.B) * position));
+        byte a = (byte)(from.A + ((to.A - from.A) * position));
 
         return new Color(r, g, b, a);
     }

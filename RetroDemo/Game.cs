@@ -10,16 +10,14 @@ namespace RetroDemo
     public class Game : Microsoft.Xna.Framework.Game
     {
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _font;
-        private RetroSpriteSmartButton _testButton;
+        private SpriteBatch? _spriteBatch;
+        private SpriteFont? _font;
+        private RetroSpriteSmartButton? _testButton;
 
-        private MiniParallaxScroller _parallaxScroller;
-        private RadialRetroGradientTexture2D _radialGradientTexture;
-        //private MultiSlicePieTexture2D _godRaysTexture;
+        private MiniParallaxScroller? _parallaxScroller;
+        private RadialRetroGradientTexture2D? _radialGradientTexture;
         private MouseState _previousMouseState;
 
-        //private float _godRaysAngle = 0f;
         private double _frameCounter;
         private double _elapsedTime;
         private int _fps;
@@ -103,8 +101,6 @@ namespace RetroDemo
                 ViewportHeight = GraphicsDevice.Viewport.Height
             });
 
-            //_godRaysTexture = new MultiSlicePieTexture2D();
-
             _previousMouseState = Mouse.GetState();
         }
 
@@ -113,11 +109,9 @@ namespace RetroDemo
             this.Exit();
         }
 
-        private void TestButton_Clicking(object sender, EventArgs e)
+        private void TestButton_Clicking(object? sender, EventArgs e)
         {
-            var button = sender as RetroSpriteSmartButton;
-
-            if (button != null)
+            if (sender is RetroSpriteSmartButton button)
             {
                 button.Text = "Clicking";
             }
@@ -125,9 +119,7 @@ namespace RetroDemo
 
         private void TestButton_Clicked(object? sender, EventArgs e)
         {
-            var button = sender as RetroSpriteSmartButton;
-
-            if (button != null)
+            if (sender is RetroSpriteSmartButton button)
             {
                 button.Text = "Clicked!";
             }
@@ -141,7 +133,7 @@ namespace RetroDemo
                 Exit();
             }
 
-            _parallaxScroller.Update();
+            _parallaxScroller?.Update();
 
             var currentMouseState = Mouse.GetState();
 
@@ -168,9 +160,9 @@ namespace RetroDemo
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch?.Begin();
 
-            _radialGradientTexture.Draw(
+            _radialGradientTexture?.Draw(
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height,
                 new RadialRetroGradientOptions
@@ -181,48 +173,29 @@ namespace RetroDemo
                     ToColor = Color.Purple,
                     GradientStops = 8
                 },
-                _spriteBatch,
+                _spriteBatch!,
                 new Rectangle(
                     0,
                     0,
                     GraphicsDevice.Viewport.Width,
                     GraphicsDevice.Viewport.Height));
 
-            ////_godRaysAngle += 0.1f;
-            ////if (_godRaysAngle > 360f)
-            ////{
-            ////    _godRaysAngle = 360f - _godRaysAngle;
-            ////}
-            ////_godRaysTexture.Draw(
-            ////    new MultiSlicePieOptions
-            ////    {
-            ////        X = GraphicsDevice.Viewport.Width / 2,
-            ////        Y = GraphicsDevice.Viewport.Height - 80,
-            ////        Width = GraphicsDevice.Viewport.Width,
-            ////        Height = GraphicsDevice.Viewport.Height,
-            ////        Radius = GraphicsDevice.Viewport.Width,
-            ////        Angle = _godRaysAngle,
-            ////        Color = SixLabors.ImageSharp.Color.Gold.WithAlpha(0.1f),
-            ////        NumSlices = 12
-            ////    },
-            ////    _spriteBatch);
+            _testButton?.Draw(_spriteBatch!);
 
-            _testButton.Draw(_spriteBatch);
+            _parallaxScroller?.Draw(_spriteBatch!);
 
-            _parallaxScroller.Draw(_spriteBatch);
+            _spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
 
-            _spriteBatch.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
-
-            _spriteBatch.End();
+            _spriteBatch?.End();
 
             base.Draw(gameTime);
         }
 
         protected override void UnloadContent()
         {
-            _testButton.Dispose();
-            _radialGradientTexture.Dispose();
-            _parallaxScroller.Dispose();
+            _testButton?.Dispose();
+            _radialGradientTexture?.Dispose();
+            _parallaxScroller?.Dispose();
             base.UnloadContent();
         }
     }

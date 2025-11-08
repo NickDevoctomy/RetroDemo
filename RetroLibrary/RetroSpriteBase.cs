@@ -1,16 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.ComponentModel;
 
 namespace RetroLibrary;
 
 public partial class RetroSpriteBase : ObservableObject, IDisposable
 {
-    public event EventHandler? Clicking;
-    public event EventHandler? Released;
-    public event EventHandler? Clicked;
+    private readonly List<string> _watchedProperties = new List<string>();
 
     [ObservableProperty]
     private string name;
@@ -36,7 +34,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isHovered;
 
-    private List<string> _watchedProperties = [];
     private bool _needsRedraw = true;
     private Texture2D? _offscreenBuffer;
 
@@ -55,11 +52,17 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         BackgroundColor = backgroundColor ?? Color.Transparent;
         ForegroundColor = foregroundColor ?? Color.Black;
         Buffered = buffered;
-        if(updateWatchedProperties)
+        if (updateWatchedProperties)
         {
             UpdateWatchedProperties();
         }
     }
+
+    public event EventHandler? Clicking;
+
+    public event EventHandler? Released;
+
+    public event EventHandler? Clicked;
 
     public void Draw(SpriteBatch spriteBatch)
     {
@@ -70,7 +73,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             return;
         }
 
-        if(_needsRedraw || _offscreenBuffer == null)
+        if (_needsRedraw || _offscreenBuffer == null)
         {
             System.Diagnostics.Debug.WriteLine($"Redrawing button '{Name}' buffer.");
             RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
@@ -111,6 +114,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
                             Clicked?.Invoke(this, EventArgs.Empty);
                             Released?.Invoke(this, EventArgs.Empty);
                         }
+
                         break;
                     }
             }
@@ -120,6 +124,11 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             IsPressed = false;
             Released?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public virtual void Dispose()
+    {
+        GC.SuppressFinalize(this);
     }
 
     public void UpdateWatchedProperties()
@@ -182,10 +191,5 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private void OnWatchedPropertyChanged(string propertyName)
     {
         _needsRedraw = true;
-    }
-
-    public virtual void Dispose()
-    {
-        throw new NotImplementedException();
     }
 }

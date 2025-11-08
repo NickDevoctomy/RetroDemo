@@ -9,7 +9,7 @@ public class LinearRetroGradientOptions : IEquatable<LinearRetroGradientOptions>
     public Point ToPoint { get; set; }
 
     public Color FromColor { get; set; } = Color.White;
-    
+
     public Color ToColor { get; set; } = Color.Black;
 
     public int GradientStops { get; set; } = 8;
