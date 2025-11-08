@@ -13,6 +13,7 @@ namespace RetroDemo
         private SpriteBatch? _spriteBatch;
         private SpriteFont? _font;
         private RetroSpriteSmartButton? _testButton;
+        private RetroSpriteSmartButton? _exitButton;
 
         private MiniParallaxScroller? _parallaxScroller;
         private RadialRetroGradientTexture2D? _radialGradientTexture;
@@ -26,9 +27,9 @@ namespace RetroDemo
         {
             _graphics = new GraphicsDeviceManager(this);
             var display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-            _graphics.PreferredBackBufferWidth = 800; // display.Width;
-            _graphics.PreferredBackBufferHeight = 600; // display.Height;
-            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = display.Width;
+            _graphics.PreferredBackBufferHeight = display.Height;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -89,6 +90,36 @@ namespace RetroDemo
             _testButton.Clicked += TestButton_Clicked;
             _testButton.Clicking += TestButton_Clicking;
 
+            _exitButton = new RetroSpriteSmartButton(
+                "ExitButton",
+                "Exit",
+                new Point(_graphics.PreferredBackBufferWidth - 208, 8),
+                new Point(200, 50),
+                false,
+                foregroundColor: Color.White,
+                upTint: Color.Green,
+                downTint: Color.Green,
+                upSmartButtonTexture: new SmartButtonTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
+                    new SmartButtonOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 8,
+                        RightMargin = 4
+                    }),
+                downSmartButtonTexture: new SmartButtonTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
+                    new SmartButtonOptions
+                    {
+                        TopMargin = 6,
+                        LeftMargin = 4,
+                        BottomMargin = 6,
+                        RightMargin = 4
+                    }),
+                font: _font);
+            _exitButton.Clicked += ExitButton_Clicked;
+
             _radialGradientTexture = new RadialRetroGradientTexture2D();
 
             _parallaxScroller = new MiniParallaxScroller(new MiniParallaxScrollerOptions
@@ -106,7 +137,7 @@ namespace RetroDemo
             _previousMouseState = Mouse.GetState();
         }
 
-        private void BlueButton_Clicked(object sender, EventArgs e)
+        private void ExitButton_Clicked(object? sender, EventArgs e)
         {
             this.Exit();
         }
@@ -140,6 +171,10 @@ namespace RetroDemo
             var currentMouseState = Mouse.GetState();
 
             _testButton?.Update(
+                currentMouseState,
+                _previousMouseState);
+
+            _exitButton?.Update(
                 currentMouseState,
                 _previousMouseState);
 
@@ -185,6 +220,7 @@ namespace RetroDemo
                     GraphicsDevice.Viewport.Height));
 
             _testButton?.Draw(_spriteBatch!);
+            _exitButton?.Draw(_spriteBatch!);
 
             _parallaxScroller?.Draw(_spriteBatch!);
 
@@ -196,6 +232,7 @@ namespace RetroDemo
         protected override void UnloadContent()
         {
             _testButton?.Dispose();
+            _exitButton?.Dispose();
             _radialGradientTexture?.Dispose();
             _parallaxScroller?.Dispose();
             base.UnloadContent();
