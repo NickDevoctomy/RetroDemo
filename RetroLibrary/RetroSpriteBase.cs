@@ -26,6 +26,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private Color foregroundColor;
 
     [ObservableProperty]
+    private SpriteFont? font;
+
+    [ObservableProperty]
     private bool buffered;
 
     [ObservableProperty]
@@ -35,7 +38,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private bool isHovered;
 
     private bool _needsRedraw = true;
-    private Texture2D? _offscreenBuffer;
+    private Texture2D? _offscreenBuffer; // !!! Something is wrong with this buffer
 
     public RetroSpriteBase(
         string name,
@@ -43,6 +46,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
+        SpriteFont? font = null,
         bool buffered = true,
         bool updateWatchedProperties = true)
     {
@@ -51,6 +55,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Size = size;
         BackgroundColor = backgroundColor ?? Color.Transparent;
         ForegroundColor = foregroundColor ?? Color.Black;
+        Font = font;
         Buffered = buffered;
         if (updateWatchedProperties)
         {
@@ -102,7 +107,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
                 case ButtonState.Pressed:
                     {
                         IsPressed = true;
-                        Clicking?.Invoke(this, EventArgs.Empty);
+                        OnClicking();
                         break;
                     }
 
@@ -110,9 +115,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
                     {
                         if (IsPressed)
                         {
+                            OnClicked();
+                            OnReleased();
                             IsPressed = false;
-                            Clicked?.Invoke(this, EventArgs.Empty);
-                            Released?.Invoke(this, EventArgs.Empty);
                         }
 
                         break;
@@ -122,7 +127,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         else
         {
             IsPressed = false;
-            Released?.Invoke(this, EventArgs.Empty);
+            OnReleased();
         }
     }
 
@@ -165,6 +170,21 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         }
     }
 
+    protected virtual void OnClicking()
+    {
+        Clicking?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnClicked()
+    {
+        Clicked?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected virtual void OnReleased()
+    {
+        Released?.Invoke(this, EventArgs.Empty);
+    }
+
     private void RedrawOffscreenBuffer(GraphicsDevice graphicsDevice)
     {
         _offscreenBuffer?.Dispose();
@@ -173,13 +193,20 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         var renderTarget = new RenderTarget2D(
             graphicsDevice,
             Size.X,
-            Size.Y);
+            Size.Y,
+            false,
+            SurfaceFormat.Color,
+            DepthFormat.None,
+            0,
+            RenderTargetUsage.PlatformContents);
+
         using var spriteBatch = new SpriteBatch(graphicsDevice);
 
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(BackgroundColor);
         spriteBatch.Begin();
+        ////spriteBatch.DrawString(Font, "Arse", new Vector2(0, 0), Color.White); // This draws correctly
         OnRedraw(spriteBatch, Point.Zero);
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);

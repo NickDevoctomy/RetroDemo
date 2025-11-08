@@ -63,6 +63,7 @@ namespace RetroDemo
                 "Test Button",
                 new Point(200, 200),
                 new Point(200, 50),
+                true,
                 foregroundColor: Color.White,
                 tint: Color.Red,
                 upSmartButtonTexture: new SmartButtonTexture2D(
@@ -148,6 +149,8 @@ namespace RetroDemo
 
         protected override void Draw(GameTime gameTime)
         {
+            base.Draw(gameTime);
+
             _elapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
             _frameCounter++;
 
@@ -158,7 +161,7 @@ namespace RetroDemo
                 _elapsedTime = 0;
             }
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch?.Begin();
 
@@ -187,8 +190,6 @@ namespace RetroDemo
             _spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
 
             _spriteBatch?.End();
-
-            base.Draw(gameTime);
         }
 
         protected override void UnloadContent()

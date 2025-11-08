@@ -7,8 +7,6 @@ public class SmartButtonTexture2D(
     Texture2D sourceTexture,
     SmartButtonOptions options) : IDisposable
 {
-    private int _cachedWidth;
-    private int _cachedHeight;
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
@@ -23,8 +21,8 @@ public class SmartButtonTexture2D(
         int height)
     {
         if (_cachedTexture != null &&
-           _cachedWidth == width &&
-           _cachedHeight == height)
+           _cachedTexture.Width == width &&
+           _cachedTexture.Height == height)
         {
             return _cachedTexture;
         }
@@ -35,8 +33,16 @@ public class SmartButtonTexture2D(
             _cachedTexture = null;
         }
 
-        var renderTarget = new RenderTarget2D(graphicsDevice, width, height);
-        var spriteBatch = new SpriteBatch(graphicsDevice);
+        var renderTarget = new RenderTarget2D(
+            graphicsDevice,
+            width,
+            height,
+            false,
+            SurfaceFormat.Color,
+            DepthFormat.None,
+            0,
+            RenderTargetUsage.PlatformContents);
+        using var spriteBatch = new SpriteBatch(graphicsDevice);
 
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
@@ -111,10 +117,7 @@ public class SmartButtonTexture2D(
 
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);
-        spriteBatch.Dispose();
 
-        _cachedWidth = width;
-        _cachedHeight = height;
         _cachedTexture = renderTarget;
 
         return renderTarget;

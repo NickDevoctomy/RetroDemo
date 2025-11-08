@@ -19,13 +19,17 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     private Color tint;
 
     [ObservableProperty]
-    private SpriteFont? font;
+    private bool isToggleButton;
+
+    [ObservableProperty]
+    private bool isToggled;
 
     public RetroSpriteSmartButton(
         string name,
         string text,
         Point position,
         Point size,
+        bool isToggleButton,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         Color? tint = null,
@@ -39,14 +43,15 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
             size,
             backgroundColor,
             foregroundColor,
+            font,
             buffered,
             false)
     {
         Text = text;
+        IsToggleButton = isToggleButton;
         UpSmartButtonTexture = upSmartButtonTexture;
         DownSmartButtonTexture = downSmartButtonTexture;
         Tint = tint ?? Color.White;
-        Font = font;
 
         UpdateWatchedProperties();
     }
@@ -60,6 +65,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         propertyNames.Add(nameof(Tint));
         propertyNames.Add(nameof(Font));
         propertyNames.Add(nameof(IsHovered));
+        propertyNames.Add(nameof(IsToggled));
     }
 
     public override void Dispose()
@@ -71,25 +77,36 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         DownSmartButtonTexture = null;
     }
 
+    protected override void OnClicked()
+    {
+        base.OnClicked();
+        if (IsToggleButton)
+        {
+            IsToggled = !IsToggled;
+        }
+    }
+
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
         Point location)
     {
-        var texture = IsPressed ? DownSmartButtonTexture : UpSmartButtonTexture;
+        var isPressed = IsToggleButton ? IsToggled : IsPressed;
+        var texture = isPressed ? DownSmartButtonTexture : UpSmartButtonTexture;
         if (texture != null)
         {
+            var buttonTexture = texture!.BuildTexture(
+                spriteBatch.GraphicsDevice,
+                Size.X,
+                Size.Y);
             spriteBatch.Draw(
-                texture!.BuildTexture(
-                    spriteBatch.GraphicsDevice,
-                    Size.X,
-                    Size.Y),
+                buttonTexture,
                 new Rectangle(location, Size),
                 Tint);
         }
 
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
-            var yOffset = IsPressed ? 2 : 0;
+            var yOffset = isPressed ? 2 : 0;
             Vector2 textSize = Font.MeasureString(Text);
             Vector2 textPosition = new Vector2(
                 location.X + ((Size.X - textSize.X) / 2),

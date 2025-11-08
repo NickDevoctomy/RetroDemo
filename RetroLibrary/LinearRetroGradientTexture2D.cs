@@ -120,7 +120,15 @@ public class LinearRetroGradientTexture2D : IDisposable
             _cachedTexture = null;
         }
 
-        var renderTarget = new RenderTarget2D(graphicsDevice, width, height);
+        var renderTarget = new RenderTarget2D(
+            graphicsDevice,
+            width,
+            height,
+            false,
+            SurfaceFormat.Color,
+            DepthFormat.None,
+            0,
+            RenderTargetUsage.PlatformContents);
         var spriteBatch = new SpriteBatch(graphicsDevice);
 
         graphicsDevice.SetRenderTarget(renderTarget);
