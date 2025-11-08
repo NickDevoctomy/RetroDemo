@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using RetroLibrary;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace RetroDemo
 {
@@ -29,9 +28,9 @@ namespace RetroDemo
         {
             _graphics = new GraphicsDeviceManager(this);
             var display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-            _graphics.PreferredBackBufferWidth = display.Width;
-            _graphics.PreferredBackBufferHeight = display.Height;
-            _graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = 800; // display.Width;
+            _graphics.PreferredBackBufferHeight = 600; // display.Height;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -61,10 +60,14 @@ namespace RetroDemo
                 _font = null;
             }
 
-            _testButton = new RetroSpriteSmartButton
-            {
-                Text = "Test Button",
-                UpSmartButtonTexture = new SmartButtonTexture2D(
+            _testButton = new RetroSpriteSmartButton(
+                "TestButton",
+                "Test Button",
+                new Point(200, 200),
+                new Point(200, 50),
+                foregroundColor: Color.White,
+                tint: Color.Red,
+                upSmartButtonTexture: new SmartButtonTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
                     new SmartButtonOptions
                     {
@@ -73,7 +76,7 @@ namespace RetroDemo
                         BottomMargin = 8,
                         RightMargin = 4
                     }),
-                DownSmartButtonTexture = new SmartButtonTexture2D(
+                downSmartButtonTexture: new SmartButtonTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
                     new SmartButtonOptions
                     {
@@ -82,12 +85,7 @@ namespace RetroDemo
                         BottomMargin = 6,
                         RightMargin = 4
                     }),
-                Position = new Point(500, 500),
-                Size = new Point(200, 50),
-                Font = _font,
-                Tint = Color.Red,
-                ForegroundColor = Color.White
-            };
+                font: _font);
             _testButton.Clicked += TestButton_Clicked;
             _testButton.Clicking += TestButton_Clicking;
 
@@ -179,12 +177,12 @@ namespace RetroDemo
                 {
                     CentrePoint = new SixLabors.ImageSharp.PointF(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height - 80),
                     Radius = GraphicsDevice.Viewport.Width,
-                    FromColor = Microsoft.Xna.Framework.Color.Yellow,
-                    ToColor = Microsoft.Xna.Framework.Color.Purple,
+                    FromColor = Color.Yellow,
+                    ToColor = Color.Purple,
                     GradientStops = 8
                 },
                 _spriteBatch,
-                new Microsoft.Xna.Framework.Rectangle(
+                new Rectangle(
                     0,
                     0,
                     GraphicsDevice.Viewport.Width,

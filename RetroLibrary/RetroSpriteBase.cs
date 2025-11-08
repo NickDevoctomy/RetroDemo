@@ -13,16 +13,19 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     public event EventHandler? Clicked;
 
     [ObservableProperty]
+    private string name;
+
+    [ObservableProperty]
     private Point position;
 
     [ObservableProperty]
     private Point size;
 
     [ObservableProperty]
-    private Color backgroundColor = Color.Transparent;
+    private Color backgroundColor;
 
     [ObservableProperty]
-    private Color foregroundColor = Color.Black;
+    private Color foregroundColor;
 
     [ObservableProperty]
     private bool buffered;
@@ -30,32 +33,53 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isPressed;
 
+    [ObservableProperty]
+    private bool isHovered;
+
     private List<string> _watchedProperties = [];
     private bool _needsRedraw = true;
     private Texture2D? _offscreenBuffer;
-    protected bool _isHovered { get; private set; }
 
-    public RetroSpriteBase()
+    public RetroSpriteBase(
+        string name,
+        Point position,
+        Point size,
+        Color? backgroundColor = null,
+        Color? foregroundColor = null,
+        bool buffered = true)
     {
-        SetWatchedProperties(_watchedProperties);
+        Name = name;
+        Position = position;
+        Size = size;
+        BackgroundColor = backgroundColor ?? Color.Transparent;
+        ForegroundColor = foregroundColor ?? Color.Black;
+        Buffered = buffered;
+        //SetWatchedProperties(_watchedProperties);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
         if (!Buffered)
         {
+            System.Diagnostics.Debug.WriteLine($"Drawing unbuffered button '{Name}'.");
             OnRedraw(spriteBatch, Position);
+            return;
         }
 
-        if(_needsRedraw)
+        if(_needsRedraw || _offscreenBuffer == null)
         {
+            System.Diagnostics.Debug.WriteLine($"Redrawing button '{Name}' buffer.");
             RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
         }
 
-        spriteBatch.Draw(
-            _offscreenBuffer!,
-            new Rectangle(Position, Size),
-            Color.White);
+        ////System.Diagnostics.Debug.WriteLine($"Redrawing button '{Name}' from buffer.");
+        if (_offscreenBuffer != null)
+        {
+            spriteBatch.Draw(
+                _offscreenBuffer,
+                new Rectangle(Position, Size),
+                Color.White);
+        }
     }
 
     public void Update(
@@ -63,8 +87,8 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             MouseState previousMouseState)
     {
         var bounds = new Rectangle(Position, Size);
-        _isHovered = bounds.Contains(mouseState.Position);
-        if (_isHovered)
+        IsHovered = bounds.Contains(mouseState.Position);
+        if (IsHovered)
         {
             switch (previousMouseState.LeftButton)
             {
@@ -92,6 +116,11 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             IsPressed = false;
             Released?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    public void UpdateSetWatchedProperties()
+    {
+        SetWatchedProperties(_watchedProperties);
     }
 
     public virtual void SetWatchedProperties(List<string> propertyNames)
@@ -125,16 +154,22 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     private void RedrawOffscreenBuffer(GraphicsDevice graphicsDevice)
     {
-        var renderTarget = new RenderTarget2D(graphicsDevice, Size.X, Size.Y);
-        var spriteBatch = new SpriteBatch(graphicsDevice);
+        _offscreenBuffer?.Dispose();
+        _offscreenBuffer = null;
 
+        var renderTarget = new RenderTarget2D(
+            graphicsDevice,
+            Size.X,
+            Size.Y);
+        using var spriteBatch = new SpriteBatch(graphicsDevice);
+
+        var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(BackgroundColor);
         spriteBatch.Begin();
         OnRedraw(spriteBatch, Point.Zero);
         spriteBatch.End();
-        graphicsDevice.SetRenderTarget(null);
-        spriteBatch.Dispose();
+        graphicsDevice.SetRenderTargets(originalRenderTargets);
 
         _offscreenBuffer = renderTarget;
         _needsRedraw = false;

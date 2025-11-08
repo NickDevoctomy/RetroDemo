@@ -16,10 +16,39 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     private SmartButtonTexture2D? downSmartButtonTexture;
 
     [ObservableProperty]
-    private Color tint = Color.White;
+    private Color tint;
 
     [ObservableProperty]
     private SpriteFont? font;
+
+    public RetroSpriteSmartButton(
+        string name,
+        string text,
+        Point position,
+        Point size,
+        Color? backgroundColor = null,
+        Color? foregroundColor = null,
+        Color? tint = null,
+        SmartButtonTexture2D? upSmartButtonTexture = null,
+        SmartButtonTexture2D? downSmartButtonTexture = null,
+        SpriteFont? font = null,
+        bool buffered = true) :
+        base(
+            name,
+            position,
+            size,
+            backgroundColor,
+            foregroundColor,
+            buffered)
+    {
+        Text = text;
+        UpSmartButtonTexture = upSmartButtonTexture;
+        DownSmartButtonTexture = downSmartButtonTexture;
+        Tint = tint ?? Color.White;
+        Font = font;
+
+        UpdateSetWatchedProperties();
+    }
 
     public override void SetWatchedProperties(List<string> propertyNames)
     {
@@ -29,6 +58,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         propertyNames.Add(nameof(DownSmartButtonTexture));
         propertyNames.Add(nameof(Tint));
         propertyNames.Add(nameof(Font));
+        propertyNames.Add(nameof(IsHovered));
     }
 
     protected override void OnRedraw(

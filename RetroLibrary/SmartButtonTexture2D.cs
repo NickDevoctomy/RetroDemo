@@ -33,6 +33,7 @@ public class SmartButtonTexture2D(
         var renderTarget = new RenderTarget2D(graphicsDevice, width, height);
         var spriteBatch = new SpriteBatch(graphicsDevice);
 
+        var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Color.Transparent);
 
@@ -104,7 +105,7 @@ public class SmartButtonTexture2D(
             Color.White);
 
         spriteBatch.End();
-        graphicsDevice.SetRenderTarget(null);
+        graphicsDevice.SetRenderTargets(originalRenderTargets);
         spriteBatch.Dispose();
 
         _cachedWidth = width;
