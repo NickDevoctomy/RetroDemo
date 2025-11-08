@@ -13,8 +13,8 @@ namespace RetroDemo
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
-        private Button _buttonRed;
-        private Button _buttonBlue;
+        private RetroSpriteSmartButton _testButton;
+
         private MiniParallaxScroller _parallaxScroller;
         private RadialRetroGradientTexture2D _radialGradientTexture;
         //private MultiSlicePieTexture2D _godRaysTexture;
@@ -41,7 +41,6 @@ namespace RetroDemo
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -62,31 +61,35 @@ namespace RetroDemo
                 _font = null;
             }
 
-            // Create the button after GraphicsDevice and font are available
-            _buttonRed = new Button(
-                GraphicsDevice,
-                _font,
-                "Click Me!",
-                new Vector2(100, 100),
-                new Vector2(200, 50))
+            _testButton = new RetroSpriteSmartButton
             {
-                BackgroundColor = Color.Red,
+                Text = "Test Button",
+                UpSmartButtonTexture = new SmartButtonTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
+                    new SmartButtonOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 8,
+                        RightMargin = 4
+                    }),
+                DownSmartButtonTexture = new SmartButtonTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
+                    new SmartButtonOptions
+                    {
+                        TopMargin = 6,
+                        LeftMargin = 4,
+                        BottomMargin = 6,
+                        RightMargin = 4
+                    }),
+                Position = new Point(500, 500),
+                Size = new Point(200, 50),
+                Font = _font,
+                Tint = Color.Red,
                 ForegroundColor = Color.White
             };
-            _buttonRed.Clicked += RedButton_Clicked;
-            _buttonRed.Clicking += RedButton_Clicking;
-
-            _buttonBlue = new Button(
-                GraphicsDevice,
-                _font,
-                "Exit",
-                new Vector2(_graphics.PreferredBackBufferWidth - 208, 8),
-                new Vector2(200, 50))
-            {
-                BackgroundColor = Color.LightSeaGreen,
-                ForegroundColor = Color.White
-            };
-            _buttonBlue.Clicked += BlueButton_Clicked;
+            _testButton.Clicked += TestButton_Clicked;
+            _testButton.Clicking += TestButton_Clicking;
 
             _radialGradientTexture = new RadialRetroGradientTexture2D();
 
@@ -112,9 +115,9 @@ namespace RetroDemo
             this.Exit();
         }
 
-        private void RedButton_Clicking(object sender, EventArgs e)
+        private void TestButton_Clicking(object sender, EventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as RetroSpriteSmartButton;
 
             if (button != null)
             {
@@ -122,9 +125,9 @@ namespace RetroDemo
             }
         }
 
-        private void RedButton_Clicked(object? sender, EventArgs e)
+        private void TestButton_Clicked(object? sender, EventArgs e)
         {
-            var button = sender as Button;
+            var button = sender as RetroSpriteSmartButton;
 
             if (button != null)
             {
@@ -144,11 +147,7 @@ namespace RetroDemo
 
             var currentMouseState = Mouse.GetState();
 
-            _buttonRed?.Update(
-                currentMouseState,
-                _previousMouseState);
-
-            _buttonBlue?.Update(
+            _testButton?.Update(
                 currentMouseState,
                 _previousMouseState);
 
@@ -172,7 +171,7 @@ namespace RetroDemo
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            
+
             _radialGradientTexture.Draw(
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height,
@@ -210,8 +209,7 @@ namespace RetroDemo
             ////    },
             ////    _spriteBatch);
 
-            _buttonRed?.Draw(_spriteBatch);
-            _buttonBlue?.Draw(_spriteBatch);
+            _testButton.Draw(_spriteBatch);
 
             _parallaxScroller.Draw(_spriteBatch);
 
@@ -224,7 +222,7 @@ namespace RetroDemo
 
         protected override void UnloadContent()
         {
-            _buttonRed?.Dispose();
+            _testButton.Dispose();
             _radialGradientTexture.Dispose();
             _parallaxScroller.Dispose();
             base.UnloadContent();

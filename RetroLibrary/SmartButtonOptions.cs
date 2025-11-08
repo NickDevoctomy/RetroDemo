@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace RetroLibrary;
+﻿namespace RetroLibrary;
 
 public class SmartButtonOptions
 {
@@ -11,6 +9,4 @@ public class SmartButtonOptions
     public int BottomMargin { get; set; }
 
     public int RightMargin { get; set; }
-
-    public Color Tint { get; set; } = Color.White;
 }
