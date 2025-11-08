@@ -60,12 +60,13 @@ namespace RetroDemo
 
             _testButton = new RetroSpriteSmartButton(
                 "TestButton",
-                "Test Button",
+                "Toggle Button",
                 new Point(200, 200),
                 new Point(200, 50),
                 true,
                 foregroundColor: Color.White,
-                tint: Color.Red,
+                upTint: Color.LightGray,
+                downTint: Color.Red,
                 upSmartButtonTexture: new SmartButtonTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
                     new SmartButtonOptions

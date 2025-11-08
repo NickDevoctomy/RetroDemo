@@ -16,7 +16,10 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     private SmartButtonTexture2D? downSmartButtonTexture;
 
     [ObservableProperty]
-    private Color tint;
+    private Color upTint;
+
+    [ObservableProperty]
+    private Color downTint;
 
     [ObservableProperty]
     private bool isToggleButton;
@@ -32,7 +35,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         bool isToggleButton,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
-        Color? tint = null,
+        Color? upTint = null,
+        Color? downTint = null,
         SmartButtonTexture2D? upSmartButtonTexture = null,
         SmartButtonTexture2D? downSmartButtonTexture = null,
         SpriteFont? font = null,
@@ -51,7 +55,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         IsToggleButton = isToggleButton;
         UpSmartButtonTexture = upSmartButtonTexture;
         DownSmartButtonTexture = downSmartButtonTexture;
-        Tint = tint ?? Color.White;
+        UpTint = upTint ?? Color.White;
+        DownTint = downTint ?? Color.White;
 
         UpdateWatchedProperties();
     }
@@ -62,7 +67,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         propertyNames.Add(nameof(Text));
         propertyNames.Add(nameof(UpSmartButtonTexture));
         propertyNames.Add(nameof(DownSmartButtonTexture));
-        propertyNames.Add(nameof(Tint));
+        propertyNames.Add(nameof(UpTint));
+        propertyNames.Add(nameof(DownTint));
         propertyNames.Add(nameof(Font));
         propertyNames.Add(nameof(IsHovered));
         propertyNames.Add(nameof(IsToggled));
@@ -101,7 +107,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
             spriteBatch.Draw(
                 buttonTexture,
                 new Rectangle(location, Size),
-                Tint);
+                isPressed ? DownTint : UpTint);
         }
 
         if (Font != null && !string.IsNullOrEmpty(Text))
