@@ -1,6 +1,6 @@
 ﻿namespace RetroLibrary;
 
-public class SmartButtonOptions
+public class NineSliceTextureOptions
 {
     public int TopMargin { get; set; }
 

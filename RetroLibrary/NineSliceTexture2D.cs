@@ -3,14 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RetroLibrary;
 
-public class SmartButtonTexture2D(
+public class NineSliceTexture2D(
     Texture2D sourceTexture,
-    SmartButtonOptions options) : IDisposable
+    NineSliceTextureOptions options) : IDisposable
 {
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
-    ~SmartButtonTexture2D()
+    ~NineSliceTexture2D()
     {
         Dispose(disposing: false);
     }

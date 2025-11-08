@@ -10,10 +10,10 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     private string text = string.Empty;
 
     [ObservableProperty]
-    private SmartButtonTexture2D? upSmartButtonTexture;
+    private NineSliceTexture2D? upSmartButtonTexture;
 
     [ObservableProperty]
-    private SmartButtonTexture2D? downSmartButtonTexture;
+    private NineSliceTexture2D? downSmartButtonTexture;
 
     [ObservableProperty]
     private Color upTint;
@@ -37,8 +37,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         Color? foregroundColor = null,
         Color? upTint = null,
         Color? downTint = null,
-        SmartButtonTexture2D? upSmartButtonTexture = null,
-        SmartButtonTexture2D? downSmartButtonTexture = null,
+        NineSliceTexture2D? upSmartButtonTexture = null,
+        NineSliceTexture2D? downSmartButtonTexture = null,
         SpriteFont? font = null,
         bool buffered = true)
         : base(

@@ -68,18 +68,18 @@ namespace RetroDemo
                 foregroundColor: Color.White,
                 upTint: Color.LightGray,
                 downTint: Color.Red,
-                upSmartButtonTexture: new SmartButtonTexture2D(
+                upSmartButtonTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
-                    new SmartButtonOptions
+                    new NineSliceTextureOptions
                     {
                         TopMargin = 4,
                         LeftMargin = 4,
                         BottomMargin = 8,
                         RightMargin = 4
                     }),
-                downSmartButtonTexture: new SmartButtonTexture2D(
+                downSmartButtonTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
-                    new SmartButtonOptions
+                    new NineSliceTextureOptions
                     {
                         TopMargin = 6,
                         LeftMargin = 4,
@@ -99,18 +99,18 @@ namespace RetroDemo
                 foregroundColor: Color.White,
                 upTint: Color.Green,
                 downTint: Color.Green,
-                upSmartButtonTexture: new SmartButtonTexture2D(
+                upSmartButtonTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
-                    new SmartButtonOptions
+                    new NineSliceTextureOptions
                     {
                         TopMargin = 4,
                         LeftMargin = 4,
                         BottomMargin = 8,
                         RightMargin = 4
                     }),
-                downSmartButtonTexture: new SmartButtonTexture2D(
+                downSmartButtonTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
-                    new SmartButtonOptions
+                    new NineSliceTextureOptions
                     {
                         TopMargin = 6,
                         LeftMargin = 4,
