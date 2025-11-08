@@ -39,7 +39,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
             size,
             backgroundColor,
             foregroundColor,
-            buffered)
+            buffered,
+            false)
     {
         Text = text;
         UpSmartButtonTexture = upSmartButtonTexture;
@@ -47,7 +48,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         Tint = tint ?? Color.White;
         Font = font;
 
-        UpdateSetWatchedProperties();
+        UpdateWatchedProperties();
     }
 
     public override void SetWatchedProperties(List<string> propertyNames)

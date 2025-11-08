@@ -46,7 +46,8 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
-        bool buffered = true)
+        bool buffered = true,
+        bool updateWatchedProperties = true)
     {
         Name = name;
         Position = position;
@@ -54,7 +55,10 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         BackgroundColor = backgroundColor ?? Color.Transparent;
         ForegroundColor = foregroundColor ?? Color.Black;
         Buffered = buffered;
-        //SetWatchedProperties(_watchedProperties);
+        if(updateWatchedProperties)
+        {
+            UpdateWatchedProperties();
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch)
@@ -118,7 +122,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         }
     }
 
-    public void UpdateSetWatchedProperties()
+    public void UpdateWatchedProperties()
     {
         SetWatchedProperties(_watchedProperties);
     }
