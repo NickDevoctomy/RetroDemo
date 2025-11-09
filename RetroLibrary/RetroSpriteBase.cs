@@ -212,7 +212,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(BackgroundColor);
-        spriteBatch.Begin();
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
         OnRedraw(spriteBatch, Point.Zero);
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);

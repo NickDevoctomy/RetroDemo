@@ -29,9 +29,9 @@ namespace RetroDemo
         {
             _graphics = new GraphicsDeviceManager(this);
             var display = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-            _graphics.PreferredBackBufferWidth = display.Width;
-            _graphics.PreferredBackBufferHeight = display.Height;
-            _graphics.IsFullScreen = true;
+            _graphics.PreferredBackBufferWidth = 800; // display.Width;
+            _graphics.PreferredBackBufferHeight = 600; // display.Height;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -64,8 +64,8 @@ namespace RetroDemo
             _testContainer = new RetroSpriteGroupContainer(
                 "TestGroupContainer",
                 "Some really long text in here!",
-                new Point(800, 450),
-                new Point(400, 400),
+                new Point(25, 35),
+                new Point(400, 300),
                 borderTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
                     new NineSliceTextureOptions
@@ -86,7 +86,7 @@ namespace RetroDemo
                         RightMargin = 4
                     }),
                 font: _font,
-                borderTint: Color.Red,
+                borderTint: new Color(Color.LightGray, 0.5f),
                 labelTint: Color.Red,
                 foregroundColor: Color.White);
 
@@ -236,7 +236,7 @@ namespace RetroDemo
 
             //GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch?.Begin();
+            _spriteBatch?.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             _radialGradientTexture?.Draw(
                 GraphicsDevice.Viewport.Width,

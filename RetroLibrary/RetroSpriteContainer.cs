@@ -95,7 +95,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Color.Transparent);
-        spriteBatch.Begin();
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
         foreach (var currentChild in Children)
         {
