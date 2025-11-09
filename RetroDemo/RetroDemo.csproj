@@ -13,15 +13,20 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Textures\border.png" />
     <None Remove="Content\Textures\grass.png" />
     <None Remove="Content\Textures\greybuttondown.png" />
     <None Remove="Content\Textures\greybuttonup.png" />
     <None Remove="Content\Textures\road.png" />
     <None Remove="Content\Textures\sandyrocks.png" />
+    <None Remove="Content\Textures\surface.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Textures\border.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\grass.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -35,6 +40,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\sandyrocks.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\surface.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

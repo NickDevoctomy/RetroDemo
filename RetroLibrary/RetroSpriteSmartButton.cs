@@ -10,10 +10,10 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     private string text = string.Empty;
 
     [ObservableProperty]
-    private NineSliceTexture2D? upSmartButtonTexture;
+    private NineSliceTexture2D? upTexture;
 
     [ObservableProperty]
-    private NineSliceTexture2D? downSmartButtonTexture;
+    private NineSliceTexture2D? downTexture;
 
     [ObservableProperty]
     private Color upTint;
@@ -37,8 +37,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         Color? foregroundColor = null,
         Color? upTint = null,
         Color? downTint = null,
-        NineSliceTexture2D? upSmartButtonTexture = null,
-        NineSliceTexture2D? downSmartButtonTexture = null,
+        NineSliceTexture2D? upTexture = null,
+        NineSliceTexture2D? downTexture = null,
         SpriteFont? font = null,
         bool buffered = true)
         : base(
@@ -53,8 +53,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     {
         Text = text;
         IsToggleButton = isToggleButton;
-        UpSmartButtonTexture = upSmartButtonTexture;
-        DownSmartButtonTexture = downSmartButtonTexture;
+        UpTexture = upTexture;
+        DownTexture = downTexture;
         UpTint = upTint ?? Color.White;
         DownTint = downTint ?? Color.White;
 
@@ -65,8 +65,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     {
         base.SetWatchedProperties(propertyNames);
         propertyNames.Add(nameof(Text));
-        propertyNames.Add(nameof(UpSmartButtonTexture));
-        propertyNames.Add(nameof(DownSmartButtonTexture));
+        propertyNames.Add(nameof(UpTexture));
+        propertyNames.Add(nameof(DownTexture));
         propertyNames.Add(nameof(UpTint));
         propertyNames.Add(nameof(DownTint));
         propertyNames.Add(nameof(Font));
@@ -77,10 +77,10 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     public override void Dispose()
     {
         GC.SuppressFinalize(this);
-        UpSmartButtonTexture?.Dispose();
-        UpSmartButtonTexture = null;
-        DownSmartButtonTexture?.Dispose();
-        DownSmartButtonTexture = null;
+        UpTexture?.Dispose();
+        UpTexture = null;
+        DownTexture?.Dispose();
+        DownTexture = null;
     }
 
     protected override void OnClicked()
@@ -97,7 +97,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         Point location)
     {
         var isPressed = IsToggleButton ? IsToggled : IsPressed;
-        var texture = isPressed ? DownSmartButtonTexture : UpSmartButtonTexture;
+        var texture = isPressed ? DownTexture : UpTexture;
         if (texture != null)
         {
             var buttonTexture = texture!.BuildTexture(

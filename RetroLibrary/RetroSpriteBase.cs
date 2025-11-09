@@ -213,7 +213,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(BackgroundColor);
         spriteBatch.Begin();
-        ////spriteBatch.DrawString(Font, "Arse", new Vector2(0, 0), Color.White); // This draws correctly
         OnRedraw(spriteBatch, Point.Zero);
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);

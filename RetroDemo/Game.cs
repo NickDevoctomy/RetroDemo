@@ -61,10 +61,34 @@ namespace RetroDemo
                 _font = null;
             }
 
-            _testContainer = new RetroSpriteContainer(
-                "TestContainer",
+            _testContainer = new RetroSpriteGroupContainer(
+                "TestGroupContainer",
+                "Some really long text in here!",
                 new Point(800, 450),
-                new Point(400, 400));
+                new Point(400, 400),
+                borderTexture: new NineSliceTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                borderOuterTopMargin: 8,
+                groupLabelTexture: new NineSliceTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                font: _font,
+                borderTint: Color.Red,
+                labelTint: Color.Red,
+                foregroundColor: Color.White);
 
             _testButton = new RetroSpriteSmartButton(
                 "TestButton",
@@ -75,7 +99,7 @@ namespace RetroDemo
                 foregroundColor: Color.White,
                 upTint: Color.LightGray,
                 downTint: Color.Red,
-                upSmartButtonTexture: new NineSliceTexture2D(
+                upTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
                     new NineSliceTextureOptions
                     {
@@ -84,7 +108,7 @@ namespace RetroDemo
                         BottomMargin = 8,
                         RightMargin = 4
                     }),
-                downSmartButtonTexture: new NineSliceTexture2D(
+                downTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
                     new NineSliceTextureOptions
                     {
@@ -108,7 +132,7 @@ namespace RetroDemo
                 foregroundColor: Color.White,
                 upTint: Color.Green,
                 downTint: Color.Green,
-                upSmartButtonTexture: new NineSliceTexture2D(
+                upTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
                     new NineSliceTextureOptions
                     {
@@ -117,7 +141,7 @@ namespace RetroDemo
                         BottomMargin = 8,
                         RightMargin = 4
                     }),
-                downSmartButtonTexture: new NineSliceTexture2D(
+                downTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
                     new NineSliceTextureOptions
                     {

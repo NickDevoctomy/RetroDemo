@@ -78,7 +78,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         }
     }
 
-    private Texture2D DrawChildrenToTexture(GraphicsDevice graphicsDevice)
+    protected Texture2D DrawChildrenToTexture(GraphicsDevice graphicsDevice)
     {
         var renderTarget = new RenderTarget2D(
             graphicsDevice,
@@ -94,7 +94,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
 
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
-        graphicsDevice.Clear(BackgroundColor);
+        graphicsDevice.Clear(Color.Transparent);
         spriteBatch.Begin();
 
         foreach (var currentChild in Children)
