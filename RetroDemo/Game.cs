@@ -12,6 +12,8 @@ namespace RetroDemo
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch? _spriteBatch;
         private SpriteFont? _font;
+        private RetroSpriteContainer? _testContainer;
+
         private RetroSpriteSmartButton? _testButton;
         private RetroSpriteSmartButton? _exitButton;
 
@@ -59,10 +61,15 @@ namespace RetroDemo
                 _font = null;
             }
 
+            _testContainer = new RetroSpriteContainer(
+                "TestContainer",
+                new Point(800, 450),
+                new Point(400, 400));
+
             _testButton = new RetroSpriteSmartButton(
                 "TestButton",
                 "Toggle Button",
-                new Point(200, 200),
+                new Point(100, 50),
                 new Point(200, 50),
                 true,
                 foregroundColor: Color.White,
@@ -89,6 +96,8 @@ namespace RetroDemo
                 font: _font);
             _testButton.Clicked += TestButton_Clicked;
             _testButton.Clicking += TestButton_Clicking;
+
+            _testContainer.Children.Add(_testButton);
 
             _exitButton = new RetroSpriteSmartButton(
                 "ExitButton",
@@ -170,9 +179,13 @@ namespace RetroDemo
 
             var currentMouseState = Mouse.GetState();
 
-            _testButton?.Update(
+            _testContainer?.Update(
                 currentMouseState,
                 _previousMouseState);
+
+            ////_testButton?.Update(
+            ////    currentMouseState,
+            ////    _previousMouseState);
 
             _exitButton?.Update(
                 currentMouseState,
@@ -219,12 +232,14 @@ namespace RetroDemo
                     GraphicsDevice.Viewport.Width,
                     GraphicsDevice.Viewport.Height));
 
-            _testButton?.Draw(_spriteBatch!);
+            //_testButton?.Draw(_spriteBatch!);
+            _testContainer?.Draw(_spriteBatch!);
+
             _exitButton?.Draw(_spriteBatch!);
 
             _parallaxScroller?.Draw(_spriteBatch!);
 
-            _spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
+            //_spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
 
             _spriteBatch?.End();
         }

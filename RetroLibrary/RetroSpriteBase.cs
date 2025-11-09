@@ -98,6 +98,29 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             MouseState mouseState,
             MouseState previousMouseState)
     {
+        OnUpdate(mouseState, previousMouseState);
+    }
+
+    public virtual void Dispose()
+    {
+        GC.SuppressFinalize(this);
+    }
+
+    public void UpdateWatchedProperties()
+    {
+        SetWatchedProperties(_watchedProperties);
+    }
+
+    public virtual void SetWatchedProperties(List<string> propertyNames)
+    {
+        _watchedProperties.Add(nameof(Size));
+        _watchedProperties.Add(nameof(IsPressed));
+    }
+
+    protected virtual void OnUpdate(
+        MouseState mouseState,
+        MouseState previousMouseState)
+    {
         var bounds = new Rectangle(Position, Size);
         IsHovered = bounds.Contains(mouseState.Position);
         if (IsHovered)
@@ -129,22 +152,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             IsPressed = false;
             OnReleased();
         }
-    }
-
-    public virtual void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
-
-    public void UpdateWatchedProperties()
-    {
-        SetWatchedProperties(_watchedProperties);
-    }
-
-    public virtual void SetWatchedProperties(List<string> propertyNames)
-    {
-        _watchedProperties.Add(nameof(Size));
-        _watchedProperties.Add(nameof(IsPressed));
     }
 
     protected virtual void OnRedraw(
