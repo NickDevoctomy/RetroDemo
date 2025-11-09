@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RetroLibrary;
-using System;
-using System.Collections.Generic;
 
 namespace RetroDemo
 {
@@ -15,8 +13,8 @@ namespace RetroDemo
 
         private RetroSpriteContainer? _testContainer;
         private RetroSpriteSmartButton? _testButton;
+        private RetroSpriteLabel _testProgressBarLabel;
         private RetroSpriteProgressBar? _testProgressBar;
-
 
         private RetroSpriteSmartButton? _exitButton;
 
@@ -125,6 +123,14 @@ namespace RetroDemo
             _testButton.Clicked += TestButton_Clicked;
             _testButton.Clicking += TestButton_Clicking;
 
+            _testProgressBarLabel = new RetroSpriteLabel(
+                "TestProgressBarLabel",
+                "Progress Bar:",
+                new Point(100, 120),
+                new Point(200, 32),
+                foregroundColor: Color.Black,
+                font: _font);
+
             _testProgressBar = new RetroSpriteProgressBar(
                 "TestProgressBar",
                 0.5f,
@@ -142,6 +148,7 @@ namespace RetroDemo
                 borderTint: Color.Red);
 
             _testContainer.Children.Add(_testButton);
+            _testContainer.Children.Add(_testProgressBarLabel);
             _testContainer.Children.Add(_testProgressBar);
 
             _exitButton = new RetroSpriteSmartButton(
@@ -229,10 +236,6 @@ namespace RetroDemo
                 currentMouseState,
                 _previousMouseState);
 
-            ////_testButton?.Update(
-            ////    currentMouseState,
-            ////    _previousMouseState);
-
             _exitButton?.Update(
                 currentMouseState,
                 _previousMouseState);
@@ -278,7 +281,6 @@ namespace RetroDemo
                     GraphicsDevice.Viewport.Width,
                     GraphicsDevice.Viewport.Height));
 
-            //_testButton?.Draw(_spriteBatch!);
             _testContainer?.Draw(_spriteBatch!);
 
             _exitButton?.Draw(_spriteBatch!);

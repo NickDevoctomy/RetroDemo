@@ -1,8 +1,8 @@
-﻿## RetroDemo
+﻿## RetroDemo 🎮
 
 This is a rough little project containing some proof of concept code for creating a retro 8bit style UI using MonoGame.
 
-### Controls
+### Controls 🕹️
 
 #### Core Controls
 
@@ -14,7 +14,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Property change tracking with automatic redraw
   - Configurable position, size, background/foreground colors, and fonts
 
-* **RetroSpriteSmartButton**
+* **RetroSpriteSmartButton** 🔘
   - Enhanced button control extending RetroSpriteBase
   - Utilizes 9-slice scaling for flexible sizing
   - Supports hover and click states with visual feedback
@@ -23,7 +23,22 @@ This is a rough little project containing some proof of concept code for creatin
   - Text rendering with configurable fonts
   - Events for click handling
 
-#### Container Controls
+* **RetroSpriteLabel** 🏷️
+  - Simple text display control with center alignment (will add more alignment options soon)
+  - Configurable text content via `Text` property
+  - Supports custom fonts, colors, and positioning
+  - Lightweight control for static text display
+  - Perfect for titles, captions, and informational text
+
+* **RetroSpriteProgressBar** 📊
+  - Animated progress indicator with gradient fill
+  - Configurable `Value` property (0.0 to 1.0 range)
+  - Customizable gradient colors via `FromColor` and `ToColor`
+  - Optional 9-slice border support with `BorderTexture` and `BorderTint`
+  - Smooth linear gradient rendering with retro quantization
+  - Ideal for loading screens, health bars, and progress indicators
+
+#### Container Controls 📦
 
 * **RetroSpriteContainer**
   - Container control for grouping multiple child sprites
@@ -39,7 +54,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Border and label tinting options
   - Adjustable label offset and border margins
 
-#### Texture Generation
+#### Texture Generation 🎨
 
 * **NineSliceTexture2D**
   - 9-slice texture scaling system for UI elements
@@ -48,7 +63,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Enables scalable textures without distortion
   - Cached texture generation for performance
 
-* **Linear Retro Gradient**
+* **Linear Retro Gradient** 🌈
   - 2 colour linear gradient support with retro styling
   - Configurable via `LinearRetroGradientOptions`:
     - `FromPoint` and `ToPoint` for direction control
@@ -57,7 +72,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Supports any angle and direction
   - Cached rendering for performance optimization
 
-* **Radial Retro Gradient**  
+* **Radial Retro Gradient** ⭕  
   - 2 colour radial gradient support with retro styling
   - Configurable via `RadialRetroGradientOptions`:
     - `CentrePoint` for gradient center positioning
@@ -66,7 +81,7 @@ This is a rough little project containing some proof of concept code for creatin
     - `GradientStops` for authentic 8-bit quantized appearance (default: 8)
   - Cached rendering for performance optimization
 
-#### Scrolling Effects
+#### Scrolling Effects 🌊
 
 * **MiniParallaxScroller**
   - Multi-layer parallax scrolling system
@@ -80,14 +95,14 @@ This is a rough little project containing some proof of concept code for creatin
   - Optimized for horizontal scrolling effects
   - Automatic texture wrapping and seamless scrolling
 
-#### Utility Extensions
+#### Utility Extensions 🛠️
 
 * **ColorExtensions**
   - Helper methods for color manipulation and gradient generation
   - Supports retro-style color quantization
   - Gradient color calculation utilities
 
-### Key Features
+### Key Features ✨
 
 - **Performance Optimized**: Buffered rendering with automatic cache invalidation
 - **Mouse Interaction**: Full mouse support with hover and click states  
@@ -96,6 +111,6 @@ This is a rough little project containing some proof of concept code for creatin
 - **Flexible Texturing**: 9-slice scaling and gradient generation
 - **Container System**: Hierarchical UI layout with automatic input handling
 
-### Screenshots
+### Screenshots 📸
 
 ![Screenshot](https://github.com/NickDevoctomy/RetroDemo/blob/main/Resources/Screenshots/1.png?raw=true)
