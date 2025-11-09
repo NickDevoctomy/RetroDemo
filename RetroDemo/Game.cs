@@ -12,9 +12,12 @@ namespace RetroDemo
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch? _spriteBatch;
         private SpriteFont? _font;
-        private RetroSpriteContainer? _testContainer;
 
+        private RetroSpriteContainer? _testContainer;
         private RetroSpriteSmartButton? _testButton;
+        private RetroSpriteProgressBar? _testProgressBar;
+
+
         private RetroSpriteSmartButton? _exitButton;
 
         private MiniParallaxScroller? _parallaxScroller;
@@ -24,6 +27,7 @@ namespace RetroDemo
         private double _frameCounter;
         private double _elapsedTime;
         private int _fps;
+        private Random _rnd = new (Environment.TickCount);
 
         public Game()
         {
@@ -121,7 +125,24 @@ namespace RetroDemo
             _testButton.Clicked += TestButton_Clicked;
             _testButton.Clicking += TestButton_Clicking;
 
+            _testProgressBar = new RetroSpriteProgressBar(
+                "TestProgressBar",
+                0.5f,
+                new Point(100, 150),
+                new Point(200, 32),
+                borderTexture: new NineSliceTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/border.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                borderTint: Color.Red);
+
             _testContainer.Children.Add(_testButton);
+            _testContainer.Children.Add(_testProgressBar);
 
             _exitButton = new RetroSpriteSmartButton(
                 "ExitButton",
@@ -188,6 +209,7 @@ namespace RetroDemo
             if (sender is RetroSpriteSmartButton button)
             {
                 button.Text = "Clicked!";
+                _testProgressBar.Value = (float)_rnd.NextDouble();
             }
         }
 
@@ -263,7 +285,7 @@ namespace RetroDemo
 
             _parallaxScroller?.Draw(_spriteBatch!);
 
-            //_spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
+            _spriteBatch?.DrawString(_font, $"FPS: {_fps}", new Vector2(10, 10), Color.White);
 
             _spriteBatch?.End();
         }

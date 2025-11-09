@@ -129,12 +129,11 @@ public class LinearRetroGradientTexture2D : IDisposable
             DepthFormat.None,
             0,
             RenderTargetUsage.PlatformContents);
-        var spriteBatch = new SpriteBatch(graphicsDevice);
-
+        using var spriteBatch = new SpriteBatch(graphicsDevice);
+        var originalRenderTargets = graphicsDevice.GetRenderTargets();
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-
-        spriteBatch.Begin();
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
         var baseGradient = CreateGradient(
             graphicsDevice,
@@ -149,8 +148,7 @@ public class LinearRetroGradientTexture2D : IDisposable
             Microsoft.Xna.Framework.Color.White);
 
         spriteBatch.End();
-        graphicsDevice.SetRenderTarget(null);
-        spriteBatch.Dispose();
+        graphicsDevice.SetRenderTargets(originalRenderTargets);
 
         _cachedWidth = width;
         _cachedHeight = height;
