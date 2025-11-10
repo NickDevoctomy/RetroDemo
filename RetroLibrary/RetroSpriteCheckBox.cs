@@ -89,10 +89,16 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
 
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
+            var textRect = new Rectangle(
+                location.X + 30,
+                location.Y,
+                Size.X - 30,
+                Size.Y);
+
             Vector2 textSize = Font.MeasureString(Text);
             Vector2 textPosition = new Vector2(
-                location.X + 30,
-                location.Y + ((Size.Y - textSize.Y) / 2));
+                textRect.X,
+                textRect.Y + ((textRect.Height - textSize.Y) / 2));
 
             spriteBatch.DrawString(
                 Font,

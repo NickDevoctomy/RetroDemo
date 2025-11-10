@@ -15,7 +15,7 @@ namespace RetroDemo
         private RetroSpriteSmartButton? _testButton;
         private RetroSpriteLabel? _testProgressBarLabel;
         private RetroSpriteProgressBar? _testProgressBar;
-        private RetroSpriteCheckBox _testCheckBox;
+        private RetroSpriteCheckBox? _testCheckBox;
 
         private RetroSpriteSmartButton? _exitButton;
 
