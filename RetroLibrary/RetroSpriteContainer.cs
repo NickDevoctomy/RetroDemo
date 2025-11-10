@@ -10,12 +10,16 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     [ObservableProperty]
     private List<RetroSpriteBase> children = new ();
 
+    [ObservableProperty]
+    private Rectangle innerMargins;
+
     public RetroSpriteContainer(
         string name,
         Point position,
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
+        Rectangle? innerMargins = null,
         SpriteFont? font = null,
         bool buffered = true,
         bool updateWatchedProperties = true)
@@ -29,6 +33,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             buffered,
             updateWatchedProperties)
     {
+        InnerMargins = innerMargins ?? Rectangle.Empty;
     }
 
     protected override void OnRedraw(
@@ -36,9 +41,18 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Point location)
     {
         var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
+
+        var innerLocation = new Point(
+            location.X + InnerMargins.X,
+            location.Y + InnerMargins.Y);
+
+        var innerSize = new Point(
+            Size.X - InnerMargins.X - InnerMargins.Width,
+            Size.Y - InnerMargins.Y - InnerMargins.Height);
+
         spriteBatch.Draw(
             childrenTexture,
-            new Rectangle(location, Size),
+            new Rectangle(innerLocation, innerSize),
             Color.White);
     }
 
@@ -53,8 +67,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         foreach (var currentChild in Children)
         {
             var offsetMouseState = new MouseState(
-                mouseState.X - Position.X,
-                mouseState.Y - Position.Y,
+                mouseState.X - (Position.X + InnerMargins.X),
+                mouseState.Y - (Position.Y + InnerMargins.Y),
                 mouseState.ScrollWheelValue,
                 mouseState.LeftButton,
                 mouseState.MiddleButton,
@@ -63,8 +77,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
                 mouseState.XButton2);
 
             var offsetPreviousMouseState = new MouseState(
-                previousMouseState.X - Position.X,
-                previousMouseState.Y - Position.Y,
+                previousMouseState.X - (Position.X + InnerMargins.X),
+                previousMouseState.Y - (Position.Y + InnerMargins.Y),
                 previousMouseState.ScrollWheelValue,
                 previousMouseState.LeftButton,
                 previousMouseState.MiddleButton,
@@ -82,8 +96,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     {
         var renderTarget = new RenderTarget2D(
             graphicsDevice,
-            Size.X,
-            Size.Y,
+            Size.X - (InnerMargins.X + InnerMargins.Width),
+            Size.Y - (InnerMargins.Y + InnerMargins.Height),
             false,
             SurfaceFormat.Color,
             DepthFormat.None,

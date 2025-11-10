@@ -27,9 +27,6 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
     [ObservableProperty]
     private Point labelOffset;
 
-    [ObservableProperty]
-    private Rectangle innerMargins;
-
     public RetroSpriteGroupContainer(
         string name,
         string text,
@@ -53,6 +50,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             size,
             backgroundColor,
             foregroundColor,
+            innerMargins,
             font,
             buffered,
             updateWatchedProperties)
@@ -64,7 +62,6 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         BorderTint = borderTint;
         LabelTint = labelTint;
         LabelOffset = labelOffset ?? new Point(8, 0);
-        InnerMargins = innerMargins ?? new Rectangle(0, 0, 0, 0);
     }
 
     protected override void OnRedraw(
@@ -117,19 +114,8 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
                 ForegroundColor);
         }
 
-        var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
-
-        var innerLocation = new Point(
-            location.X + InnerMargins.X,
-            location.Y + InnerMargins.Y);
-
-        var innerSize = new Point(
-            Size.X - InnerMargins.X - InnerMargins.Width,
-            Size.Y - InnerMargins.Y - InnerMargins.Height);
-
-        spriteBatch.Draw(
-            childrenTexture,
-            new Rectangle(innerLocation, innerSize),
-            Color.White);
+        base.OnRedraw(
+            spriteBatch,
+            location);
     }
 }

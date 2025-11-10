@@ -13,8 +13,9 @@ namespace RetroDemo
 
         private RetroSpriteContainer? _testContainer;
         private RetroSpriteSmartButton? _testButton;
-        private RetroSpriteLabel _testProgressBarLabel;
+        private RetroSpriteLabel? _testProgressBarLabel;
         private RetroSpriteProgressBar? _testProgressBar;
+        private RetroSpriteCheckBox _testCheckBox;
 
         private RetroSpriteSmartButton? _exitButton;
 
@@ -87,6 +88,7 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     }),
+                innerMargins: new Rectangle(8, 32, 8, 8),
                 font: _font,
                 borderTint: new Color(Color.LightGray, 0.5f),
                 labelTint: Color.Red,
@@ -95,7 +97,7 @@ namespace RetroDemo
             _testButton = new RetroSpriteSmartButton(
                 "TestButton",
                 "Toggle Button",
-                new Point(100, 50),
+                new Point(0, 0),
                 new Point(200, 50),
                 true,
                 foregroundColor: Color.White,
@@ -126,7 +128,7 @@ namespace RetroDemo
             _testProgressBarLabel = new RetroSpriteLabel(
                 "TestProgressBarLabel",
                 "Progress Bar:",
-                new Point(100, 120),
+                new Point(0, 50),
                 new Point(200, 32),
                 foregroundColor: Color.Black,
                 font: _font);
@@ -134,7 +136,7 @@ namespace RetroDemo
             _testProgressBar = new RetroSpriteProgressBar(
                 "TestProgressBar",
                 0.5f,
-                new Point(100, 150),
+                new Point(0, 75),
                 new Point(200, 32),
                 borderTexture: new NineSliceTexture2D(
                     Texture2D.FromFile(GraphicsDevice, "Content/Textures/border.png"),
@@ -147,9 +149,28 @@ namespace RetroDemo
                     }),
                 borderTint: Color.Red);
 
+            _testCheckBox = new RetroSpriteCheckBox(
+                "TestCheckBox",
+                "Check Me!",
+                new Point(0, 120),
+                new Point(150, 32),
+                boxTexture: new NineSliceTexture2D(
+                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                isChecked: false,
+                foregroundColor: Color.Black,
+                font: _font);
+
             _testContainer.Children.Add(_testButton);
             _testContainer.Children.Add(_testProgressBarLabel);
             _testContainer.Children.Add(_testProgressBar);
+            _testContainer.Children.Add(_testCheckBox);
 
             _exitButton = new RetroSpriteSmartButton(
                 "ExitButton",
@@ -216,7 +237,7 @@ namespace RetroDemo
             if (sender is RetroSpriteSmartButton button)
             {
                 button.Text = "Clicked!";
-                _testProgressBar.Value = (float)_rnd.NextDouble();
+                _testProgressBar!.Value = (float)_rnd.NextDouble();
             }
         }
 
@@ -231,6 +252,7 @@ namespace RetroDemo
             _parallaxScroller?.Update();
 
             var currentMouseState = Mouse.GetState();
+            ////System.Diagnostics.Debug.WriteLine($"Mouse Position: {currentMouseState.Position}");
 
             _testContainer?.Update(
                 currentMouseState,
