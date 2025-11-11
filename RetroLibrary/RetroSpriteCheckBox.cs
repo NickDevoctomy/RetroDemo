@@ -95,8 +95,8 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
                 Size.X - 30,
                 Size.Y);
 
-            Vector2 textSize = Font.MeasureString(Text);
-            Vector2 textPosition = new Vector2(
+            var textSize = Font.MeasureString(Text);
+            var textPosition = new Vector2(
                 textRect.X,
                 textRect.Y + ((textRect.Height - textSize.Y) / 2));
 

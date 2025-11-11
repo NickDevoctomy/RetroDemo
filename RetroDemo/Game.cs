@@ -8,6 +8,7 @@ namespace RetroDemo
     public class Game : Microsoft.Xna.Framework.Game
     {
         private readonly GraphicsDeviceManager _graphics;
+        private readonly Texture2DResourceLoader _texture2DLoader = null!;
         private SpriteBatch? _spriteBatch;
         private SpriteFont? _font;
 
@@ -26,7 +27,7 @@ namespace RetroDemo
         private double _frameCounter;
         private double _elapsedTime;
         private int _fps;
-        private Random _rnd = new (Environment.TickCount);
+        private readonly Random _rnd = new (Environment.TickCount);
 
         public Game()
         {
@@ -36,6 +37,8 @@ namespace RetroDemo
             _graphics.PreferredBackBufferHeight = 600; // display.Height;
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
+
+            _texture2DLoader= new Texture2DResourceLoader(GraphicsDevice);
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -70,7 +73,7 @@ namespace RetroDemo
                 new Point(25, 35),
                 new Point(400, 300),
                 borderTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    _texture2DLoader.FromFile("Content/Textures/surface.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -80,7 +83,7 @@ namespace RetroDemo
                     }),
                 borderOuterTopMargin: 8,
                 groupLabelTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    _texture2DLoader.FromFile("Content/Textures/surface.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -104,7 +107,7 @@ namespace RetroDemo
                 upTint: Color.LightGray,
                 downTint: Color.Red,
                 upTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
+                    _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -113,7 +116,7 @@ namespace RetroDemo
                         RightMargin = 4
                     }),
                 downTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
+                    _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 6,
@@ -139,7 +142,7 @@ namespace RetroDemo
                 new Point(0, 75),
                 new Point(200, 32),
                 borderTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/border.png"),
+                    _texture2DLoader.FromFile("Content/Textures/border.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -155,7 +158,7 @@ namespace RetroDemo
                 new Point(0, 120),
                 new Point(150, 32),
                 boxTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/surface.png"),
+                    _texture2DLoader.FromFile("Content/Textures/surface.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -182,7 +185,7 @@ namespace RetroDemo
                 upTint: Color.Green,
                 downTint: Color.Green,
                 upTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttonup.png"),
+                    _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 4,
@@ -191,7 +194,7 @@ namespace RetroDemo
                         RightMargin = 4
                     }),
                 downTexture: new NineSliceTexture2D(
-                    Texture2D.FromFile(GraphicsDevice, "Content/Textures/greybuttondown.png"),
+                    _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
                     new NineSliceTextureOptions
                     {
                         TopMargin = 6,
@@ -204,13 +207,15 @@ namespace RetroDemo
 
             _radialGradientTexture = new RadialRetroGradientTexture2D();
 
-            _parallaxScroller = new MiniParallaxScroller(new MiniParallaxScrollerOptions
+            _parallaxScroller = new MiniParallaxScroller(
+                _texture2DLoader,
+                new MiniParallaxScrollerOptions
             {
                 Layers = new List<MiniParallaxScrollerLayer>
                 {
-                    new MiniParallaxScrollerLayer("Content/Textures/grass.png", 6.0f, 0),
-                    new MiniParallaxScrollerLayer("Content/Textures/road.png", 4.0f, 30),
-                    new MiniParallaxScrollerLayer("Content/Textures/sandyrocks.png", 2.0f, 60),
+                    new ("Content/Textures/grass.png", 6.0f, 0),
+                    new ("Content/Textures/road.png", 4.0f, 30),
+                    new ("Content/Textures/sandyrocks.png", 2.0f, 60),
                 },
                 ViewportWidth = GraphicsDevice.Viewport.Width,
                 ViewportHeight = GraphicsDevice.Viewport.Height

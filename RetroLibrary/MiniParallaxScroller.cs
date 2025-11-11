@@ -5,9 +5,11 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary;
 
-public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDisposable
+public class MiniParallaxScroller(
+    Texture2DResourceLoader textureLoader,
+    MiniParallaxScrollerOptions options) : IDisposable
 {
-    private readonly Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState>();
+    private readonly Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new ();
     private bool _layerTexturesCached = false;
     private bool disposedValue;
 
@@ -46,42 +48,22 @@ public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDispos
                 continue;
             }
 
-            if (state.Texture == null)
-            {
-                state.Texture = Texture2D.FromFile(
-                    spriteBatch.GraphicsDevice,
-                    layer.TexturePath);
-
-                using var image = Image.Load<Rgba32>(layer.TexturePath);
-                image.Mutate(ctx =>
-                {
-                    ctx.Flip(FlipMode.Horizontal);
-                });
-                using var ms = new MemoryStream();
-                image.SaveAsPng(ms);
-                ms.Seek(0, SeekOrigin.Begin);
-                state.TextureFlipped = Texture2D.FromStream(spriteBatch.GraphicsDevice, ms);
-            }
-
-            var fullSize = state.Texture.Bounds.Size;
+            var fullSize = state.Texture!.Bounds.Size;
             var offsetPixelsX = state.Offset * fullSize.X;
 
             var copiesRequired = (int)Math.Ceiling(((decimal)rect.Width + fullSize.X) / fullSize.X) + 1;
 
             // We really need to cache the result of this, based on copiesRequired and FirstFlipped state
             var flip = state.FirstFlipped;
-            for (var x = 0; x < copiesRequired - 1; x++)
-            {
-                var image = flip ? state.TextureFlipped : state.Texture;
-                var curOffsetX = offsetPixelsX + (x * fullSize.X);
-
-                spriteBatch.Draw(
-                    image,
-                    new Microsoft.Xna.Framework.Rectangle((int)curOffsetX, startYOffset.GetValueOrDefault() - layer.YOffset, fullSize.X, fullSize.Y),
-                    Microsoft.Xna.Framework.Color.White);
-
-                flip = !flip;
-            }
+            AlternateFlipTile(
+                spriteBatch,
+                startYOffset,
+                layer,
+                state,
+                fullSize,
+                offsetPixelsX,
+                copiesRequired,
+                flip);
         }
     }
 
@@ -118,6 +100,30 @@ public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDispos
         }
     }
 
+    private static void AlternateFlipTile(
+        SpriteBatch spriteBatch,
+        int? startYOffset,
+        MiniParallaxScrollerLayer layer,
+        MiniParallaxScrollerLayerState state,
+        Microsoft.Xna.Framework.Point fullSize,
+        float offsetPixelsX,
+        int copiesRequired,
+        bool flip)
+    {
+        for (var x = 0; x < copiesRequired - 1; x++)
+        {
+            var image = flip ? state.TextureFlipped : state.Texture;
+            var curOffsetX = offsetPixelsX + (x * fullSize.X);
+
+            spriteBatch.Draw(
+                image,
+                new Microsoft.Xna.Framework.Rectangle((int)curOffsetX, startYOffset.GetValueOrDefault() - layer.YOffset, fullSize.X, fullSize.Y),
+                Microsoft.Xna.Framework.Color.White);
+
+            flip = !flip;
+        }
+    }
+
     private void CacheLayerTextures(SpriteBatch spriteBatch)
     {
         foreach (var layer in options.Layers)
@@ -129,9 +135,7 @@ public class MiniParallaxScroller(MiniParallaxScrollerOptions options) : IDispos
 
             if (state.Texture == null)
             {
-                state.Texture = Texture2D.FromFile(
-                    spriteBatch.GraphicsDevice,
-                    layer.TexturePath);
+                state.Texture = textureLoader.FromFile(layer.TexturePath);
 
                 using var image = Image.Load<Rgba32>(layer.TexturePath);
                 image.Mutate(ctx =>

@@ -8,7 +8,7 @@ namespace RetroLibrary;
 
 public partial class RetroSpriteBase : ObservableObject, IDisposable
 {
-    private readonly List<string> _watchedProperties = new List<string>();
+    private readonly List<string> _watchedProperties = new ();
 
     [ObservableProperty]
     private string name;

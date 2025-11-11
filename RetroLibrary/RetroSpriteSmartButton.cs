@@ -113,8 +113,8 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
             var yOffset = isPressed ? 2 : 0;
-            Vector2 textSize = Font.MeasureString(Text);
-            Vector2 textPosition = new Vector2(
+            var textSize = Font.MeasureString(Text);
+            var textPosition = new Vector2(
                 location.X + ((Size.X - textSize.X) / 2),
                 location.Y + yOffset + ((Size.Y - textSize.Y) / 2));
 
