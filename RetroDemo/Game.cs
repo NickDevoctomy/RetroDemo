@@ -139,7 +139,7 @@ namespace RetroDemo
             _testProgressBar = new RetroSpriteProgressBar(
                 "TestProgressBar",
                 0.5f,
-                new Point(0, 75),
+                new Point(0, 83),
                 new Point(200, 32),
                 borderTexture: new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/border.png"),

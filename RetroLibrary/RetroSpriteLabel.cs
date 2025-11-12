@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RetroLibrary.Enums;
+using RetroLibrary.Extensions;
 
 namespace RetroLibrary;
 
@@ -9,6 +11,12 @@ public partial class RetroSpriteLabel : RetroSpriteBase
     [ObservableProperty]
     private string text = string.Empty;
 
+    [ObservableProperty]
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle;
+
+    [ObservableProperty]
+    private VerticalAlignment verticalAlignment = Enums.VerticalAlignment.Middle;
+
     public RetroSpriteLabel(
         string name,
         string text,
@@ -16,6 +24,8 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
+        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle,
+        VerticalAlignment veritcalAlignment = Enums.VerticalAlignment.Middle,
         SpriteFont? font = null,
         bool buffered = true,
         bool updateWatchedProperties = true)
@@ -30,6 +40,16 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             updateWatchedProperties)
     {
         Text = text;
+        HorizontalAlignment = horizontalAlignment;
+        VerticalAlignment = veritcalAlignment;
+    }
+
+    public override void SetWatchedProperties(List<string> propertyNames)
+    {
+        base.SetWatchedProperties(propertyNames);
+        propertyNames.Add(nameof(Text));
+        propertyNames.Add(nameof(HorizontalAlignment));
+        propertyNames.Add(nameof(VerticalAlignment));
     }
 
     protected override void OnRedraw(
@@ -40,9 +60,11 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
             Vector2 textSize = Font.MeasureString(Text);
-            Vector2 textPosition = new Vector2(
-                location.X + ((Size.X - textSize.X) / 2),
-                location.Y + ((Size.Y - textSize.Y) / 2));
+
+            Vector2 textPosition = textSize.Align(
+                new Rectangle(location, Size),
+                HorizontalAlignment,
+                (VerticalAlignment)VerticalAlignment);
 
             spriteBatch.DrawString(
                 Font,
