@@ -38,7 +38,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private bool isHovered;
 
     private bool _needsRedraw = true;
-    private Texture2D? _offscreenBuffer; // !!! Something is wrong with this buffer
+    private Texture2D? _offscreenBuffer;
 
     public RetroSpriteBase(
         string name,
@@ -84,7 +84,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
         }
 
-        ////System.Diagnostics.Debug.WriteLine($"Redrawing button '{Name}' from buffer.");
         if (_offscreenBuffer != null)
         {
             spriteBatch.Draw(
