@@ -7,8 +7,9 @@ namespace RetroDemo;
 
 public class Game : RetroGameBase
 {
-    private Texture2DResourceLoader? _texture2DLoader;
+    private readonly Random _rnd = new(Environment.TickCount);
 
+    private Texture2DResourceLoader? _texture2DLoader;
     private SpriteFont? _font;
     private RetroSpriteContainer? _testContainer;
     private RetroSpriteNineSliceButton? _testButton;
@@ -16,17 +17,12 @@ public class Game : RetroGameBase
     private RetroSpriteProgressBar? _testProgressBar;
     private RetroSpriteCheckBox? _testCheckBox;
     private RetroSpriteSliderBar? _testSliderBar;
-
     private RetroSpriteTabbedContainer? _tabbedContainer;
-
     private RetroSpriteNineSliceButton? _orangeButton;
     private RetroSpriteNineSliceButton? _exitButton;
-
     private MiniParallaxScroller? _parallaxScroller;
     private RadialRetroGradientTexture2D? _radialGradientTexture;
     private MouseState _previousMouseState;
-
-    private readonly Random _rnd = new (Environment.TickCount);
 
     public Game(
         int width,
