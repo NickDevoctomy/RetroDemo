@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RetroLibrary;
@@ -13,12 +14,14 @@ namespace RetroDemo
         private SpriteFont? _font;
 
         private RetroSpriteContainer? _testContainer;
-        private RetroSpriteSmartButton? _testButton;
+        private RetroSpriteNineSliceButton? _testButton;
         private RetroSpriteLabel? _testProgressBarLabel;
         private RetroSpriteProgressBar? _testProgressBar;
         private RetroSpriteCheckBox? _testCheckBox;
 
-        private RetroSpriteSmartButton? _exitButton;
+        private RetroSpriteTabbedContainer _tabbedContainer;
+
+        private RetroSpriteNineSliceButton? _exitButton;
 
         private MiniParallaxScroller? _parallaxScroller;
         private RadialRetroGradientTexture2D? _radialGradientTexture;
@@ -97,7 +100,7 @@ namespace RetroDemo
                 labelTint: Color.Red,
                 foregroundColor: Color.White);
 
-            _testButton = new RetroSpriteSmartButton(
+            _testButton = new RetroSpriteNineSliceButton(
                 "TestButton",
                 "Toggle Button",
                 new Point(0, 0),
@@ -170,12 +173,38 @@ namespace RetroDemo
                 foregroundColor: Color.Black,
                 font: _font);
 
+            _tabbedContainer = new RetroSpriteTabbedContainer(
+                "TabbedContainer",
+                new Point(25, 35),
+                new Point(400, 300),
+                foregroundColor: Color.White,
+                font: _font);
+            _tabbedContainer.TabUpTexture = new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/tab.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    });
+            _tabbedContainer.TabDownTexture = new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/tab.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    });
+            _tabbedContainer.TabPages.Add(new TabPage("Tab1", []));
+
             _testContainer.Children.Add(_testButton);
             _testContainer.Children.Add(_testProgressBarLabel);
             _testContainer.Children.Add(_testProgressBar);
             _testContainer.Children.Add(_testCheckBox);
 
-            _exitButton = new RetroSpriteSmartButton(
+            _exitButton = new RetroSpriteNineSliceButton(
                 "ExitButton",
                 "Exit",
                 new Point(_graphics.PreferredBackBufferWidth - 208, 8),
@@ -231,7 +260,7 @@ namespace RetroDemo
 
         private void TestButton_Clicking(object? sender, EventArgs e)
         {
-            if (sender is RetroSpriteSmartButton button)
+            if (sender is RetroSpriteNineSliceButton button)
             {
                 button.Text = "Clicking";
             }
@@ -239,7 +268,7 @@ namespace RetroDemo
 
         private void TestButton_Clicked(object? sender, EventArgs e)
         {
-            if (sender is RetroSpriteSmartButton button)
+            if (sender is RetroSpriteNineSliceButton button)
             {
                 button.Text = "Clicked!";
                 _testProgressBar!.Value = (float)_rnd.NextDouble();
@@ -260,6 +289,10 @@ namespace RetroDemo
             ////System.Diagnostics.Debug.WriteLine($"Mouse Position: {currentMouseState.Position}");
 
             _testContainer?.Update(
+                currentMouseState,
+                _previousMouseState);
+
+            _tabbedContainer.Update(
                 currentMouseState,
                 _previousMouseState);
 
@@ -286,8 +319,6 @@ namespace RetroDemo
                 _elapsedTime = 0;
             }
 
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
-
             _spriteBatch?.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             _radialGradientTexture?.Draw(
@@ -308,7 +339,9 @@ namespace RetroDemo
                     GraphicsDevice.Viewport.Width,
                     GraphicsDevice.Viewport.Height));
 
-            _testContainer?.Draw(_spriteBatch!);
+            //_testContainer?.Draw(_spriteBatch!);
+
+            _tabbedContainer?.Draw(_spriteBatch!);
 
             _exitButton?.Draw(_spriteBatch!);
 

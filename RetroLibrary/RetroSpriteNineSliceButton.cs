@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RetroLibrary;
 
-public partial class RetroSpriteSmartButton : RetroSpriteBase
+public partial class RetroSpriteNineSliceButton : RetroSpriteBase
 {
     [ObservableProperty]
     private string text = string.Empty;
@@ -27,7 +27,7 @@ public partial class RetroSpriteSmartButton : RetroSpriteBase
     [ObservableProperty]
     private bool isToggled;
 
-    public RetroSpriteSmartButton(
+    public RetroSpriteNineSliceButton(
         string name,
         string text,
         Point position,
