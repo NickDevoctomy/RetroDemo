@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Enums;
 
 namespace RetroLibrary;
 
@@ -49,7 +50,39 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
     [ObservableProperty]
     private bool isThumbHovered;
 
+    [ObservableProperty]
+    private ValueFrequency valueFrequency = ValueFrequency.Integer;
+
     private bool _isDragging;
+
+    public RetroSpriteSliderBar(
+        string name,
+        Point position,
+        Point size,
+        Color? backgroundColor = null,
+        Color? foregroundColor = null,
+        NineSliceTexture2D? sliderBarTexture = null,
+        Color? sliderBarTint = null,
+        SpriteFont? font = null,
+        bool buffered = true,
+        bool updateWatchedProperties = true)
+        : base(
+            name,
+            position,
+            size,
+            backgroundColor,
+            foregroundColor,
+            font,
+            buffered,
+            updateWatchedProperties)
+    {
+        SliderBarTexture = sliderBarTexture;
+        SliderBarTint = sliderBarTint ?? Color.White;
+        if (valueFrequency == ValueFrequency.Integer)
+        {
+            Value = (int)Value;
+        }
+    }
 
     public RetroSpriteSliderBar(
         string name,
@@ -62,6 +95,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         NineSliceTexture2D? buttonTexture = null,
         Color? buttonTint = null,
         Color? buttonHoverTint = null,
+        ValueFrequency valueFrequency = ValueFrequency.Integer,
         SpriteFont? font = null,
         bool buffered = true,
         bool updateWatchedProperties = true)
@@ -80,6 +114,11 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         ButtonTexture = buttonTexture;
         ButtonTint = buttonTint ?? Color.White;
         ButtonHoverTint = buttonHoverTint ?? ButtonTint;
+        ValueFrequency = valueFrequency;
+        if (this.valueFrequency == ValueFrequency.Integer)
+        {
+            Value = (int)Value;
+        }
     }
 
     public override void Dispose()
@@ -108,6 +147,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         propertyNames.Add(nameof(ButtonWidth));
         propertyNames.Add(nameof(ButtonHeight));
         propertyNames.Add(nameof(IsThumbHovered));
+        propertyNames.Add(nameof(ValueFrequency));
     }
 
     protected override void OnRedraw(SpriteBatch spriteBatch, Point location)
@@ -174,7 +214,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
 
         if (_isDragging && mouseHeld)
         {
-            System.Diagnostics.Debug.WriteLine($"Dragging - LocalMouseX: {localMouse.X}");
             UpdateValueFromMouseX(localMouse.X);
         }
 
@@ -182,6 +221,51 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         {
             _isDragging = false;
         }
+    }
+
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (string.IsNullOrEmpty(e.PropertyName))
+        {
+            return;
+        }
+
+        if (e.PropertyName == nameof(ValueFrequency))
+        {
+            if (ValueFrequency == ValueFrequency.Integer)
+            {
+                Value = ClampAndRound(Value);
+            }
+        }
+        else if (e.PropertyName == nameof(Value))
+        {
+            if (ValueFrequency == ValueFrequency.Integer)
+            {
+                Value = ClampAndRound(Value);
+            }
+            else
+            {
+                Value = MathHelper.Clamp(Value, Minimum, Maximum);
+            }
+        }
+        else if (e.PropertyName == nameof(Minimum) || e.PropertyName == nameof(Maximum))
+        {
+            if (ValueFrequency == ValueFrequency.Integer)
+            {
+                Value = ClampAndRound(Value);
+            }
+            else
+            {
+                Value = MathHelper.Clamp(Value, Minimum, Maximum);
+            }
+        }
+    }
+
+    private float ClampAndRound(float v)
+    {
+        var clamped = MathHelper.Clamp(v, Minimum, Maximum);
+        return (float)Math.Round(clamped);
     }
 
     private Rectangle GetThumbRectangle(Point location)
@@ -216,6 +300,11 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         float t = travel <= 0 ? 0f : (clampedCenter - minCenterX) / travel;
 
         float newValue = Minimum + (t * (Maximum - Minimum));
+        if (ValueFrequency == ValueFrequency.Integer)
+        {
+            newValue = (float)Math.Round(newValue);
+        }
+
         Value = newValue;
     }
 }
