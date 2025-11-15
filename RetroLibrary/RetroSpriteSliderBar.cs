@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace RetroLibrary;
 
@@ -21,6 +22,35 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
     [ObservableProperty]
     private float value = 50;
 
+    [ObservableProperty]
+    private float buttonMarginLeft = 8;
+
+    [ObservableProperty]
+    private float buttonMarginRight = 8;
+
+    [ObservableProperty]
+    private NineSliceTexture2D? buttonTexture;
+
+    [ObservableProperty]
+    private Color buttonTint = Color.White;
+
+    [ObservableProperty]
+    private Color buttonHoverTint = Color.White;
+
+    [ObservableProperty]
+    private int barHeight = 8;
+
+    [ObservableProperty]
+    private int buttonWidth = 16;
+
+    [ObservableProperty]
+    private int buttonHeight = 0;
+
+    [ObservableProperty]
+    private bool isThumbHovered;
+
+    private bool _isDragging;
+
     public RetroSpriteSliderBar(
         string name,
         Point position,
@@ -29,6 +59,9 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         Color? foregroundColor = null,
         NineSliceTexture2D? sliderBarTexture = null,
         Color? sliderBarTint = null,
+        NineSliceTexture2D? buttonTexture = null,
+        Color? buttonTint = null,
+        Color? buttonHoverTint = null,
         SpriteFont? font = null,
         bool buffered = true,
         bool updateWatchedProperties = true)
@@ -44,6 +77,18 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
     {
         SliderBarTexture = sliderBarTexture;
         SliderBarTint = sliderBarTint ?? Color.White;
+        ButtonTexture = buttonTexture;
+        ButtonTint = buttonTint ?? Color.White;
+        ButtonHoverTint = buttonHoverTint ?? ButtonTint;
+    }
+
+    public override void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        SliderBarTexture?.Dispose();
+        SliderBarTexture = null;
+        ButtonTexture?.Dispose();
+        ButtonTexture = null;
     }
 
     public override void SetWatchedProperties(List<string> propertyNames)
@@ -51,16 +96,29 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         base.SetWatchedProperties(propertyNames);
         propertyNames.Add(nameof(SliderBarTexture));
         propertyNames.Add(nameof(SliderBarTint));
+        propertyNames.Add(nameof(Minimum));
+        propertyNames.Add(nameof(Maximum));
+        propertyNames.Add(nameof(Value));
+        propertyNames.Add(nameof(ButtonMarginLeft));
+        propertyNames.Add(nameof(ButtonMarginRight));
+        propertyNames.Add(nameof(ButtonTexture));
+        propertyNames.Add(nameof(ButtonTint));
+        propertyNames.Add(nameof(ButtonHoverTint));
+        propertyNames.Add(nameof(BarHeight));
+        propertyNames.Add(nameof(ButtonWidth));
+        propertyNames.Add(nameof(ButtonHeight));
+        propertyNames.Add(nameof(IsThumbHovered));
     }
 
     protected override void OnRedraw(SpriteBatch spriteBatch, Point location)
     {
+        int barH = BarHeight > 0 ? BarHeight : 8;
         if (SliderBarTexture is not null)
         {
             var sliderBarTexture = SliderBarTexture.BuildTexture(
                 spriteBatch.GraphicsDevice,
                 Size.X,
-                8);
+                barH);
 
             var rect = new Rectangle(
                 location.X,
@@ -73,5 +131,91 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
                 rect,
                 SliderBarTint);
         }
+
+        var thumbRect = GetThumbRectangle(location);
+        if (ButtonTexture is not null && thumbRect.Width > 0 && thumbRect.Height > 0)
+        {
+            var thumbTex = ButtonTexture.BuildTexture(
+                spriteBatch.GraphicsDevice,
+                thumbRect.Width,
+                thumbRect.Height);
+
+            var tint = (_isDragging || IsThumbHovered) ? ButtonHoverTint : ButtonTint;
+            spriteBatch.Draw(
+                thumbTex,
+                thumbRect,
+                tint);
+        }
+    }
+
+    protected override void OnUpdate(MouseState mouseState, MouseState previousMouseState)
+    {
+        base.OnUpdate(mouseState, previousMouseState);
+
+        var localMouse = new Point(mouseState.X - Position.X, mouseState.Y - Position.Y);
+        bool mouseWentDown = previousMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed;
+        bool mouseHeld = mouseState.LeftButton == ButtonState.Pressed;
+        bool mouseReleased = previousMouseState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released;
+
+        IsThumbHovered = GetThumbRectangle(Point.Zero).Contains(localMouse);
+
+        if (mouseWentDown)
+        {
+            if (IsThumbHovered)
+            {
+                _isDragging = true;
+            }
+            else if (localMouse.Y >= 0 && localMouse.Y <= Size.Y && localMouse.X >= 0 && localMouse.X <= Size.X)
+            {
+                UpdateValueFromMouseX(localMouse.X);
+                _isDragging = true;
+            }
+        }
+
+        if (_isDragging && mouseHeld)
+        {
+            System.Diagnostics.Debug.WriteLine($"Dragging - LocalMouseX: {localMouse.X}");
+            UpdateValueFromMouseX(localMouse.X);
+        }
+
+        if (_isDragging && mouseReleased)
+        {
+            _isDragging = false;
+        }
+    }
+
+    private Rectangle GetThumbRectangle(Point location)
+    {
+        int thumbW = ButtonWidth > 0 ? ButtonWidth : 16;
+        int thumbH = ButtonHeight > 0 ? ButtonHeight : Size.Y;
+
+        float minCenterX = ButtonMarginLeft + (thumbW / 2f);
+        float maxCenterX = Size.X - ButtonMarginRight - (thumbW / 2f);
+        float travel = MathF.Max(0, maxCenterX - minCenterX);
+
+        float range = MathF.Max(0.0001f, Maximum - Minimum);
+        float t = MathHelper.Clamp((Value - Minimum) / range, 0f, 1f);
+
+        float centerX = minCenterX + (t * travel);
+
+        int left = (int)MathF.Round(centerX - (thumbW / 2f));
+        int top = location.Y + ((Size.Y - thumbH) / 2);
+
+        return new Rectangle(location.X + left, top, thumbW, thumbH);
+    }
+
+    private void UpdateValueFromMouseX(int localMouseX)
+    {
+        int thumbW = ButtonWidth > 0 ? ButtonWidth : 16;
+
+        float minCenterX = ButtonMarginLeft + (thumbW / 2f);
+        float maxCenterX = Size.X - ButtonMarginRight - (thumbW / 2f);
+        float travel = MathF.Max(0, maxCenterX - minCenterX);
+
+        float clampedCenter = MathHelper.Clamp(localMouseX, minCenterX, maxCenterX);
+        float t = travel <= 0 ? 0f : (clampedCenter - minCenterX) / travel;
+
+        float newValue = Minimum + (t * (Maximum - Minimum));
+        Value = newValue;
     }
 }

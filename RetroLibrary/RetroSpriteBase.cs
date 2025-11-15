@@ -69,6 +69,8 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     public event EventHandler? Clicked;
 
+    public event EventHandler? WatchedPropertyChanged;
+
     public void Draw(SpriteBatch spriteBatch)
     {
         if (!Buffered)
@@ -223,5 +225,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private void OnWatchedPropertyChanged(string propertyName)
     {
         _needsRedraw = true;
+        WatchedPropertyChanged?.Invoke(this, EventArgs.Empty);
     }
 }

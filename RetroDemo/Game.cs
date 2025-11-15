@@ -221,8 +221,18 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     }),
-                sliderBarTint: Color.DarkGray);
-
+                sliderBarTint: Color.DarkGray,
+                buttonTexture: new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                buttonTint: Color.Red,
+                buttonHoverTint: Color.LightPink);              
 
             _tabbedContainer.TabPages.Add(new TabPage("Hello World!!!", [_testSliderBar ]));
 
