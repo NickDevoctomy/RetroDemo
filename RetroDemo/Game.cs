@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RetroLibrary;
@@ -19,7 +18,7 @@ namespace RetroDemo
         private RetroSpriteProgressBar? _testProgressBar;
         private RetroSpriteCheckBox? _testCheckBox;
 
-        private RetroSpriteTabbedContainer _tabbedContainer;
+        private RetroSpriteTabbedContainer? _tabbedContainer;
 
         private RetroSpriteNineSliceButton? _orangeButton;
         private RetroSpriteNineSliceButton? _exitButton;
@@ -58,16 +57,12 @@ namespace RetroDemo
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load a default font (you'll need to add a font to your Content pipeline)
-            // For now, we'll create a simple button after the font is loaded
             try
             {
                 _font = Content.Load<SpriteFont>("DefaultFont");
             }
             catch
             {
-                // If no font is available, we'll need to handle this gracefully
-                // For now, let's create the button anyway and it will handle null font
                 _font = null;
             }
 
@@ -332,7 +327,7 @@ namespace RetroDemo
 
             var currentMouseState = Mouse.GetState();
 
-            _tabbedContainer.Update(
+            _tabbedContainer?.Update(
                 currentMouseState,
                 _previousMouseState);
 
