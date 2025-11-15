@@ -21,6 +21,7 @@ namespace RetroDemo
 
         private RetroSpriteTabbedContainer _tabbedContainer;
 
+        private RetroSpriteNineSliceButton? _orangeButton;
         private RetroSpriteNineSliceButton? _exitButton;
 
         private MiniParallaxScroller? _parallaxScroller;
@@ -74,7 +75,7 @@ namespace RetroDemo
                 "TestGroupContainer",
                 "Some really long text in here!",
                 new Point(8, 8),
-                new Point(400, 250),
+                new Point(380, 250),
                 borderTexture: new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/surface.png"),
                     new NineSliceTextureOptions
@@ -211,7 +212,37 @@ namespace RetroDemo
             _tabbedContainer.TabDownTint = new Color(Color.LightGray, 0.5f);
             _tabbedContainer.TabPages.Add(new TabPage("Apple", [ _testContainer ]));
             _tabbedContainer.TabPages.Add(new TabPage("Hello World!!!", []));
-            _tabbedContainer.TabPages.Add(new TabPage("Oranges", []));
+
+            _orangeButton = new RetroSpriteNineSliceButton(
+                "OrangeButton",
+                "Orange",
+                new Point(8, 8),
+                new Point(200, 50),
+                false,
+                foregroundColor: Color.White,
+                upTint: Color.Orange,
+                downTint: Color.Orange,
+                upTexture: new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 8,
+                        RightMargin = 4
+                    }),
+                downTexture: new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 6,
+                        LeftMargin = 4,
+                        BottomMargin = 6,
+                        RightMargin = 4
+                    }),
+                font: _font);
+
+            _tabbedContainer.TabPages.Add(new TabPage("Oranges", [ _orangeButton ]));
 
             _testContainer.Children.Add(_testButton);
             _testContainer.Children.Add(_testProgressBarLabel);
