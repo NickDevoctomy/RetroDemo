@@ -9,6 +9,8 @@ namespace RetroLibrary;
 
 public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 {
+    private readonly HashSet<TabPage> _subscribedPages = new ();
+
     [ObservableProperty]
     private ObservableCollection<TabPage> tabPages = new ();
 
@@ -80,13 +82,13 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         UpdateEffectiveInnerMargins();
 
         TabPages.CollectionChanged += TabPages_CollectionChanged;
+        EnsurePageSubscriptions();
     }
 
     public override void SetWatchedProperties(List<string> propertyNames)
     {
         base.SetWatchedProperties(propertyNames);
         propertyNames.Add(nameof(TabPages));
-        ////propertyNames.Add(nameof(SelectedIndex));
         propertyNames.Add(nameof(TabUpTexture));
         propertyNames.Add(nameof(TabDownTexture));
         propertyNames.Add(nameof(TabUpTint));
@@ -194,10 +196,16 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         if (e.PropertyName == nameof(TabPages))
         {
             TabPages.CollectionChanged -= TabPages_CollectionChanged;
+            foreach (var page in _subscribedPages)
+            {
+                page.PropertyChanged -= TabPage_PropertyChanged;
+            }
+
+            _subscribedPages.Clear();
         }
     }
 
-    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine($"Property changed: {e.PropertyName}");
         base.OnPropertyChanged(e);
@@ -217,6 +225,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         else if (e.PropertyName == nameof(TabPages))
         {
             TabPages.CollectionChanged += TabPages_CollectionChanged;
+            EnsurePageSubscriptions();
             UpdateActiveChildren();
         }
     }
@@ -227,9 +236,10 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         {
             foreach (var item in e.OldItems)
             {
-                if (item is TabPage oldPage)
+                if (item is TabPage oldPage && _subscribedPages.Contains(oldPage))
                 {
                     oldPage.PropertyChanged -= TabPage_PropertyChanged;
+                    _subscribedPages.Remove(oldPage);
                 }
             }
         }
@@ -238,22 +248,23 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         {
             foreach (var item in e.NewItems)
             {
-                if (item is TabPage newPage)
+                if (item is TabPage newPage && !_subscribedPages.Contains(newPage))
                 {
                     newPage.PropertyChanged += TabPage_PropertyChanged;
+                    _subscribedPages.Add(newPage);
                 }
             }
         }
 
         if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
         {
-            foreach (var page in TabPages)
+            foreach (var page in _subscribedPages)
             {
-                ////!!! handle leak
-                ////!!! page.PropertyChanged -= TabPage_PropertyChanged;
-
-                page.PropertyChanged += TabPage_PropertyChanged;
+                page.PropertyChanged -= TabPage_PropertyChanged;
             }
+
+            _subscribedPages.Clear();
+            EnsurePageSubscriptions();
         }
 
         if (TabPages.Count == 0)
@@ -268,7 +279,28 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         UpdateActiveChildren();
     }
 
-    private void TabPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void EnsurePageSubscriptions()
+    {
+        foreach (var page in TabPages)
+        {
+            if (_subscribedPages.Contains(page))
+            {
+                continue;
+            }
+
+            page.PropertyChanged += TabPage_PropertyChanged;
+            _subscribedPages.Add(page);
+        }
+
+        var removed = _subscribedPages.Where(p => !TabPages.Contains(p)).ToList();
+        foreach (var page in removed)
+        {
+            page.PropertyChanged -= TabPage_PropertyChanged;
+            _subscribedPages.Remove(page);
+        }
+    }
+
+    private void TabPage_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(TabPage.Title))
         {
@@ -320,7 +352,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         Rectangle rect,
         bool isSelected)
     {
-        System.Diagnostics.Debug.WriteLine($"Drawing single tab {tabIndex}.");
         var texture = isSelected ? TabDownTexture : TabUpTexture;
         var tint = isSelected ? TabDownTint : TabUpTint;
 

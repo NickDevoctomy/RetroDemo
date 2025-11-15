@@ -7,11 +7,16 @@ namespace RetroLibrary;
 
 public partial class RetroSpriteContainer : RetroSpriteBase
 {
+    private readonly HashSet<RetroSpriteBase> _subscribedChildren = new ();
+
     [ObservableProperty]
     private List<RetroSpriteBase> children = new ();
 
     [ObservableProperty]
     private Rectangle innerMargins;
+
+    [ObservableProperty]
+    private int childrenChangeVersion;
 
     public RetroSpriteContainer(
         string name,
@@ -34,12 +39,22 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             updateWatchedProperties)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
+        EnsureChildSubscriptions();
+    }
+
+    public override void SetWatchedProperties(List<string> propertyNames)
+    {
+        base.SetWatchedProperties(propertyNames);
+        propertyNames.Add(nameof(ChildrenChangeVersion));
+        propertyNames.Add(nameof(InnerMargins));
     }
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
         Point location)
     {
+        // Keep subscriptions current before drawing
+        EnsureChildSubscriptions();
         var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
 
         var innerLocation = new Point(
@@ -63,6 +78,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         base.OnUpdate(
             mouseState,
             previousMouseState);
+
+        EnsureChildSubscriptions();
 
         foreach (var currentChild in Children)
         {
@@ -120,5 +137,31 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         graphicsDevice.SetRenderTargets(originalRenderTargets);
 
         return renderTarget;
+    }
+
+    private void EnsureChildSubscriptions()
+    {
+        foreach (var child in Children)
+        {
+            if (_subscribedChildren.Contains(child))
+            {
+                continue;
+            }
+
+            child.WatchedPropertyChanged += Child_WatchedPropertyChanged;
+            _subscribedChildren.Add(child);
+        }
+
+        var removed = _subscribedChildren.Where(c => !Children.Contains(c)).ToList();
+        foreach (var child in removed)
+        {
+            child.WatchedPropertyChanged -= Child_WatchedPropertyChanged;
+            _subscribedChildren.Remove(child);
+        }
+    }
+
+    private void Child_WatchedPropertyChanged(object? sender, EventArgs e)
+    {
+        ChildrenChangeVersion++;
     }
 }
