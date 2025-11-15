@@ -331,11 +331,6 @@ namespace RetroDemo
             _parallaxScroller?.Update();
 
             var currentMouseState = Mouse.GetState();
-            ////System.Diagnostics.Debug.WriteLine($"Mouse Position: {currentMouseState.Position}");
-
-            _testContainer?.Update(
-                currentMouseState,
-                _previousMouseState);
 
             _tabbedContainer.Update(
                 currentMouseState,
