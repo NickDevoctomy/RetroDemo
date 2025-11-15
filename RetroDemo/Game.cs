@@ -17,6 +17,7 @@ namespace RetroDemo
         private RetroSpriteLabel? _testProgressBarLabel;
         private RetroSpriteProgressBar? _testProgressBar;
         private RetroSpriteCheckBox? _testCheckBox;
+        private RetroSpriteSliderBar? _testSliderBar;
 
         private RetroSpriteTabbedContainer? _tabbedContainer;
 
@@ -206,7 +207,24 @@ namespace RetroDemo
                     });
             _tabbedContainer.TabDownTint = new Color(Color.LightGray, 0.5f);
             _tabbedContainer.TabPages.Add(new TabPage("Apple", [ _testContainer ]));
-            _tabbedContainer.TabPages.Add(new TabPage("Hello World!!!", []));
+
+            _testSliderBar = new RetroSpriteSliderBar(
+                "TestSliderBar",
+                new Point(8, 8),
+                new Point(350, 32),
+                sliderBarTexture: new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    }),
+                sliderBarTint: Color.DarkGray);
+
+
+            _tabbedContainer.TabPages.Add(new TabPage("Hello World!!!", [_testSliderBar ]));
 
             _orangeButton = new RetroSpriteNineSliceButton(
                 "OrangeButton",
