@@ -20,6 +20,7 @@
     <None Remove="Content\Textures\road.png" />
     <None Remove="Content\Textures\sandyrocks.png" />
     <None Remove="Content\Textures\surface.png" />
+    <None Remove="Content\Textures\surfacegrey.png" />
     <None Remove="Content\Textures\tab.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
@@ -44,6 +45,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\surface.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Textures\surfacegrey.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\tab.png">

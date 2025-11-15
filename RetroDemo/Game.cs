@@ -179,6 +179,15 @@ namespace RetroDemo
                 new Point(400, 300),
                 foregroundColor: Color.White,
                 font: _font);
+            _tabbedContainer.TabPageTexture = new NineSliceTexture2D(
+                    _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                    new NineSliceTextureOptions
+                    {
+                        TopMargin = 4,
+                        LeftMargin = 4,
+                        BottomMargin = 4,
+                        RightMargin = 4
+                    });
             _tabbedContainer.TabUpTexture = new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/tab.png"),
                     new NineSliceTextureOptions
@@ -197,7 +206,9 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     });
-            _tabbedContainer.TabPages.Add(new TabPage("Tab1", []));
+            _tabbedContainer.TabPages.Add(new TabPage("Apple", []));
+            _tabbedContainer.TabPages.Add(new TabPage("Oranges", []));
+            _tabbedContainer.TabPages.Add(new TabPage("Tab", []));
 
             _testContainer.Children.Add(_testButton);
             _testContainer.Children.Add(_testProgressBarLabel);

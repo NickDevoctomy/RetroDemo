@@ -40,6 +40,17 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     [ObservableProperty]
     private int tabLeftPadding = 4;
 
+    // Page background
+    [ObservableProperty]
+    private NineSliceTexture2D? tabPageTexture;
+
+    [ObservableProperty]
+    private Color tabPageTint = Color.White;
+
+    // How many pixels the selected tab should overlap the page background
+    [ObservableProperty]
+    private int tabOverlapPixels = 2;
+
     // Content margins exclude the header; effective InnerMargins = ContentMargins with Top + TabHeaderHeight
     [ObservableProperty]
     private Rectangle contentMargins;
@@ -92,6 +103,9 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         propertyNames.Add(nameof(TabHorizontalPadding));
         propertyNames.Add(nameof(TabSpacing));
         propertyNames.Add(nameof(TabLeftPadding));
+        propertyNames.Add(nameof(TabPageTexture));
+        propertyNames.Add(nameof(TabPageTint));
+        propertyNames.Add(nameof(TabOverlapPixels));
         propertyNames.Add(nameof(ContentMargins));
         propertyNames.Add(nameof(Font));
     }
@@ -100,11 +114,38 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         SpriteBatch spriteBatch,
         Point location)
     {
-        // Draw tab header (outside of InnerMargins, at top of the control)
-        DrawTabsHeader(spriteBatch, location);
+        var tabRects = BuildTabRects();
+        var selected = SelectedIndex;
 
-        // Draw content (children) via base into effective InnerMargins
+        // 1) Draw non-selected tabs first (they will be behind the page)
+        for (int i = 0; i < tabRects.Count; i++)
+        {
+            if (i == selected) continue;
+            DrawSingleTab(spriteBatch, location, tabRects[i], i == selected);
+        }
+
+        // 2) Draw page background slightly under the tab by TabOverlapPixels
+        var innerLocation = new Point(
+            location.X + InnerMargins.X,
+            location.Y + InnerMargins.Y - TabOverlapPixels);
+        var innerSize = new Point(
+            Size.X - InnerMargins.X - InnerMargins.Width,
+            Size.Y - InnerMargins.Y - InnerMargins.Height + TabOverlapPixels);
+
+        if (TabPageTexture != null && innerSize.X > 0 && innerSize.Y > 0)
+        {
+            var pageTex = TabPageTexture.BuildTexture(spriteBatch.GraphicsDevice, innerSize.X, innerSize.Y);
+            spriteBatch.Draw(pageTex, new Rectangle(innerLocation, innerSize), TabPageTint);
+        }
+
+        // 3) Draw content (children) via base into effective InnerMargins (not overlapped)
         base.OnRedraw(spriteBatch, location);
+
+        // 4) Draw selected tab on top to overlap the page by TabOverlapPixels
+        if (selected >= 0 && selected < tabRects.Count)
+        {
+            DrawSingleTab(spriteBatch, location, tabRects[selected], true);
+        }
     }
 
     protected override void OnUpdate(
@@ -279,30 +320,28 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         InnerMargins = effective;
     }
 
-    private void DrawTabsHeader(SpriteBatch spriteBatch, Point location)
+    private void DrawSingleTab(SpriteBatch spriteBatch, Point location, Rectangle rect, bool isSelected)
     {
-        var tabRects = BuildTabRects();
-        for (int i = 0; i < tabRects.Count; i++)
+        var texture = isSelected ? TabDownTexture : TabUpTexture;
+        var tint = isSelected ? TabDownTint : TabUpTint;
+
+        if (texture != null)
         {
-            var rect = tabRects[i];
-            var isSelected = i == SelectedIndex;
-            var texture = isSelected ? TabDownTexture : TabUpTexture;
-            var tint = isSelected ? TabDownTint : TabUpTint;
+            var built = texture.BuildTexture(
+                spriteBatch.GraphicsDevice,
+                rect.Width,
+                rect.Height);
+            var drawRect = new Rectangle(location.X + rect.X, location.Y + rect.Y, rect.Width, rect.Height);
+            spriteBatch.Draw(built, drawRect, tint);
+        }
 
-            if (texture != null)
+        // Draw title text
+        if (Font != null)
+        {
+            int index = BuildTabRects().IndexOf(rect); // basic mapping; acceptable due to small counts
+            if (index >= 0 && index < TabPages.Count)
             {
-                var built = texture.BuildTexture(
-                    spriteBatch.GraphicsDevice,
-                    rect.Width,
-                    rect.Height);
-                var drawRect = new Rectangle(location.X + rect.X, location.Y + rect.Y, rect.Width, rect.Height);
-                spriteBatch.Draw(built, drawRect, tint);
-            }
-
-            // Draw title text
-            if (Font != null && i < TabPages.Count)
-            {
-                var title = TabPages[i].Title ?? string.Empty;
+                var title = TabPages[index].Title ?? string.Empty;
                 if (!string.IsNullOrEmpty(title))
                 {
                     var textSize = Font.MeasureString(title);
