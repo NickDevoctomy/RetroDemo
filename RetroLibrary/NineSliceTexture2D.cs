@@ -7,6 +7,7 @@ public class NineSliceTexture2D(
     Texture2D sourceTexture,
     NineSliceTextureOptions options) : IDisposable
 {
+    private Dictionary<(int width, int height), Texture2D> _textureCache = new ();
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
@@ -20,17 +21,12 @@ public class NineSliceTexture2D(
         int width,
         int height)
     {
-        if (_cachedTexture != null &&
-           _cachedTexture.Width == width &&
-           _cachedTexture.Height == height)
+        var cachedTexture = CheckCache(
+            width,
+            height);
+        if (cachedTexture != null)
         {
-            return _cachedTexture;
-        }
-
-        if (_cachedTexture != null)
-        {
-            _cachedTexture.Dispose();
-            _cachedTexture = null;
+            return cachedTexture;
         }
 
         var renderTarget = new RenderTarget2D(
@@ -118,7 +114,10 @@ public class NineSliceTexture2D(
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);
 
-        _cachedTexture = renderTarget;
+        CacheTexture(
+            width,
+            height,
+            renderTarget);
 
         return renderTarget;
     }
@@ -143,5 +142,70 @@ public class NineSliceTexture2D(
 
             disposedValue = true;
         }
+    }
+
+    private void CacheTexture(
+        int width,
+        int height,
+        Texture2D texture)
+    {
+        switch (options.CachingMode)
+        {
+            case Enums.CachingMode.Single:
+                {
+                    _cachedTexture?.Dispose();
+                    _cachedTexture = texture;
+                    break;
+                }
+
+            case Enums.CachingMode.BySize:
+                {
+                    if (_textureCache.TryGetValue((width, height), out var existingTexture))
+                    {
+                        existingTexture.Dispose();
+                    }
+
+                    _textureCache[(width, height)] = texture;
+
+                    System.Diagnostics.Debug.WriteLine($"Cached textures count: {_textureCache.Count}");
+
+                    break;
+                }
+        }
+    }
+
+    private Texture2D? CheckCache(
+        int width,
+        int height)
+    {
+        switch (options.CachingMode)
+        {
+            case Enums.CachingMode.Single:
+                {
+                    if (_cachedTexture != null &&
+                       _cachedTexture.Width == width &&
+                       _cachedTexture.Height == height)
+                    {
+                        return _cachedTexture;
+                    }
+
+                    _cachedTexture?.Dispose();
+                    _cachedTexture = null;
+
+                    return null;
+                }
+
+            case Enums.CachingMode.BySize:
+                {
+                    if (_textureCache.TryGetValue((width, height), out var cachedTexture))
+                    {
+                        return cachedTexture;
+                    }
+
+                    return null;
+                }
+        }
+
+        return null;
     }
 }

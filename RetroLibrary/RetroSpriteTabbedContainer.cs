@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,14 +9,12 @@ namespace RetroLibrary;
 
 public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 {
-    // Pages and selection
     [ObservableProperty]
     private ObservableCollection<TabPage> tabPages = new ();
 
     [ObservableProperty]
     private int selectedIndex = -1;
 
-    // Styling for tabs
     [ObservableProperty]
     private NineSliceTexture2D? tabUpTexture;
 
@@ -40,25 +39,20 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     [ObservableProperty]
     private int tabLeftPadding = 4;
 
-    // Page background
     [ObservableProperty]
     private NineSliceTexture2D? tabPageTexture;
 
     [ObservableProperty]
     private Color tabPageTint = Color.White;
 
-    // How many pixels the selected tab should overlap the page background
     [ObservableProperty]
     private int tabOverlapPixels = 2;
 
-    // Content margins exclude the header; effective InnerMargins = ContentMargins with Top + TabHeaderHeight
     [ObservableProperty]
     private Rectangle contentMargins;
 
     private bool _tabPressed;
     private int _pressedTabIndex = -1;
-
-    // Keep subscription to currently selected page's children
     private TabPage? _currentSelectedPage;
 
     public RetroSpriteTabbedContainer(
@@ -82,11 +76,9 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             buffered,
             updateWatchedProperties)
     {
-        // Treat provided innerMargins as content margins and lift header above it
         ContentMargins = innerMargins ?? Rectangle.Empty;
         UpdateEffectiveInnerMargins();
 
-        // Subscribe to page list changes
         TabPages.CollectionChanged += TabPages_CollectionChanged;
     }
 
@@ -94,7 +86,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     {
         base.SetWatchedProperties(propertyNames);
         propertyNames.Add(nameof(TabPages));
-        propertyNames.Add(nameof(SelectedIndex));
+        ////propertyNames.Add(nameof(SelectedIndex));
         propertyNames.Add(nameof(TabUpTexture));
         propertyNames.Add(nameof(TabDownTexture));
         propertyNames.Add(nameof(TabUpTint));
@@ -117,14 +109,16 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         var tabRects = BuildTabRects();
         var selected = SelectedIndex;
 
-        // 1) Draw non-selected tabs first (they will be behind the page)
         for (int i = 0; i < tabRects.Count; i++)
         {
-            if (i == selected) continue;
-            DrawSingleTab(spriteBatch, location, tabRects[i], i == selected);
+            if (i == selected)
+            {
+                continue;
+            }
+
+            DrawSingleTab(spriteBatch, location, i, tabRects[i], i == selected);
         }
 
-        // 2) Draw page background slightly under the tab by TabOverlapPixels
         var innerLocation = new Point(
             location.X + InnerMargins.X,
             location.Y + InnerMargins.Y - TabOverlapPixels);
@@ -138,14 +132,12 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             spriteBatch.Draw(pageTex, new Rectangle(innerLocation, innerSize), TabPageTint);
         }
 
-        // 3) Draw content (children) via base into effective InnerMargins (not overlapped)
-        base.OnRedraw(spriteBatch, location);
-
-        // 4) Draw selected tab on top to overlap the page by TabOverlapPixels
         if (selected >= 0 && selected < tabRects.Count)
         {
-            DrawSingleTab(spriteBatch, location, tabRects[selected], true);
+            DrawSingleTab(spriteBatch, location, selected, tabRects[selected], true);
         }
+
+        base.OnRedraw(spriteBatch, location);
     }
 
     protected override void OnUpdate(
@@ -154,15 +146,10 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     {
         base.OnUpdate(mouseState, previousMouseState);
 
-        // Determine mouse position relative to this container's top-left
         var localMouse = new Point(mouseState.X - Position.X, mouseState.Y - Position.Y);
         var wasPressed = previousMouseState.LeftButton == ButtonState.Pressed;
         var isPressed = mouseState.LeftButton == ButtonState.Pressed;
-
-        // Build rects for tabs
         var tabRects = BuildTabRects();
-
-        // Find hovered tab
         int hoveredIndex = -1;
         for (int i = 0; i < tabRects.Count; i++)
         {
@@ -173,14 +160,12 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             }
         }
 
-        // Mouse down over a tab
         if (hoveredIndex >= 0 && !wasPressed && isPressed)
         {
             _tabPressed = true;
             _pressedTabIndex = hoveredIndex;
         }
 
-        // Mouse up - commit selection if released over the same tab
         if (!isPressed && wasPressed && _tabPressed)
         {
             if (hoveredIndex >= 0 && hoveredIndex == _pressedTabIndex)
@@ -190,11 +175,11 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
                     SelectedIndex = hoveredIndex;
                 }
             }
+
             _tabPressed = false;
             _pressedTabIndex = -1;
         }
 
-        // Cancel press state if mouse moved off tabs while holding, or no longer pressed
         if (!isPressed)
         {
             _tabPressed = false;
@@ -202,8 +187,19 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         }
     }
 
+    protected override void OnPropertyChanging(PropertyChangingEventArgs e)
+    {
+        base.OnPropertyChanging(e);
+
+        if (e.PropertyName == nameof(TabPages))
+        {
+            TabPages.CollectionChanged -= TabPages_CollectionChanged;
+        }
+    }
+
     protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine($"Property changed: {e.PropertyName}");
         base.OnPropertyChanged(e);
         if (string.IsNullOrEmpty(e.PropertyName))
         {
@@ -220,8 +216,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         }
         else if (e.PropertyName == nameof(TabPages))
         {
-            // Re-subscribe when the collection instance changes
-            TabPages.CollectionChanged -= TabPages_CollectionChanged;
             TabPages.CollectionChanged += TabPages_CollectionChanged;
             UpdateActiveChildren();
         }
@@ -229,7 +223,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
     private void TabPages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        // Manage per-page title change subscriptions for redraw
         if (e.OldItems != null)
         {
             foreach (var item in e.OldItems)
@@ -240,6 +233,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
                 }
             }
         }
+
         if (e.NewItems != null)
         {
             foreach (var item in e.NewItems)
@@ -250,17 +244,18 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
                 }
             }
         }
+
         if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
         {
-            // Clear and reattach to all
             foreach (var page in TabPages)
             {
-                page.PropertyChanged -= TabPage_PropertyChanged;
+                ////!!! handle leak
+                ////!!! page.PropertyChanged -= TabPage_PropertyChanged;
+
                 page.PropertyChanged += TabPage_PropertyChanged;
             }
         }
 
-        // Clamp or initialize selection and refresh children
         if (TabPages.Count == 0)
         {
             SelectedIndex = -1;
@@ -277,14 +272,12 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     {
         if (e.PropertyName == nameof(TabPage.Title))
         {
-            // Title changed, just flag redraw
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(TabPages)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(TabPages)));
         }
     }
 
     private void UpdateActiveChildren()
     {
-        // Unhook old
         if (_currentSelectedPage != null)
         {
             _currentSelectedPage.Children.CollectionChanged -= SelectedChildren_CollectionChanged;
@@ -292,7 +285,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
         if (SelectedIndex < 0 || SelectedIndex >= TabPages.Count)
         {
-            Children = new List<RetroSpriteBase>();
+            Children = new ();
             _currentSelectedPage = null;
             return;
         }
@@ -320,8 +313,14 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         InnerMargins = effective;
     }
 
-    private void DrawSingleTab(SpriteBatch spriteBatch, Point location, Rectangle rect, bool isSelected)
+    private void DrawSingleTab(
+        SpriteBatch spriteBatch,
+        Point location,
+        int tabIndex,
+        Rectangle rect,
+        bool isSelected)
     {
+        System.Diagnostics.Debug.WriteLine($"Drawing single tab {tabIndex}.");
         var texture = isSelected ? TabDownTexture : TabUpTexture;
         var tint = isSelected ? TabDownTint : TabUpTint;
 
@@ -331,25 +330,27 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
                 spriteBatch.GraphicsDevice,
                 rect.Width,
                 rect.Height);
-            var drawRect = new Rectangle(location.X + rect.X, location.Y + rect.Y, rect.Width, rect.Height);
-            spriteBatch.Draw(built, drawRect, tint);
+            var drawRect = new Rectangle(
+                location.X + rect.X,
+                location.Y + rect.Y,
+                rect.Width,
+                rect.Height);
+            spriteBatch.Draw(
+                built,
+                drawRect,
+                tint);
         }
 
-        // Draw title text
-        if (Font != null)
+        if (Font != null && tabIndex >= 0 && tabIndex < TabPages.Count)
         {
-            int index = BuildTabRects().IndexOf(rect); // basic mapping; acceptable due to small counts
-            if (index >= 0 && index < TabPages.Count)
+            var title = TabPages[tabIndex].Title ?? string.Empty;
+            if (!string.IsNullOrEmpty(title))
             {
-                var title = TabPages[index].Title ?? string.Empty;
-                if (!string.IsNullOrEmpty(title))
-                {
-                    var textSize = Font.MeasureString(title);
-                    var textPos = new Vector2(
-                        location.X + rect.X + (rect.Width - textSize.X) / 2f,
-                        location.Y + rect.Y + (rect.Height - textSize.Y) / 2f);
-                    spriteBatch.DrawString(Font, title, textPos, ForegroundColor);
-                }
+                var textSize = Font.MeasureString(title);
+                var textPos = new Vector2(
+                    location.X + rect.X + ((rect.Width - textSize.X) / 2f),
+                    location.Y + rect.Y + TabOverlapPixels + ((rect.Height - textSize.Y) / 2f));
+                spriteBatch.DrawString(Font, title, textPos, ForegroundColor);
             }
         }
     }
@@ -357,11 +358,11 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
     private List<Rectangle> BuildTabRects()
     {
         var rects = new List<Rectangle>();
-        int x = TabLeftPadding;
-        int h = TabHeaderHeight;
-        int count = TabPages.Count;
+        var x = TabLeftPadding;
+        var h = TabHeaderHeight;
+        var count = TabPages.Count;
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             int w;
             if (Font != null)
@@ -372,7 +373,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             }
             else
             {
-                // Fallback width if no font set
                 w = 80;
             }
 

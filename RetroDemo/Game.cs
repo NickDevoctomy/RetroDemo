@@ -73,8 +73,8 @@ namespace RetroDemo
             _testContainer = new RetroSpriteGroupContainer(
                 "TestGroupContainer",
                 "Some really long text in here!",
-                new Point(25, 35),
-                new Point(400, 300),
+                new Point(8, 8),
+                new Point(400, 250),
                 borderTexture: new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/surface.png"),
                     new NineSliceTextureOptions
@@ -188,6 +188,7 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     });
+            _tabbedContainer.TabPageTint = new Color(Color.LightGray, 0.5f);
             _tabbedContainer.TabUpTexture = new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/tab.png"),
                     new NineSliceTextureOptions
@@ -197,6 +198,7 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     });
+            _tabbedContainer.TabUpTint = new Color(Color.LightGray, 0.1f);
             _tabbedContainer.TabDownTexture = new NineSliceTexture2D(
                     _texture2DLoader.FromFile("Content/Textures/tab.png"),
                     new NineSliceTextureOptions
@@ -206,9 +208,10 @@ namespace RetroDemo
                         BottomMargin = 4,
                         RightMargin = 4
                     });
-            _tabbedContainer.TabPages.Add(new TabPage("Apple", []));
+            _tabbedContainer.TabDownTint = new Color(Color.LightGray, 0.5f);
+            _tabbedContainer.TabPages.Add(new TabPage("Apple", [ _testContainer ]));
+            _tabbedContainer.TabPages.Add(new TabPage("Hello World!!!", []));
             _tabbedContainer.TabPages.Add(new TabPage("Oranges", []));
-            _tabbedContainer.TabPages.Add(new TabPage("Tab", []));
 
             _testContainer.Children.Add(_testButton);
             _testContainer.Children.Add(_testProgressBarLabel);

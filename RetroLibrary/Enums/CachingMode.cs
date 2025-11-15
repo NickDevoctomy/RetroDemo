@@ -1,0 +1,8 @@
+﻿namespace RetroLibrary.Enums;
+
+public enum CachingMode
+{
+    None = 1,
+    Single = 2,
+    BySize = 3
+}
