@@ -1,5 +1,4 @@
-﻿
-namespace RetroLibrary.Loader.Common;
+﻿namespace RetroLibrary.Loader.Common;
 
 public class VariableReplacer : IVariableReplacer
 {
@@ -10,7 +9,7 @@ public class VariableReplacer : IVariableReplacer
         var results = new Dictionary<string, string>();
         foreach (var variable in variables)
         {
-            switch(variable)
+            switch (variable)
             {
                 case "GameWidth":
                     {

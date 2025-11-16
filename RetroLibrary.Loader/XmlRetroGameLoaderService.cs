@@ -8,7 +8,6 @@ public class XmlRetroGameLoaderService(
     IEnumerable<IResourceLoader> resourceLoaders,
     IEnumerable<IComponentLoader> componentLoaders) : IRetroGameLoaderService
 {
-    public Dictionary<string, object> Resources = [];
     public List<RetroSpriteBase> Sprites { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public async Task<bool> LoadGameAsync(
@@ -21,14 +20,14 @@ public class XmlRetroGameLoaderService(
             LoadOptions.None,
             cancellationToken);
 
-        if(document == null ||
+        if (document == null ||
             document.Root == null)
         {
             return false;
         }
 
         var resourcesRoot = document.Root.Element("Resources");
-        if(resourcesRoot != null)
+        if (resourcesRoot != null)
         {
             foreach (var resourceElement in resourcesRoot.Elements())
             {

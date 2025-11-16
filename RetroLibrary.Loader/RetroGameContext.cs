@@ -10,7 +10,10 @@ public class RetroGameContext(
     IResourceManager resourceManager)
 {
     public GraphicsDeviceManager GraphicsDeviceManager { get; } = graphicsDeviceManager;
+
     public ContentManager ContentManager { get; } = contentManager;
+
     public string GameDefinitionFilePath { get; set; } = string.Empty;
+
     public IResourceManager ResourceManager { get; } = resourceManager;
 }

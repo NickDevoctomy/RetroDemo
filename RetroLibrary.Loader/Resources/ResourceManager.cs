@@ -1,5 +1,4 @@
-﻿
-namespace RetroLibrary.Loader.Resources;
+﻿namespace RetroLibrary.Loader.Resources;
 
 public class ResourceManager : IResourceManager
 {
