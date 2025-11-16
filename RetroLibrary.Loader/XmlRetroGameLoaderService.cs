@@ -1,9 +1,12 @@
 ﻿using System.Xml.Linq;
+using RetroLibrary.Loader.Components;
 using RetroLibrary.Loader.Resources;
 
 namespace RetroLibrary.Loader;
 
-public class XmlRetroGameLoaderService(IEnumerable<IResourceLoader> resourceLoaders) : IRetroGameLoaderService
+public class XmlRetroGameLoaderService(
+    IEnumerable<IResourceLoader> resourceLoaders,
+    IEnumerable<IComponentLoader> componentLoaders) : IRetroGameLoaderService
 {
     public Dictionary<string, object> Resources = [];
     public List<RetroSpriteBase> Sprites { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -36,6 +39,19 @@ public class XmlRetroGameLoaderService(IEnumerable<IResourceLoader> resourceLoad
                     cancellationToken);
 
                 gameContext.ResourceManager.AddResource(id, value);
+            }
+        }
+
+        var componentsRoot = document.Root.Element("Components");
+        if (componentsRoot != null)
+        {
+            foreach (var componentElement in componentsRoot.Elements())
+            {
+                var componentLoader = componentLoaders.Single(loader => loader.IsApplicable(componentElement));
+                await componentLoader.LoadComponentAsync(
+                    gameContext,
+                    componentElement,
+                    cancellationToken);
             }
         }
 

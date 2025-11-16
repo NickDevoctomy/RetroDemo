@@ -3,7 +3,7 @@ namespace RetroLibrary.Loader.Resources;
 
 public class ResourceManager : IResourceManager
 {
-    private Dictionary<string, object> _resources = new ();
+    private readonly Dictionary<string, object> _resources = new ();
 
     public IReadOnlyDictionary<string, object> Resources => _resources;
 

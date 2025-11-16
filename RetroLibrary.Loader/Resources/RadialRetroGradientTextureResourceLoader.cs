@@ -1,17 +1,18 @@
 ﻿using System.Xml.Linq;
 using RetroLibrary.Loader.Common;
+using RetroLibrary.Loader.Components;
 using SixLabors.ImageSharp;
 
-namespace RetroLibrary.Loader.Components;
+namespace RetroLibrary.Loader.Resources;
 
-public class RadialRetroGradientComponentLoader(IColorLoader colorLoader) : IComponentLoader
+public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) : IResourceLoader
 {
     public bool IsApplicable(XElement element)
     {
         return element.Name == "RadialRetroGradient";
     }
 
-    public Task<(string Id, object Value)> LoadComponentAsync(
+    public Task<(string Id, object Value)> LoadResourceAsync(
         RetroGameContext gameContext,
         XElement element,
         CancellationToken cancellationToken)

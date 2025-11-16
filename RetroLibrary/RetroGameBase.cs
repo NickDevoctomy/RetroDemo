@@ -15,10 +15,12 @@ public class RetroGameBase : Game
         int height,
         bool fullscreen)
     {
-        Graphics = new GraphicsDeviceManager(this);
-        Graphics.PreferredBackBufferWidth = width;
-        Graphics.PreferredBackBufferHeight = height;
-        Graphics.IsFullScreen = fullscreen;
+        Graphics = new GraphicsDeviceManager(this)
+        {
+            PreferredBackBufferWidth = width,
+            PreferredBackBufferHeight = height,
+            IsFullScreen = fullscreen
+        };
         Graphics.ApplyChanges();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;

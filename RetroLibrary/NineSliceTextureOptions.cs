@@ -11,5 +11,6 @@ public class NineSliceTextureOptions
     public int BottomMargin { get; set; }
 
     public int RightMargin { get; set; }
+
     public CachingMode CachingMode { get; set; } = CachingMode.BySize;
 }

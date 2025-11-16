@@ -2,7 +2,7 @@
 
 namespace RetroLibrary.Loader.Components;
 
-internal interface IComponentLoader
+public interface IComponentLoader
 {
     public bool IsApplicable(XElement element);
 

@@ -2,6 +2,15 @@
 
     <Resources>
         <Font id="DefaultFont" />
+        <RadialRetroGradient
+            id="sunset"
+            centreX="50%"
+            centreY="-80pxFromBottom"
+            radius="100%Width"
+            fromColor="Yellow"
+            toColor="Purple"
+            gradientStops="8" />
+        
         <NineSliceTexture
             id="surface"
             path="Content/Textures/surface.png"
@@ -46,15 +55,7 @@
             right="4" />
     </Resources>
 
-    <Components>
-        <RadialRetroGradient id="sunset"
-                             centreX="50%"
-                             centreY="-80pxFromBottom"
-                             radius="100%Width"
-                             fromColor="Yellow"
-                             toColor="Purple"
-                             gradientStops="8" />
-        
+    <Components>        
         <MiniParallaxScroller
             name="Parallax"
             viewportWidth="auto"

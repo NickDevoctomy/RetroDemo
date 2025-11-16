@@ -114,11 +114,8 @@ public class LinearRetroGradientTexture2D : IDisposable
             return _cachedTexture;
         }
 
-        if (_cachedTexture != null)
-        {
-            _cachedTexture.Dispose();
-            _cachedTexture = null;
-        }
+        _cachedTexture?.Dispose();
+        _cachedTexture = null;
 
         var renderTarget = new RenderTarget2D(
             graphicsDevice,
