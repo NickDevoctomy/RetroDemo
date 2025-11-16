@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace RetroLibrary;
+namespace RetroLibrary.Resources;
 
-public class Texture2DResourceLoader(GraphicsDevice graphicsDevice)
+public class Texture2DResourceLoader(GraphicsDevice graphicsDevice) : ITexture2DResourceLoader
 {
     private readonly Dictionary<string, Texture2D> _cachedTextures = new ();
 

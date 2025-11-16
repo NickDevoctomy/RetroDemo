@@ -5,6 +5,6 @@ internal interface IRetroGameLoaderService
     public List<RetroSpriteBase> Sprites { get; set; }
 
     public Task<bool> LoadGameAsync(
-        string filePath,
+        RetroGameContext gameContext,
         CancellationToken cancellationToken);
 }

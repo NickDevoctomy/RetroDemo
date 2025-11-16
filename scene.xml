@@ -1,6 +1,7 @@
 ﻿<Scene name="Main">
 
     <Resources>
+        <Font id="DefaultFont" />
         <NineSliceTexture
             id="surface"
             path="Content/Textures/surface.png"
