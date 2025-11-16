@@ -56,7 +56,7 @@
     </Resources>
 
     <Components>        
-        <MiniParallaxScroller
+        <!--<MiniParallaxScroller
             name="Parallax"
             viewportWidth="auto"
             viewportHeight="auto">
@@ -193,12 +193,11 @@
                 </TabPage>
 
             </TabPages>
-        </Sprite>
+        </Sprite>-->
 
         <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
                 name="ExitButton"
-                anchor="TopRight"
-                offsetX="-208"
+                offsetX="${GameWidth}-208"
                 offsetY="8"
                 width="200"
                 height="50"
