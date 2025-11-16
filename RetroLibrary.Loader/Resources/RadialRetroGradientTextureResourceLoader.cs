@@ -18,6 +18,9 @@ public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) 
         CancellationToken cancellationToken)
     {
         var id = element.Attribute("id")!.Value;
+        var fromColor = colorLoader.ColorFromName(element.Element("FromColor")!.Value, Microsoft.Xna.Framework.Color.White);
+        var toColor = colorLoader.ColorFromName(element.Element("ToColor")!.Value, Microsoft.Xna.Framework.Color.White);
+
         var radialRetroGradient = new RadialRetroGradientTexture2D(
             new RadialRetroGradientOptions
             {
@@ -25,8 +28,8 @@ public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) 
                     float.Parse(element.Element("CentrePoint")!.Attribute("x")!.Value),
                     float.Parse(element.Element("CentrePoint")!.Attribute("y")!.Value)),
                 Radius = float.Parse(element.Element("Radius")!.Value),
-                FromColor = colorLoader.ColorFromName(element.Element("FromColor")!.Value, Microsoft.Xna.Framework.Color.White),
-                ToColor = colorLoader.ColorFromName(element.Element("ToColor")!.Value, Microsoft.Xna.Framework.Color.White),
+                FromColor = fromColor.GetValueOrDefault(),
+                ToColor = toColor.GetValueOrDefault(),
                 GradientStops = int.Parse(element.Element("GradientStops")!.Value)
             });
 

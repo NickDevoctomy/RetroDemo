@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLibrary.Loader", "RetroLibrary.Loader\RetroLibrary.Loader.csproj", "{EBE98BFD-3515-7BE4-E9BF-57D190124844}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{316E080F-EBCB-4957-A8E0-A2BE22ABF5B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLibrary.Loader.UnitTests", "RetroLibrary.Loader.UnitTests\RetroLibrary.Loader.UnitTests.csproj", "{C783571A-72E1-4C2C-B3FF-787A7D30B088}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,9 +41,16 @@ Global
 		{EBE98BFD-3515-7BE4-E9BF-57D190124844}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE98BFD-3515-7BE4-E9BF-57D190124844}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE98BFD-3515-7BE4-E9BF-57D190124844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C783571A-72E1-4C2C-B3FF-787A7D30B088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C783571A-72E1-4C2C-B3FF-787A7D30B088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C783571A-72E1-4C2C-B3FF-787A7D30B088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C783571A-72E1-4C2C-B3FF-787A7D30B088}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C783571A-72E1-4C2C-B3FF-787A7D30B088} = {316E080F-EBCB-4957-A8E0-A2BE22ABF5B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F6EAD7F-4CCF-4D7B-9033-018937C24F41}

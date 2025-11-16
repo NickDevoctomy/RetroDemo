@@ -17,6 +17,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="System.ValueTuple" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" />
+        <PackageReference Include="MonoGame.Library.SDL" />        
     </ItemGroup>
 
 </Project>
