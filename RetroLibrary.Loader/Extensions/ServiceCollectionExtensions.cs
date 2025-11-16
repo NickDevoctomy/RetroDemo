@@ -12,6 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IResourceManager, ResourceManager>();
 
         services.AddScoped<IColorLoader, ColorLoader>();
+        services.AddScoped<IVariableReplacer, VariableReplacer>();
         services.AddScoped<IRetroGameLoaderService, XmlRetroGameLoaderService>();
 
         AddAllOfType<IResourceLoader>(services);
