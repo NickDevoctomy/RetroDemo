@@ -197,10 +197,8 @@
 
         <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
                 name="ExitButton"
-                offsetX="${GameWidth}-208"
-                offsetY="8"
-                width="200"
-                height="50"
+                position="${GameWidth}-208,8"
+                size="200,50"
                 text="Exit"
                 foregroundColor="White"
                 upTint="Green"
