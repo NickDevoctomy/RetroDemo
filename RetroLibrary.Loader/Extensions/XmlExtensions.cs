@@ -4,17 +4,29 @@ using RetroLibrary.Loader.Common;
 
 namespace RetroLibrary.Loader.Extensions;
 
-public class XmlExtensions
+public static class XmlExtensions
 {
     public static Point ToPoint(
-        this XAttribute element,
+        this XAttribute attribute,
+        RetroGameContext gameContext,
         IVariableReplacer variableReplacer)
     {
-        var rawValue = element.Value;
-        rawValue = variableReplacer.ReplaceAllVariables(rawValue);
+        var rawValue = attribute.Value;
+        rawValue = variableReplacer.ReplaceAllVariables(gameContext, rawValue);
+        var parts = rawValue.Split(',');
 
         return new Point(
-            int.Parse(element.Attribute("x")!.Value),
-            int.Parse(element.Attribute("y")!.Value));
+            int.Parse(parts[0]),
+            int.Parse(parts[0]));
+    }
+
+    public static Color? ToColor(
+        this XAttribute attribute,
+        IColorLoader colorLoader,
+        Color? defaultColor)
+    {
+        return colorLoader.ColorFromName(
+            attribute.Value,
+            defaultColor);
     }
 }

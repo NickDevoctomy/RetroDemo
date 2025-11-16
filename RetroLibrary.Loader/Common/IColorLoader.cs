@@ -4,7 +4,7 @@ namespace RetroLibrary.Loader.Common;
 
 public interface IColorLoader
 {
-    public Color ColorFromName(
+    public Color? ColorFromName(
         string name,
-        Color defaultColor);
+        Color? defaultColor);
 }
