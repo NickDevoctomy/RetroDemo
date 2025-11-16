@@ -7,11 +7,10 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary;
 
-public class RadialRetroGradientTexture2D : IDisposable
+public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : IDisposable
 {
     private int _cachedWidth;
     private int _cachedHeight;
-    private RadialRetroGradientOptions? _options;
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
@@ -23,7 +22,6 @@ public class RadialRetroGradientTexture2D : IDisposable
     public void Draw(
         int width,
         int height,
-        RadialRetroGradientOptions options,
         SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Rectangle bounds)
     {
@@ -100,8 +98,7 @@ public class RadialRetroGradientTexture2D : IDisposable
     {
         if (_cachedTexture != null &&
            _cachedWidth == width &&
-           _cachedHeight == height &&
-           options.Equals(_options))
+           _cachedHeight == height)
         {
             return _cachedTexture;
         }
@@ -146,7 +143,6 @@ public class RadialRetroGradientTexture2D : IDisposable
 
         _cachedWidth = width;
         _cachedHeight = height;
-        _options = options;
         _cachedTexture = renderTarget;
 
         return _cachedTexture;

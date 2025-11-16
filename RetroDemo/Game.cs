@@ -281,7 +281,15 @@ public class Game : RetroGameBase
             font: _font);
         _exitButton.Clicked += ExitButton_Clicked;
 
-        _radialGradientTexture = new RadialRetroGradientTexture2D();
+        _radialGradientTexture = new RadialRetroGradientTexture2D(
+            new RadialRetroGradientOptions
+            {
+                CentrePoint = new SixLabors.ImageSharp.PointF(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height - 80),
+                Radius = GraphicsDevice.Viewport.Width,
+                FromColor = Color.Yellow,
+                ToColor = Color.Purple,
+                GradientStops = 8
+            });
 
         _parallaxScroller = new MiniParallaxScroller(
             _texture2DLoader,
@@ -351,15 +359,7 @@ public class Game : RetroGameBase
     {
         _radialGradientTexture?.Draw(
             GraphicsDevice.Viewport.Width,
-            GraphicsDevice.Viewport.Height,
-            new RadialRetroGradientOptions
-            {
-                CentrePoint = new SixLabors.ImageSharp.PointF(GraphicsDevice.Viewport.Width / 2f, GraphicsDevice.Viewport.Height - 80),
-                Radius = GraphicsDevice.Viewport.Width,
-                FromColor = Color.Yellow,
-                ToColor = Color.Purple,
-                GradientStops = 8
-            },
+            GraphicsDevice.Viewport.Height, 
             spriteBatch,
             new Rectangle(
                 0,

@@ -46,17 +46,15 @@
             right="4" />
     </Resources>
 
-    <Background>
-        <RadialRetroGradient id="Sunset"
+    <Components>
+        <RadialRetroGradient id="sunset"
                              centreX="50%"
                              centreY="-80pxFromBottom"
                              radius="100%Width"
                              fromColor="Yellow"
                              toColor="Purple"
                              gradientStops="8" />
-    </Background>
-
-    <Components>
+        
         <MiniParallaxScroller
             name="Parallax"
             viewportWidth="auto"
