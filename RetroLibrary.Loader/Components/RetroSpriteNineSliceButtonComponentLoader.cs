@@ -1,10 +1,13 @@
 ﻿using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using RetroLibrary.Loader.Common;
-using RetroLibrary.Loader.Extensions;
-using RetroLibrary.Loader.Resources;
+using RetroLibrary.Controls;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Common;
+using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.Extensions;
 
-namespace RetroLibrary.Loader.Components;
+namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteNineSliceButtonComponentLoader(
     IVariableReplacer variableReplacer,

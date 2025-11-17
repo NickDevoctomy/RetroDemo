@@ -1,9 +1,11 @@
 ﻿using System.Xml.Linq;
-using RetroLibrary.Loader.Common;
-using RetroLibrary.Loader.Components;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Common;
+using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 using SixLabors.ImageSharp;
 
-namespace RetroLibrary.Loader.Resources;
+namespace RetroLibrary.XmlLoader.Resources;
 
 public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) : IResourceLoader
 {

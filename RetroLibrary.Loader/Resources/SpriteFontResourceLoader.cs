@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Resources;
 
-namespace RetroLibrary.Loader.Resources;
+namespace RetroLibrary.XmlLoader.Resources;
 
 public class SpriteFontResourceLoader : IResourceLoader
 {
@@ -19,7 +21,7 @@ public class SpriteFontResourceLoader : IResourceLoader
         SpriteFont? font = null;
         try
         {
-            font = gameContext.ContentManager.Load<SpriteFont>(id);
+            font = gameContext.ContentManager!.Load<SpriteFont>(id);
         }
         catch
         {

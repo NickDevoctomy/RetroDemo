@@ -69,9 +69,11 @@
     <PackageReference Include="NVorbis" />
     <PackageReference Include="SixLabors.ImageSharp" />
     <PackageReference Include="System.ValueTuple" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RetroLibrary\RetroLibrary.csproj" />
+    <ProjectReference Include="..\RetroLibrary.Controls\RetroLibrary.Controls.csproj" />
+    <ProjectReference Include="..\RetroLibrary.Loader\RetroLibrary.XmlLoader.csproj" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">
     <Message Text="Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)" Importance="High" />

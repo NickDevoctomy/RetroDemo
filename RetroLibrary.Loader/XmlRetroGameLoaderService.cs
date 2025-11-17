@@ -1,8 +1,11 @@
 ﻿using System.Xml.Linq;
-using RetroLibrary.Loader.Components;
-using RetroLibrary.Loader.Resources;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Interfaces;
+using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.Components;
 
-namespace RetroLibrary.Loader;
+namespace RetroLibrary.XmlLoader;
 
 public class XmlRetroGameLoaderService(
     IEnumerable<IResourceLoader> resourceLoaders,

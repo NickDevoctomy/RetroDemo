@@ -1,8 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using RetroLibrary;
-using RetroLibrary.Resources;
+using RetroLibrary.Controls;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Interfaces;
+using RetroLibrary.Core.Resources;
 
 namespace RetroDemo;
 
@@ -25,17 +29,14 @@ public class Game : RetroGameBase
     private RadialRetroGradientTexture2D? _radialGradientTexture;
     private MouseState _previousMouseState;
 
-    public Game(
-        int width,
-        int height,
-        bool fullscreen)
-        : base(width, height, fullscreen)
+    public Game(RetroGameContext retroGameContext)
+        : base(retroGameContext)
     {
     }
 
     protected override void OnLoadContent()
     {
-        _texture2DLoader = new Texture2DResourceLoader(GraphicsDevice);
+        _texture2DLoader = new Texture2DResourceLoader();
 
         try
         {
@@ -52,7 +53,9 @@ public class Game : RetroGameBase
             new Point(8, 8),
             new Point(380, 250),
             borderTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surface.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surface.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -62,7 +65,9 @@ public class Game : RetroGameBase
                 }),
             borderOuterTopMargin: 8,
             groupLabelTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surface.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surface.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -86,7 +91,9 @@ public class Game : RetroGameBase
             upTint: Color.LightGray,
             downTint: Color.Red,
             upTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttonup.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -95,7 +102,9 @@ public class Game : RetroGameBase
                     RightMargin = 4
                 }),
             downTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttondown.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 6,
@@ -121,7 +130,9 @@ public class Game : RetroGameBase
             new Point(0, 83),
             new Point(200, 32),
             borderTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/border.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/border.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -137,7 +148,9 @@ public class Game : RetroGameBase
             new Point(0, 120),
             new Point(150, 32),
             boxTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surface.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surface.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -156,7 +169,9 @@ public class Game : RetroGameBase
             foregroundColor: Color.White,
             font: _font);
         _tabbedContainer.TabPageTexture = new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surfacegrey.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -166,7 +181,9 @@ public class Game : RetroGameBase
                 });
         _tabbedContainer.TabPageTint = new Color(Color.LightGray, 0.5f);
         _tabbedContainer.TabUpTexture = new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/tab.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/tab.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -176,7 +193,9 @@ public class Game : RetroGameBase
                 });
         _tabbedContainer.TabUpTint = new Color(Color.LightGray, 0.1f);
         _tabbedContainer.TabDownTexture = new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/tab.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/tab.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -192,7 +211,9 @@ public class Game : RetroGameBase
             new Point(8, 8),
             new Point(350, 32),
             sliderBarTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surfacegrey.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -202,7 +223,9 @@ public class Game : RetroGameBase
                 }),
             sliderBarTint: Color.DarkGray,
             buttonTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/surfacegrey.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/surfacegrey.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -225,7 +248,9 @@ public class Game : RetroGameBase
             upTint: Color.Orange,
             downTint: Color.Orange,
             upTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttonup.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -234,7 +259,9 @@ public class Game : RetroGameBase
                     RightMargin = 4
                 }),
             downTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttondown.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 6,
@@ -261,7 +288,9 @@ public class Game : RetroGameBase
             upTint: Color.Green,
             downTint: Color.Green,
             upTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttonup.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttonup.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 4,
@@ -270,7 +299,9 @@ public class Game : RetroGameBase
                     RightMargin = 4
                 }),
             downTexture: new NineSliceTexture2D(
-                _texture2DLoader.FromFile("Content/Textures/greybuttondown.png"),
+                _texture2DLoader.FromFile(
+                    GraphicsDevice,
+                    "Content/Textures/greybuttondown.png"),
                 new NineSliceTextureOptions
                 {
                     TopMargin = 6,

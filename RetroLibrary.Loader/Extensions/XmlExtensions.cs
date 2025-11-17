@@ -1,8 +1,9 @@
 ﻿using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using RetroLibrary.Loader.Common;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Common;
 
-namespace RetroLibrary.Loader.Extensions;
+namespace RetroLibrary.XmlLoader.Extensions;
 
 public static class XmlExtensions
 {

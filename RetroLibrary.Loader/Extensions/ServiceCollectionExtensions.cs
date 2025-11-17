@@ -1,27 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using RetroLibrary.Loader.Common;
-using RetroLibrary.Loader.Components;
-using RetroLibrary.Loader.Resources;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using RetroLibrary.Core.Interfaces;
+using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.Components;
 
-namespace RetroLibrary.Loader.Extensions;
+namespace RetroLibrary.XmlLoader.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static void AddRetroLibraryXmlLoader(this IServiceCollection services)
     {
-        services.AddSingleton<IResourceManager, ResourceManager>();
-
-        services.AddScoped<IColorLoader, ColorLoader>();
-        services.AddScoped<IVariableReplacer, VariableReplacer>();
         services.AddScoped<IRetroGameLoaderService, XmlRetroGameLoaderService>();
-
         AddAllOfType<IResourceLoader>(services);
         AddAllOfType<IComponentLoader>(services);
     }
 
     private static void AddAllOfType<T>(IServiceCollection services)
     {
-        var assembly = typeof(T).Assembly;
+        var assembly = Assembly.GetExecutingAssembly();
         var allTypes = assembly.GetTypes().Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface).ToList();
         foreach (var curType in allTypes)
         {

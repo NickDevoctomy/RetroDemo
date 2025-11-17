@@ -1,13 +1,12 @@
 ﻿using System.Xml.Linq;
-using RetroLibrary.Core;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.Core.Resources;
 
-public interface IComponentLoader
+public interface IResourceLoader
 {
     public bool IsApplicable(XElement element);
 
-    public Task<(string Id, object Value)> LoadComponentAsync(
+    public Task<(string Id, object Value)> LoadResourceAsync(
         RetroGameContext gameContext,
         XElement element,
         CancellationToken cancellationToken);

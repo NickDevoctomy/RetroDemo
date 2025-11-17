@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="xunit" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" />
+        <PackageReference Include="MonoGame.Library.SDL" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RetroLibrary.Core\RetroLibrary.Core.csproj" />
+    </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
