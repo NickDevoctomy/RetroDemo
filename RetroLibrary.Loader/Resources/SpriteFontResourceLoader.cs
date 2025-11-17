@@ -12,10 +12,10 @@ public class SpriteFontResourceLoader : IResourceLoader
         return element.Name == "Font";
     }
 
-    public Task<(string Id, object Value)> LoadResourceAsync(
+    // !!! TODO: Needs to be called during game LoadContent phase !!!
+    public (string Id, object Value) LoadResource(
         RetroGameContext gameContext,
-        XElement element,
-        CancellationToken cancellationToken)
+        XElement element)
     {
         var id = element.Attribute("id")!.Value;
         SpriteFont? font = null;
@@ -30,6 +30,6 @@ public class SpriteFontResourceLoader : IResourceLoader
 
         return (font == null)
             ? throw new Exception($"Failed to load font resource with id '{id}'.")
-            : Task.FromResult((id, (object)font));
+            : (id, (object)font);
     }
 }

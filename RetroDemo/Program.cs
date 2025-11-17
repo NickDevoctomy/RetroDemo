@@ -14,7 +14,7 @@ var retroGameContext = contextFactory.CreateRetroGameContext(
     800,
     600,
     false,
-    string.Empty);
+    "Content/scene.xml");
 using var game = new Game(retroGameContext);
 game.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 59.0);
 game.Run();

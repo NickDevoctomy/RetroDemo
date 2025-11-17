@@ -13,10 +13,9 @@ public class NineSliceTextureResourceLoader(ITexture2DResourceLoader texture2DRe
         return element.Name == "NineSliceTexture";
     }
 
-    public Task<(string Id, object Value)> LoadResourceAsync(
+    public (string Id, object Value) LoadResource(
         RetroGameContext gameContext,
-        XElement element,
-        CancellationToken cancellationToken)
+        XElement element)
     {
         var id = element.Attribute("id")!.Value;
         var nineSliceTexture2D = new NineSliceTexture2D(
@@ -33,6 +32,6 @@ public class NineSliceTextureResourceLoader(ITexture2DResourceLoader texture2DRe
 
         return nineSliceTexture2D == null
             ? throw new Exception($"Failed to load font resource with id '{id}'.")
-            : (Task<(string Id, object Value)>)Task.FromResult((id, (object)nineSliceTexture2D));
+            : (id, (object)nineSliceTexture2D);
     }
 }

@@ -13,6 +13,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\scene.xml" />
     <None Remove="Content\Textures\border.png" />
     <None Remove="Content\Textures\grass.png" />
     <None Remove="Content\Textures\greybuttondown.png" />
@@ -26,6 +27,9 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\scene.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\border.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

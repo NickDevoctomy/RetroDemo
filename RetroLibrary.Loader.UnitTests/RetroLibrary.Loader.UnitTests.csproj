@@ -11,11 +11,11 @@
   <ItemGroup>
     <PackageReference Include="xunit" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" />
-    <PackageReference Include="MonoGame.Library.SDL" />      
+    <PackageReference Include="MonoGame.Library.SDL" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroLibrary.Loader\RetroLibrary.Loader.csproj" />
+    <ProjectReference Include="..\RetroLibrary.Loader\RetroLibrary.XmlLoader.csproj" />
   </ItemGroup>
 
   <ItemGroup>

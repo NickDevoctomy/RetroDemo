@@ -6,8 +6,7 @@ public interface IResourceLoader
 {
     public bool IsApplicable(XElement element);
 
-    public Task<(string Id, object Value)> LoadResourceAsync(
+    public (string Id, object Value) LoadResource(
         RetroGameContext gameContext,
-        XElement element,
-        CancellationToken cancellationToken);
+        XElement element);
 }

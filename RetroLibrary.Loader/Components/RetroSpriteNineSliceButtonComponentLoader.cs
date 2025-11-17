@@ -20,10 +20,9 @@ public class RetroSpriteNineSliceButtonComponentLoader(
             element.Attribute("type")!.Value == "RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary";
     }
 
-    public Task<(string Id, object Value)> LoadComponentAsync(
+    public (string Id, object Value) LoadComponent(
         RetroGameContext gameContext,
-        XElement element,
-        CancellationToken cancellationToken)
+        XElement element)
     {
         var name = element.Attribute("name")!.Value;
 
@@ -40,7 +39,7 @@ public class RetroSpriteNineSliceButtonComponentLoader(
             upTexture: GetResource<NineSliceTexture2D>(element.Attribute("upTextureRef"), gameContext.ResourceManager),
             downTexture: GetResource<NineSliceTexture2D>(element.Attribute("downTextureRef"), gameContext.ResourceManager));
 
-        return Task.FromResult((name, (object)button));
+        return (name, (object)button);
     }
 
     private static T? GetResource<T>(

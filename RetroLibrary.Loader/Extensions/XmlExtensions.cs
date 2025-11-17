@@ -13,12 +13,13 @@ public static class XmlExtensions
         IVariableReplacer variableReplacer)
     {
         var rawValue = attribute.Value;
-        rawValue = variableReplacer.ReplaceAllVariables(gameContext, rawValue);
         var parts = rawValue.Split(',');
+        var width = variableReplacer.ReplaceAllVariables(gameContext, parts[0]);
+        var height = variableReplacer.ReplaceAllVariables(gameContext, parts[1]);
 
         return new Point(
-            int.Parse(parts[0]),
-            int.Parse(parts[0]));
+            int.Parse(width),
+            int.Parse(height));
     }
 
     public static Color? ToColor(

@@ -6,7 +6,5 @@ public interface IRetroGameLoaderService
 {
     public List<RetroSpriteBase> Sprites { get; set; }
 
-    public Task<bool> LoadGameAsync(
-        RetroGameContext gameContext,
-        CancellationToken cancellationToken);
+    public bool LoadGame(RetroGameContext gameContext);
 }

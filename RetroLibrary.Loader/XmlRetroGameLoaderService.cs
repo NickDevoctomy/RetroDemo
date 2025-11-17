@@ -13,15 +13,12 @@ public class XmlRetroGameLoaderService(
 {
     public List<RetroSpriteBase> Sprites { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-    public async Task<bool> LoadGameAsync(
-        RetroGameContext gameContext,
-        CancellationToken cancellationToken)
+    public bool LoadGame(RetroGameContext gameContext)
     {
         using var stream = File.OpenRead(gameContext.GameDefinitionFilePath);
-        var document = await XDocument.LoadAsync(
+        var document = XDocument.Load(
             stream,
-            LoadOptions.None,
-            cancellationToken);
+            LoadOptions.None);
 
         if (document == null ||
             document.Root == null)
@@ -35,10 +32,9 @@ public class XmlRetroGameLoaderService(
             foreach (var resourceElement in resourcesRoot.Elements())
             {
                 var resourceLoader = resourceLoaders.Single(loader => loader.IsApplicable(resourceElement));
-                (string id, object value) = await resourceLoader.LoadResourceAsync(
+                (string id, object value) = resourceLoader.LoadResource(
                     gameContext,
-                    resourceElement,
-                    cancellationToken);
+                    resourceElement);
 
                 gameContext.ResourceManager.AddResource(id, value);
             }
@@ -50,13 +46,12 @@ public class XmlRetroGameLoaderService(
             foreach (var componentElement in componentsRoot.Elements())
             {
                 var componentLoader = componentLoaders.Single(loader => loader.IsApplicable(componentElement));
-                await componentLoader.LoadComponentAsync(
+                (string id, object value) = componentLoader.LoadComponent(
                     gameContext,
-                    componentElement,
-                    cancellationToken);
+                    componentElement);
             }
         }
 
-        return false;
+        return true;
     }
 }

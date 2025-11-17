@@ -7,8 +7,7 @@ public interface IComponentLoader
 {
     public bool IsApplicable(XElement element);
 
-    public Task<(string Id, object Value)> LoadComponentAsync(
+    public (string Id, object Value) LoadComponent(
         RetroGameContext gameContext,
-        XElement element,
-        CancellationToken cancellationToken);
+        XElement element);
 }

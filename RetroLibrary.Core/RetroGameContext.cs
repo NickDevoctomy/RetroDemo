@@ -40,7 +40,10 @@ public class RetroGameContext(
         GraphicsDeviceManager.ApplyChanges();
         ContentManager = retroGameBase.Content;
         ContentManager.RootDirectory = "Content";
+    }
 
-        // Load game definition
+    public void LoadGameDefinition()
+    {
+        var success = RetroGameLoaderService.LoadGame(this);
     }
 }

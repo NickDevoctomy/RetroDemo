@@ -6,6 +6,7 @@ namespace RetroLibrary.Core.Base;
 
 public class RetroGameBase : Game
 {
+    private readonly RetroGameContext _retroGameContext;
     private double _frameCounter;
     private double _elapsedTime;
     private int _fps;
@@ -13,14 +14,15 @@ public class RetroGameBase : Game
 
     public RetroGameBase(RetroGameContext retroGameContext)
     {
-        retroGameContext.Initialse(this);
-        Graphics = retroGameContext.GraphicsDeviceManager!;
+        _retroGameContext = retroGameContext;
+        _retroGameContext.Initialse(this);
+        Graphics = _retroGameContext.GraphicsDeviceManager!;
         IsMouseVisible = true;
     }
 
     public int Fps => _fps;
 
-    public GraphicsDeviceManager Graphics { get; init; }
+    public GraphicsDeviceManager Graphics { get; private set; }
 
     protected virtual void OnLoadContent()
     {
@@ -46,6 +48,7 @@ public class RetroGameBase : Game
 
     protected override void LoadContent()
     {
+        _retroGameContext.LoadGameDefinition();
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         OnLoadContent();
     }
