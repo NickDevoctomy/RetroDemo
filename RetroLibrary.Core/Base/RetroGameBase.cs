@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RetroLibrary.Core.Interfaces;
 
 namespace RetroLibrary.Core.Base;
@@ -11,6 +12,7 @@ public class RetroGameBase : Game
     private double _elapsedTime;
     private int _fps;
     private SpriteBatch? _spriteBatch;
+    private MouseState _previousMouseState;
 
     public RetroGameBase(RetroGameContext retroGameContext)
     {
@@ -26,19 +28,31 @@ public class RetroGameBase : Game
 
     protected virtual void OnLoadContent()
     {
-        // Do nothing by default
+        _previousMouseState = Mouse.GetState();
     }
 
-    protected virtual void OnUpdate(GameTime gameTime)
+    protected virtual void OnUpdate(
+        GameTime gameTime,
+        MouseState currentState,
+        MouseState previousState)
     {
-        // Do nothing by default
+        // !!! Causing flicker for some reason or another
+        foreach (var sprite in _retroGameContext.RetroGameLoaderService.Sprites)
+        {
+            sprite.Update(
+                currentState,
+                previousState);
+        }
     }
 
     protected virtual void OnDraw(
         GameTime gameTime,
         SpriteBatch spriteBatch)
     {
-        // Do nothing by default
+        foreach (var sprite in _retroGameContext.RetroGameLoaderService.Sprites)
+        {
+            sprite.Draw(spriteBatch);
+        }
     }
 
     protected virtual void OnUnloadContent()
@@ -55,7 +69,21 @@ public class RetroGameBase : Game
 
     protected override void Update(GameTime gameTime)
     {
-        OnUpdate(gameTime);
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+            Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
+            Exit();
+        }
+
+        var currentMouseState = Mouse.GetState();
+
+        OnUpdate(
+            gameTime,
+            currentMouseState,
+            _previousMouseState);
+
+        _previousMouseState = currentMouseState;
+
         base.Update(gameTime);
     }
 
@@ -73,6 +101,8 @@ public class RetroGameBase : Game
             _elapsedTime = 0;
         }
 
+        GraphicsDevice.Clear(_retroGameContext.RetroGameLoaderService.BackgroundColor);
+
         _spriteBatch!.Begin(
             SpriteSortMode.Deferred,
             BlendState.AlphaBlend);
@@ -80,6 +110,12 @@ public class RetroGameBase : Game
         OnDraw(
             gameTime,
             _spriteBatch!);
+
+        _spriteBatch?.DrawString(
+            _retroGameContext.ResourceManager.GetResource<SpriteFont>("DefaultFont"),
+            $"FPS: {_fps}",
+            new Vector2(10, 10),
+            Color.White);
 
         _spriteBatch!.End();
     }

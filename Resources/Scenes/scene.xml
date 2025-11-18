@@ -1,16 +1,16 @@
-﻿<Scene name="Main">
+﻿<Scene name="Main"
+       backgroundColor="red">
 
     <Resources>
         <Font id="DefaultFont" />
-        <!--<RadialRetroGradient
+        <RadialRetroGradient
             id="sunset"
-            centreX="50%"
-            centreY="-80pxFromBottom"
-            radius="100%Width"
+            centrePoint="GameWidth/2,GameHeight-80"
+            radius="GameWidth"
             fromColor="Yellow"
             toColor="Purple"
-            gradientStops="8" />-->
-        
+            gradientStops="8" />
+
         <NineSliceTexture
             id="surface"
             path="Content/Textures/surface.png"
@@ -55,7 +55,7 @@
             right="4" />
     </Resources>
 
-    <Components>        
+    <Components>
         <!--<MiniParallaxScroller
             name="Parallax"
             viewportWidth="auto"
@@ -195,15 +195,35 @@
             </TabPages>
         </Sprite>-->
 
+        <Sprite type="RetroLibrary.RetroSpriteTexturePanel, RetroLibrary"
+                name="Sunset"
+                position="0,0"
+                size="GameWidth,GameHeight"
+                textureRef="sunset" />
+
+        <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
+                name="OrangeButton"
+                position="20,60"
+                size="200,50"
+                text="Orange"
+                fontRef="DefaultFont"
+                isToggleButton="false"
+                foregroundColor="White"
+                upTint="Orange"
+                downTint="Orange"
+                upTextureRef="buttonUp"
+                downTextureRef="buttonDown" />
+
         <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
                 name="ExitButton"
                 position="GameWidth-208,8"
                 size="200,50"
                 text="Exit"
+                fontRef="DefaultFont"
                 foregroundColor="White"
                 upTint="Green"
                 downTint="Green"
                 upTextureRef="buttonUp"
-                downTextureRef="buttonDown" />
+                downTextureRef="buttonDown"/>
     </Components>
 </Scene>

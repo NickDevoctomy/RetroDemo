@@ -5,7 +5,7 @@ using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Resources;
 
-public class SpriteFontResourceLoader : IResourceLoader
+public class SpriteFontResourceLoader : ResourceLoaderBase, IResourceLoader
 {
     public bool IsApplicable(XElement element)
     {

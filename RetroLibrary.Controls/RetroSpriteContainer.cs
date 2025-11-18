@@ -125,6 +125,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         using var spriteBatch = new SpriteBatch(graphicsDevice);
 
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
+        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Color.Transparent);
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);

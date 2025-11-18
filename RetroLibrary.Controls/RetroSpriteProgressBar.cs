@@ -23,7 +23,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
     [ObservableProperty]
     private Color? toColor;
 
-    private LinearRetroGradientTexture2D? _progressTexture = new LinearRetroGradientTexture2D();
+    private LinearRetroGradientTexture2D? _progressTexture;
     private Texture2D? _cachedGradientTexture;
 
     public RetroSpriteProgressBar(
@@ -129,13 +129,12 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             RenderTargetUsage.PlatformContents);
         using var spriteBatch = new SpriteBatch(graphicsDevice);
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
+        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Color.Transparent);
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
-        _progressTexture?.Draw(
-            size.X,
-            size.Y,
+        _progressTexture ??= new LinearRetroGradientTexture2D(
             new LinearRetroGradientOptions
             {
                 FromColor = FromColor ?? Color.Green,
@@ -143,7 +142,11 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
                 GradientStops = 8,
                 FromPoint = new Point(0, 0),
                 ToPoint = new Point(size.X, 0)
-            },
+            });
+
+        _progressTexture?.Draw(
+            size.X,
+            size.Y,
             spriteBatch,
             new Rectangle(Point.Zero, size));
 

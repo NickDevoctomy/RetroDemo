@@ -5,10 +5,17 @@ namespace RetroLibrary.Core.Drawing;
 
 public class NineSliceTexture2D(
     Texture2D sourceTexture,
-    NineSliceTextureOptions options) : IDisposable
+    NineSliceTextureOptions options,
+    IBlitterService blitterService) : IDisposable
 {
-    private Dictionary<(int width, int height), Texture2D> _textureCache = new ();
+    private readonly IBlitterService _blitter = blitterService;
+    private readonly Texture2D _sourceTexture = sourceTexture;
+    private readonly NineSliceTextureOptions _options = options;
+
+    private readonly Dictionary<(int width, int height), Texture2D> _textureCache = new ();
     private Texture2D? _cachedTexture;
+    private Color[] _sourceData = Array.Empty<Color>();
+    private bool _setSourceData = false;
     private bool disposedValue;
 
     ~NineSliceTexture2D()
@@ -21,105 +28,82 @@ public class NineSliceTexture2D(
         int width,
         int height)
     {
-        var cachedTexture = CheckCache(
-            width,
-            height);
+        var cachedTexture = CheckCache(width, height);
         if (cachedTexture != null)
         {
             return cachedTexture;
         }
 
-        var renderTarget = new RenderTarget2D(
-            graphicsDevice,
-            width,
-            height,
-            false,
-            SurfaceFormat.Color,
-            DepthFormat.None,
-            0,
-            RenderTargetUsage.PlatformContents);
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
+        if (width <= 0 || height <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(width), "Width/Height must be > 0.");
+        }
 
-        var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        graphicsDevice.SetRenderTarget(renderTarget);
-        graphicsDevice.Clear(Color.Transparent);
+        var left = _options.LeftMargin;
+        var right = _options.RightMargin;
+        var top = _options.TopMargin;
+        var bottom = _options.BottomMargin;
 
-        spriteBatch.Begin();
+        if (left + right > width || top + bottom > height)
+        {
+            throw new ArgumentException("Nine-slice margins exceed target dimensions.");
+        }
 
-        // 9-Slice drawing
+        EnsureSourceDataLoaded();
 
-        // Top left corner
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(0, 0, options.LeftMargin, options.TopMargin),
-            new Rectangle(0, 0, options.LeftMargin, options.TopMargin),
-            Color.White);
+        var srcW = _sourceTexture.Width;
+        var srcH = _sourceTexture.Height;
+        var destData = new Color[width * height];
+        var srcInnerW = srcW - left - right;
+        var srcInnerH = srcH - top - bottom;
+        var dstInnerW = width - left - right;
+        var dstInnerH = height - top - bottom;
 
-        // Left edge
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(0, options.TopMargin, options.LeftMargin, height - options.TopMargin - options.BottomMargin),
-            new Rectangle(0, options.TopMargin, options.LeftMargin, sourceTexture.Height - options.TopMargin - options.BottomMargin),
-            Color.White);
+        var src = _sourceData!;
 
-        // Bottom left corner
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(0, height - options.BottomMargin, options.LeftMargin, options.BottomMargin),
-            new Rectangle(0, sourceTexture.Height - options.BottomMargin, options.LeftMargin, options.BottomMargin),
-            Color.White);
+        // Precompute rects/points
+        var srcTopLeft = new Rectangle(0, 0, left, top);
+        var srcTopRight = new Rectangle(srcW - right, 0, right, top);
+        var srcBottomLeft = new Rectangle(0, srcH - bottom, left, bottom);
+        var srcBottomRight = new Rectangle(srcW - right, srcH - bottom, right, bottom);
 
-        // Top edge
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(options.LeftMargin, 0, width - options.LeftMargin - options.RightMargin, options.TopMargin),
-            new Rectangle(options.LeftMargin, 0, sourceTexture.Width - options.LeftMargin - options.RightMargin, options.TopMargin),
-            Color.White);
+        var srcTopEdge = new Rectangle(left, 0, srcInnerW, top);
+        var srcBottomEdge = new Rectangle(left, srcH - bottom, srcInnerW, bottom);
+        var srcLeftEdge = new Rectangle(0, top, left, srcInnerH);
+        var srcRightEdge = new Rectangle(srcW - right, top, right, srcInnerH);
+        var srcCenter = new Rectangle(left, top, srcInnerW, srcInnerH);
 
-        // Top right corner
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(width - options.RightMargin, 0, options.RightMargin, options.TopMargin),
-            new Rectangle(sourceTexture.Width - options.RightMargin, 0, options.RightMargin, options.TopMargin),
-            Color.White);
+        var dstTopLeft = new Point(0, 0);
+        var dstTopRight = new Point(width - right, 0);
+        var dstBottomLeft = new Point(0, height - bottom);
+        var dstBottomRight = new Point(width - right, height - bottom);
 
-        // Right edge
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(width - options.RightMargin, options.TopMargin, options.RightMargin, height - options.TopMargin - options.BottomMargin),
-            new Rectangle(sourceTexture.Width - options.RightMargin, options.TopMargin, options.RightMargin, sourceTexture.Height - options.TopMargin - options.BottomMargin),
-            Color.White);
+        var dstTopEdge = new Rectangle(left, 0, dstInnerW, top);
+        var dstBottomEdge = new Rectangle(left, height - bottom, dstInnerW, bottom);
+        var dstLeftEdge = new Rectangle(0, top, left, dstInnerH);
+        var dstRightEdge = new Rectangle(width - right, top, right, dstInnerH);
+        var dstCenter = new Rectangle(left, top, dstInnerW, dstInnerH);
 
-        // Bottom right corner
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(width - options.RightMargin, height - options.BottomMargin, options.RightMargin, options.BottomMargin),
-            new Rectangle(sourceTexture.Width - options.RightMargin, sourceTexture.Height - options.BottomMargin, options.RightMargin, options.BottomMargin),
-            Color.White);
+        // Corners (exact copy)
+        _blitter.BlitExact(src, srcW, srcTopLeft, destData, width, dstTopLeft);
+        _blitter.BlitExact(src, srcW, srcTopRight, destData, width, dstTopRight);
+        _blitter.BlitExact(src, srcW, srcBottomLeft, destData, width, dstBottomLeft);
+        _blitter.BlitExact(src, srcW, srcBottomRight, destData, width, dstBottomRight);
 
-        // Bottom edge
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(options.LeftMargin, height - options.BottomMargin, width - options.LeftMargin - options.RightMargin, options.BottomMargin),
-            new Rectangle(options.LeftMargin, sourceTexture.Height - options.BottomMargin, sourceTexture.Width - options.LeftMargin - options.RightMargin, options.BottomMargin),
-            Color.White);
+        // Edges (scaled in one axis)
+        _blitter.BlitScaledNearest(src, srcW, srcTopEdge, destData, width, dstTopEdge); // Top edge
+        _blitter.BlitScaledNearest(src, srcW, srcBottomEdge, destData, width, dstBottomEdge); // Bottom edge
+        _blitter.BlitScaledNearest(src, srcW, srcLeftEdge, destData, width, dstLeftEdge); // Left edge
+        _blitter.BlitScaledNearest(src, srcW, srcRightEdge, destData, width, dstRightEdge); // Right edge
 
-        // Center
-        spriteBatch.Draw(
-            sourceTexture,
-            new Rectangle(options.LeftMargin, options.TopMargin, width - options.LeftMargin - options.RightMargin, height - options.TopMargin - options.BottomMargin),
-            new Rectangle(options.LeftMargin, options.TopMargin, sourceTexture.Width - options.LeftMargin - options.RightMargin, sourceTexture.Height - options.TopMargin - options.BottomMargin),
-            Color.White);
+        // Center (scaled both axes)
+        _blitter.BlitScaledNearest(src, srcW, srcCenter, destData, width, dstCenter);
 
-        spriteBatch.End();
-        graphicsDevice.SetRenderTargets(originalRenderTargets);
+        var result = new Texture2D(graphicsDevice, width, height, false, SurfaceFormat.Color);
+        result.SetData(destData);
 
-        CacheTexture(
-            width,
-            height,
-            renderTarget);
-
-        return renderTarget;
+        CacheTexture(width, height, result);
+        return result;
     }
 
     public void Dispose()
@@ -134,11 +118,17 @@ public class NineSliceTexture2D(
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                foreach (var kv in _textureCache)
+                {
+                    kv.Value.Dispose();
+                }
+
+                _textureCache.Clear();
             }
 
             _cachedTexture?.Dispose();
             _cachedTexture = null;
+            _sourceData = null;
 
             disposedValue = true;
         }
@@ -149,7 +139,7 @@ public class NineSliceTexture2D(
         int height,
         Texture2D texture)
     {
-        switch (options.CachingMode)
+        switch (_options.CachingMode)
         {
             case Enums.CachingMode.Single:
                 {
@@ -160,15 +150,13 @@ public class NineSliceTexture2D(
 
             case Enums.CachingMode.BySize:
                 {
-                    if (_textureCache.TryGetValue((width, height), out var existingTexture))
+                    if (_textureCache.TryGetValue((width, height), out var existing))
                     {
-                        existingTexture.Dispose();
+                        existing.Dispose();
                     }
 
                     _textureCache[(width, height)] = texture;
-
                     System.Diagnostics.Debug.WriteLine($"Cached textures count: {_textureCache.Count}");
-
                     break;
                 }
         }
@@ -178,34 +166,39 @@ public class NineSliceTexture2D(
         int width,
         int height)
     {
-        switch (options.CachingMode)
+        switch (_options.CachingMode)
         {
             case Enums.CachingMode.Single:
+                if (_cachedTexture != null &&
+                    _cachedTexture.Width == width &&
+                    _cachedTexture.Height == height)
                 {
-                    if (_cachedTexture != null &&
-                       _cachedTexture.Width == width &&
-                       _cachedTexture.Height == height)
-                    {
-                        return _cachedTexture;
-                    }
-
-                    _cachedTexture?.Dispose();
-                    _cachedTexture = null;
-
-                    return null;
+                    return _cachedTexture;
                 }
+
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
+                return null;
 
             case Enums.CachingMode.BySize:
+                if (_textureCache.TryGetValue((width, height), out var cached))
                 {
-                    if (_textureCache.TryGetValue((width, height), out var cachedTexture))
-                    {
-                        return cachedTexture;
-                    }
-
-                    return null;
+                    return cached;
                 }
+
+                return null;
         }
 
         return null;
+    }
+
+    private void EnsureSourceDataLoaded()
+    {
+        if (!_setSourceData)
+        {
+            _sourceData = new Color[_sourceTexture.Width * _sourceTexture.Height];
+            _sourceTexture.GetData(_sourceData);
+            _setSourceData = true;
+        }
     }
 }

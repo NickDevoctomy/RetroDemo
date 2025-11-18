@@ -38,7 +38,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private bool isHovered;
 
     private bool _needsRedraw = true;
-    private Texture2D? _offscreenBuffer;
+    private RenderTarget2D? _offscreenRenderTarget;
 
     public RetroSpriteBase(
         string name,
@@ -47,7 +47,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         SpriteFont? font = null,
-        bool buffered = true,
+        bool buffered = false,
         bool updateWatchedProperties = true)
     {
         Name = name;
@@ -57,6 +57,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
         Buffered = buffered;
+
         if (updateWatchedProperties)
         {
             UpdateWatchedProperties();
@@ -75,21 +76,23 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     {
         if (!Buffered)
         {
-            System.Diagnostics.Debug.WriteLine($"Drawing unbuffered button '{Name}'.");
+            System.Diagnostics.Debug.WriteLine($"Drawing unbuffered sprite '{Name}'.");
             OnRedraw(spriteBatch, Position);
             return;
         }
 
-        if (_needsRedraw || _offscreenBuffer == null)
+        throw new NotImplementedException("Buffered drawing is not implemented yet.");
+
+        if (_needsRedraw || _offscreenRenderTarget == null)
         {
-            System.Diagnostics.Debug.WriteLine($"Redrawing button '{Name}' buffer.");
+            System.Diagnostics.Debug.WriteLine($"Redrawing offscreen buffer for '{Name}'.");
             RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
         }
 
-        if (_offscreenBuffer != null)
+        if (_offscreenRenderTarget != null)
         {
             spriteBatch.Draw(
-                _offscreenBuffer,
+                _offscreenRenderTarget,
                 new Rectangle(Position, Size),
                 Color.White);
         }
@@ -105,6 +108,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     public virtual void Dispose()
     {
         GC.SuppressFinalize(this);
+
+        _offscreenRenderTarget?.Dispose();
+        _offscreenRenderTarget = null;
     }
 
     public void UpdateWatchedProperties()
@@ -166,7 +172,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     {
         base.OnPropertyChanged(e);
 
-        if (string.IsNullOrEmpty(e.PropertyName))
+        if (!Buffered || string.IsNullOrEmpty(e.PropertyName))
         {
             return;
         }
@@ -195,30 +201,29 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     private void RedrawOffscreenBuffer(GraphicsDevice graphicsDevice)
     {
-        _offscreenBuffer?.Dispose();
-        _offscreenBuffer = null;
-
-        var renderTarget = new RenderTarget2D(
-            graphicsDevice,
-            Size.X,
-            Size.Y,
-            false,
-            SurfaceFormat.Color,
-            DepthFormat.None,
-            0,
-            RenderTargetUsage.PlatformContents);
-
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
+        _offscreenRenderTarget ??= new RenderTarget2D(
+                graphicsDevice,
+                Size.X,
+                Size.Y,
+                false,
+                SurfaceFormat.Color,
+                DepthFormat.None,
+                0,
+                RenderTargetUsage.PreserveContents);
 
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        graphicsDevice.SetRenderTarget(renderTarget);
+        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
+        graphicsDevice.SetRenderTarget(_offscreenRenderTarget);             // Switching render target causes flicker
         graphicsDevice.Clear(BackgroundColor);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+
+        using var spriteBatch = new SpriteBatch(graphicsDevice);
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
         OnRedraw(spriteBatch, Point.Zero);
+
         spriteBatch.End();
         graphicsDevice.SetRenderTargets(originalRenderTargets);
 
-        _offscreenBuffer = renderTarget;
         _needsRedraw = false;
     }
 

@@ -1,7 +1,6 @@
 ﻿using System.Xml.Linq;
-using RetroLibrary.Core;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.Core.Components;
 
 public interface IComponentLoader
 {

@@ -42,7 +42,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         NineSliceTexture2D? upTexture = null,
         NineSliceTexture2D? downTexture = null,
         SpriteFont? font = null,
-        bool buffered = true)
+        bool buffered = false)
         : base(
             name,
             position,

@@ -7,11 +7,10 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary.Core.Drawing;
 
-public class LinearRetroGradientTexture2D : IDisposable
+public class LinearRetroGradientTexture2D(LinearRetroGradientOptions options) : IRetroTexture2D, IDisposable
 {
     private int _cachedWidth;
     private int _cachedHeight;
-    private LinearRetroGradientOptions? _options;
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
@@ -23,7 +22,6 @@ public class LinearRetroGradientTexture2D : IDisposable
     public void Draw(
         int width,
         int height,
-        LinearRetroGradientOptions options,
         SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Rectangle bounds)
     {
@@ -109,7 +107,7 @@ public class LinearRetroGradientTexture2D : IDisposable
         if (_cachedTexture != null &&
            _cachedWidth == width &&
            _cachedHeight == height &&
-           options.Equals(_options))
+           options.Equals(options))
         {
             return _cachedTexture;
         }
@@ -128,6 +126,7 @@ public class LinearRetroGradientTexture2D : IDisposable
             RenderTargetUsage.PlatformContents);
         using var spriteBatch = new SpriteBatch(graphicsDevice);
         var originalRenderTargets = graphicsDevice.GetRenderTargets();
+        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
         spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
@@ -149,7 +148,6 @@ public class LinearRetroGradientTexture2D : IDisposable
 
         _cachedWidth = width;
         _cachedHeight = height;
-        _options = options;
         _cachedTexture = renderTarget;
 
         return _cachedTexture;

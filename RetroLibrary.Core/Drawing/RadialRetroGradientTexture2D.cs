@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary.Core.Drawing;
 
-public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : IDisposable
+public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : IRetroTexture2D, IDisposable
 {
     private int _cachedWidth;
     private int _cachedHeight;
@@ -115,8 +115,10 @@ public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : 
             DepthFormat.None,
             0,
             RenderTargetUsage.PlatformContents);
+
         var spriteBatch = new SpriteBatch(graphicsDevice);
 
+        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
         graphicsDevice.SetRenderTarget(renderTarget);
         graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
 

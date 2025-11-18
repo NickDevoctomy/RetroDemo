@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
-using RetroLibrary.XmlLoader.Components;
 
 namespace RetroLibrary.XmlLoader.Extensions;
 

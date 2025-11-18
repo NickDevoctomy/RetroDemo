@@ -21,7 +21,7 @@ public static class ColorExtensions
     public static Color? ToColorFromName(this string name)
     {
         CacheColors();
-        return ColorsByName.TryGetValue(name, out var color)
+        return ColorsByName.TryGetValue(name.ToLower(), out var color)
             ? color
             : null;
     }
@@ -106,12 +106,12 @@ public static class ColorExtensions
 
                     if (!NamesByColor.ContainsKey(color.GetValueOrDefault()))
                     {
-                        NamesByColor.Add(color.GetValueOrDefault(), property.Name);
+                        NamesByColor.Add(color.GetValueOrDefault(), property.Name.ToLower());
                     }
 
                     if (!ColorsByName.ContainsKey(property.Name))
                     {
-                        ColorsByName.Add(property.Name, color.GetValueOrDefault());
+                        ColorsByName.Add(property.Name.ToLower(), color.GetValueOrDefault());
                     }
                 }
             }

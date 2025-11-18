@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Microsoft.Xna.Framework;
+using RetroLibrary.Controls;
+using RetroLibrary.Core;
+using RetroLibrary.Core.Common;
+using RetroLibrary.Core.Components;
+using RetroLibrary.Core.Drawing;
+
+namespace RetroLibrary.XmlLoader.Components
+{
+    internal class RetroSpriteTexturePanelComponentLoader(
+            IVariableReplacer variableReplacer,
+            IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    {
+        public bool IsApplicable(XElement element)
+        {
+            return element.Name == "RetroSpriteTexturePanel" ||
+                   element.Attribute("type")!.Value == "RetroLibrary.RetroSpriteTexturePanel, RetroLibrary";
+        }
+
+        public (string Id, object Value) LoadComponent(
+            RetroGameContext gameContext,
+            XElement element)
+        {
+            var name = element.Attribute("name")!.Value;
+
+            var panel = new RetroSpriteTexturePanel(
+                name,
+                ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
+                ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
+                texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef"), gameContext.ResourceManager));
+
+            return (name, panel);
+        }
+    }
+}

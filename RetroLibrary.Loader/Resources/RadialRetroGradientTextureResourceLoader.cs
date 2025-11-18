@@ -7,7 +7,10 @@ using SixLabors.ImageSharp;
 
 namespace RetroLibrary.XmlLoader.Resources;
 
-public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) : IResourceLoader
+public class RadialRetroGradientTextureResourceLoader(
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ResourceLoaderBase, IResourceLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -19,16 +22,15 @@ public class RadialRetroGradientTextureResourceLoader(IColorLoader colorLoader) 
         XElement element)
     {
         var id = element.Attribute("id")!.Value;
+
         var fromColor = colorLoader.ColorFromName(element.Attribute("fromColor")!.Value, Microsoft.Xna.Framework.Color.White);
         var toColor = colorLoader.ColorFromName(element.Attribute("toColor")!.Value, Microsoft.Xna.Framework.Color.White);
 
         var radialRetroGradient = new RadialRetroGradientTexture2D(
             new RadialRetroGradientOptions
             {
-                CentrePoint = new PointF(
-                    0,
-                    0),
-                Radius = 0,
+                CentrePoint = ToPointF(element.Attribute("centrePoint"), gameContext, variableReplacer, PointF.Empty),
+                Radius = ToFloat(element.Attribute("radius"), gameContext, variableReplacer, 0f),
                 FromColor = fromColor.GetValueOrDefault(),
                 ToColor = toColor.GetValueOrDefault(),
                 GradientStops = int.Parse(element.Attribute("gradientStops")!.Value)

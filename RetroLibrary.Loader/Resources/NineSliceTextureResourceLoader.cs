@@ -1,12 +1,14 @@
 ﻿using System.Xml.Linq;
-using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Resources;
 
-public class NineSliceTextureResourceLoader(ITexture2DResourceLoader texture2DResourceLoader) : IResourceLoader
+public class NineSliceTextureResourceLoader(
+    ITexture2DResourceLoader texture2DResourceLoader,
+    IBlitterService blitterService)
+    : ResourceLoaderBase, IResourceLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -28,7 +30,8 @@ public class NineSliceTextureResourceLoader(ITexture2DResourceLoader texture2DRe
                     LeftMargin = int.Parse(element.Attribute("left")!.Value),
                     BottomMargin = int.Parse(element.Attribute("bottom")!.Value),
                     RightMargin = int.Parse(element.Attribute("right")!.Value)
-                });
+                },
+                blitterService);
 
         return nineSliceTexture2D == null
             ? throw new Exception($"Failed to load font resource with id '{id}'.")

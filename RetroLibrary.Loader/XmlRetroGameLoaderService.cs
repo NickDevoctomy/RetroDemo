@@ -1,6 +1,9 @@
 ﻿using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Common;
+using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
 using RetroLibrary.XmlLoader.Components;
@@ -8,10 +11,15 @@ using RetroLibrary.XmlLoader.Components;
 namespace RetroLibrary.XmlLoader;
 
 public class XmlRetroGameLoaderService(
+    IColorLoader colorLoader,
     IEnumerable<IResourceLoader> resourceLoaders,
     IEnumerable<IComponentLoader> componentLoaders) : IRetroGameLoaderService
 {
-    public List<RetroSpriteBase> Sprites { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Name { get; private set; } = "Retro Game";
+
+    public Color BackgroundColor { get; private set; } = Color.Transparent;
+
+    public List<RetroSpriteBase> Sprites { get; private set; } = new ();
 
     public bool LoadGame(RetroGameContext gameContext)
     {
@@ -25,6 +33,12 @@ public class XmlRetroGameLoaderService(
         {
             return false;
         }
+
+        Name = document.Root.Element("Name")?.Value ?? "Retro Game";
+        var bgColor = document.Root.Attribute("backgroundColor")!.Value;
+        BackgroundColor = colorLoader.ColorFromName(
+            bgColor,
+            Color.Transparent).GetValueOrDefault();
 
         var resourcesRoot = document.Root.Element("Resources");
         if (resourcesRoot != null)
@@ -49,6 +63,11 @@ public class XmlRetroGameLoaderService(
                 (string id, object value) = componentLoader.LoadComponent(
                     gameContext,
                     componentElement);
+
+                if (value is RetroSpriteBase sprite)
+                {
+                    Sprites.Add(sprite);
+                }
             }
         }
 
