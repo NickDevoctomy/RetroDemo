@@ -236,9 +236,10 @@
                             name="TestProgressBar"
                             position="8,8"
                             size="200,50"
-                            value="0.5"
+                            value="0.75"
                             borderTextureRef="border"
-                            borderTint="Red" />
+                            borderTint="Red">
+                    </Sprite>
                 </TabPage>  
                 <TabPage title="Oranges" />
             </TabPages>

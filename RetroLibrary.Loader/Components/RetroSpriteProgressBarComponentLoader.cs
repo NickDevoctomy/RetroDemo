@@ -27,7 +27,7 @@ public class RetroSpriteProgressBarComponentLoader(
 
         var progressBar = new RetroSpriteProgressBar(
             name,
-            value: float.Parse(element.Attribute("value")?.Value ?? "0"),
+            value: ToFloat(element.Attribute("value"), 0f),
             position: ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
             size: ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
             backgroundColor: ToColor(element.Attribute("backgroundColor"), element.Attribute("backgroundColorAlpha"), colorLoader, null),

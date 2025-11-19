@@ -55,6 +55,14 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         BorderTint = borderTint;
         FromColor = fromColor;
         ToColor = toColor;
+
+        _progressTexture = new LinearRetroGradientTexture2D(new LinearRetroGradientOptions
+        {
+            FromColor = FromColor ?? Color.Green,
+            ToColor = ToColor ?? Color.Red,
+            FromPoint = new Point(0, 0),
+            ToPoint = new Point(Size.X, 0)
+        });
     }
 
     public override void SetWatchedProperties(List<string> propertyNames)
@@ -84,7 +92,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             width,
             sizeOffset.Y,
             spriteBatch,
-            new Rectangle(locationOffset, sizeOffset));
+            new Rectangle(locationOffset, new Point(width, sizeOffset.Y)));
 
         if (BorderTexture != null)
         {

@@ -25,7 +25,7 @@ public class LinearRetroGradientTexture2D(LinearRetroGradientOptions options) : 
         SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Rectangle bounds)
     {
-        var texture = BuildTexture(
+        var texture = _cachedTexture ?? CreateGradient(
             spriteBatch.GraphicsDevice,
             width,
             height,
@@ -96,60 +96,5 @@ public class LinearRetroGradientTexture2D(LinearRetroGradientOptions options) : 
         ms.Seek(0, SeekOrigin.Begin);
 
         return Texture2D.FromStream(graphicsDevice, ms);
-    }
-
-    private Texture2D BuildTexture(
-        GraphicsDevice graphicsDevice,
-        int width,
-        int height,
-        LinearRetroGradientOptions options)
-    {
-        if (_cachedTexture != null &&
-           _cachedWidth == width &&
-           _cachedHeight == height &&
-           options.Equals(options))
-        {
-            return _cachedTexture;
-        }
-
-        _cachedTexture?.Dispose();
-        _cachedTexture = null;
-
-        var renderTarget = new RenderTarget2D(
-            graphicsDevice,
-            width,
-            height,
-            false,
-            SurfaceFormat.Color,
-            DepthFormat.None,
-            0,
-            RenderTargetUsage.PlatformContents);
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
-        var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
-        graphicsDevice.SetRenderTarget(renderTarget);
-        graphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-
-        var baseGradient = CreateGradient(
-            graphicsDevice,
-            width,
-            height,
-            options);
-
-        spriteBatch.Draw(
-            baseGradient,
-            new Microsoft.Xna.Framework.Rectangle(0, 0, width, height),
-            new Microsoft.Xna.Framework.Rectangle(0, 0, width, height),
-            Microsoft.Xna.Framework.Color.White);
-
-        spriteBatch.End();
-        graphicsDevice.SetRenderTargets(originalRenderTargets);
-
-        _cachedWidth = width;
-        _cachedHeight = height;
-        _cachedTexture = renderTarget;
-
-        return _cachedTexture;
     }
 }

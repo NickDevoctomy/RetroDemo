@@ -64,6 +64,18 @@ public class ComponentLoaderBase
         return attribute.ToRectangle(gameContext, variableReplacer);
     }
 
+    protected static float ToFloat(
+        XAttribute? attribute,
+        float defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return float.Parse(attribute.Value);
+    }
+
     protected static bool ToBool(
         XAttribute? attribute,
         bool defaultValue)
