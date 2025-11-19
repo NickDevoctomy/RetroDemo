@@ -8,7 +8,6 @@ This is a rough little project containing some proof of concept code for creatin
 
 * **RetroSpriteBase**
   - Base class for all retro UI controls
-  - Features buffered/unbuffered rendering modes
   - Mouse interaction support (hover, click, press states)
   - Events: `Clicking`, `Released`, `Clicked`
   - Property change tracking with automatic redraw
@@ -37,6 +36,10 @@ This is a rough little project containing some proof of concept code for creatin
   - Optional 9-slice border support with `BorderTexture` and `BorderTint`
   - Smooth linear gradient rendering with retro quantization
   - Ideal for loading screens, health bars, and progress indicators
+
+* **RetroSpriteTexturePanel** 🖼️
+  - Texture display control with support for Retro Gradients
+  - Allows for laying out textures and gradients in the UI
 
 #### Container Controls 📦
 
@@ -95,12 +98,13 @@ This is a rough little project containing some proof of concept code for creatin
   - Optimized for horizontal scrolling effects
   - Automatic texture wrapping and seamless scrolling
 
-#### Utility Extensions 🛠️
+### Layout Engine
 
-* **ColorExtensions**
-  - Helper methods for color manipulation and gradient generation
-  - Supports retro-style color quantization
-  - Gradient color calculation utilities
+* **XmlRetroGameLoderService**
+  - XML-based layout loader for retro UI
+  - Parses XML files to create and configure RetroSprite controls
+  - Supports nested containers and complex layouts
+  - Simplifies UI creation with declarative syntax
 
 ### Key Features ✨
 
@@ -110,6 +114,7 @@ This is a rough little project containing some proof of concept code for creatin
 - **Retro Styling**: Authentic 8-bit appearance with quantized gradients
 - **Flexible Texturing**: 9-slice scaling and gradient generation
 - **Container System**: Hierarchical UI layout with automatic input handling
+- **Layout Loading**: XML-based layout definitions for easy UI creation
 
 ### Screenshots 📸
 

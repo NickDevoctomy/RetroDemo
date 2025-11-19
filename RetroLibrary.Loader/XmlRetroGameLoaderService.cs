@@ -11,8 +11,7 @@ namespace RetroLibrary.XmlLoader;
 
 public class XmlRetroGameLoaderService(
     IColorLoader colorLoader,
-    IEnumerable<IResourceLoader> resourceLoaders,
-    IEnumerable<IComponentLoader> componentLoaders) : IRetroGameLoaderService
+    IEnumerable<IResourceLoader> resourceLoaders) : IRetroGameLoaderService
 {
     public string Name { get; private set; } = "Retro Game";
 
@@ -58,7 +57,7 @@ public class XmlRetroGameLoaderService(
         {
             foreach (var componentElement in componentsRoot.Elements())
             {
-                var componentLoader = componentLoaders.Single(loader => loader.IsApplicable(componentElement));
+                var componentLoader = gameContext.ComponentLoaders.Single(loader => loader.IsApplicable(componentElement));
                 (string id, object value) = componentLoader.LoadComponent(
                     gameContext,
                     componentElement);

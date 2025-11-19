@@ -17,7 +17,7 @@ public class RetroSpriteNineSliceButtonComponentLoader(
     {
         return
             element.Name == "RetroSpriteNineSliceButton" ||
-            element.Attribute("type")!.Value == "RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary";
+            element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary";
     }
 
     public (string Id, object Value) LoadComponent(
@@ -33,10 +33,10 @@ public class RetroSpriteNineSliceButtonComponentLoader(
             ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
             ToBool(element.Attribute("isToggle"), false),
             font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), colorLoader, null),
-            upTint: ToColor(element.Attribute("upTint"), colorLoader, null),
-            downTint: ToColor(element.Attribute("downTint"), colorLoader, null),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, colorLoader, null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
+            upTint: ToColor(element.Attribute("upTint"), null, colorLoader, null),
+            downTint: ToColor(element.Attribute("downTint"), null, colorLoader, null),
             upTexture: GetResource<NineSliceTexture2D>(element.Attribute("upTextureRef"), gameContext.ResourceManager),
             downTexture: GetResource<NineSliceTexture2D>(element.Attribute("downTextureRef"), gameContext.ResourceManager),
             buffered: ToBool(element.Attribute("buffered"), false));

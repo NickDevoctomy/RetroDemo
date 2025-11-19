@@ -1,4 +1,6 @@
-﻿namespace RetroLibrary.Core;
+﻿using RetroLibrary.Core.Components;
+
+namespace RetroLibrary.Core;
 
 public interface IRetroGameContextFactory
 {
@@ -6,5 +8,6 @@ public interface IRetroGameContextFactory
         int width,
         int height,
         bool isFullScreen,
-        string gameDefinitionFilePath);
+        string gameDefinitionFilePath,
+        IEnumerable<IComponentLoader> componentLoaders);
 }

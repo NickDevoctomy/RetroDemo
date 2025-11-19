@@ -128,7 +128,7 @@ public class NineSliceTexture2D(
 
             _cachedTexture?.Dispose();
             _cachedTexture = null;
-            _sourceData = null;
+            _sourceData = Array.Empty<Color>();
 
             disposedValue = true;
         }

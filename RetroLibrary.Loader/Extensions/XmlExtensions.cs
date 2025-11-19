@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 
@@ -15,6 +16,25 @@ public static class XmlExtensions
         var value = variableReplacer.ReplaceAllVariables(gameContext, rawValue);
 
         return float.Parse(value);
+    }
+
+    public static Microsoft.Xna.Framework.Rectangle ToRectangle(
+        this XAttribute attribute,
+        RetroGameContext gameContext,
+        IVariableReplacer variableReplacer)
+    {
+        var rawValue = attribute.Value;
+        var parts = rawValue.Split(',');
+        var x = variableReplacer.ReplaceAllVariables(gameContext, parts[0]);
+        var y = variableReplacer.ReplaceAllVariables(gameContext, parts[1]);
+        var width = variableReplacer.ReplaceAllVariables(gameContext, parts[2]);
+        var height = variableReplacer.ReplaceAllVariables(gameContext, parts[3]);
+
+        return new Microsoft.Xna.Framework.Rectangle(
+            int.Parse(x),
+            int.Parse(y),
+            int.Parse(width),
+            int.Parse(height));
     }
 
     public static Microsoft.Xna.Framework.Point ToPoint(
@@ -50,10 +70,12 @@ public static class XmlExtensions
     public static Microsoft.Xna.Framework.Color? ToColor(
         this XAttribute attribute,
         IColorLoader colorLoader,
-        Microsoft.Xna.Framework.Color? defaultColor)
+        Microsoft.Xna.Framework.Color? defaultColor,
+        float alpha)
     {
-        return colorLoader.ColorFromName(
+        var color = colorLoader.ColorFromName(
             attribute.Value,
             defaultColor);
+        return color == null ? null : Color.MultiplyAlpha(color.GetValueOrDefault(), alpha);
     }
 }

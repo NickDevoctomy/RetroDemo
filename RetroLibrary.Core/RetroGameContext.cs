@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
 
@@ -11,15 +12,16 @@ public class RetroGameContext(
     int height,
     bool isFullScreen,
     string gameDefinitionFilePath,
-    IRetroGameLoaderService retroGameLoaderService)
+    IRetroGameLoaderService retroGameLoaderService,
+    IEnumerable<IComponentLoader> componentLoaders)
 {
-    public int Width { get; set; } = width;
+    public int Width { get; } = width;
 
-    public int Height { get; set; } = height;
+    public int Height { get; } = height;
 
-    public bool IsFullScreen { get; set; } = isFullScreen;
+    public bool IsFullScreen { get; } = isFullScreen;
 
-    public string GameDefinitionFilePath { get; set; } = gameDefinitionFilePath;
+    public string GameDefinitionFilePath { get; } = gameDefinitionFilePath;
 
     public GraphicsDeviceManager? GraphicsDeviceManager { get; private set; }
 
@@ -28,6 +30,8 @@ public class RetroGameContext(
     public IRetroGameLoaderService RetroGameLoaderService { get; } = retroGameLoaderService;
 
     public IResourceManager ResourceManager { get; } = new ResourceManager();
+
+    public IEnumerable<IComponentLoader> ComponentLoaders { get; } = componentLoaders;
 
     public void Initialse(RetroGameBase retroGameBase)
     {

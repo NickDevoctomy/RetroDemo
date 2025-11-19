@@ -104,8 +104,14 @@ public class RetroGameBase : Game
         GraphicsDevice.Clear(_retroGameContext.RetroGameLoaderService.BackgroundColor);
 
         _spriteBatch!.Begin(
-            SpriteSortMode.Deferred,
-            BlendState.AlphaBlend);
+            SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
+            null,
+            null,
+            new RasterizerState
+            {
+                ScissorTestEnable = true
+            });
 
         OnDraw(
             gameTime,

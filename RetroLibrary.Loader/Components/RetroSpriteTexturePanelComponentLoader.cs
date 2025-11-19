@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
@@ -20,7 +15,7 @@ namespace RetroLibrary.XmlLoader.Components
         public bool IsApplicable(XElement element)
         {
             return element.Name == "RetroSpriteTexturePanel" ||
-                   element.Attribute("type")!.Value == "RetroLibrary.RetroSpriteTexturePanel, RetroLibrary";
+                   element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary";
         }
 
         public (string Id, object Value) LoadComponent(

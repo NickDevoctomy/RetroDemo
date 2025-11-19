@@ -72,12 +72,12 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     public event EventHandler? WatchedPropertyChanged;
 
-    public void Draw(SpriteBatch spriteBatch)
+    public void Draw(SpriteBatch spriteBatch, Point? location = null)
     {
         if (!Buffered)
         {
             System.Diagnostics.Debug.WriteLine($"Drawing unbuffered sprite '{Name}'.");
-            OnRedraw(spriteBatch, Position);
+            OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
             return;
         }
 

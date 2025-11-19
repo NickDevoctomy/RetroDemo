@@ -1,4 +1,5 @@
-﻿using RetroLibrary.Core.Interfaces;
+﻿using RetroLibrary.Core.Components;
+using RetroLibrary.Core.Interfaces;
 
 namespace RetroLibrary.Core;
 
@@ -8,13 +9,15 @@ public class RetroGameContextFactory(IRetroGameLoaderService retroGameLoaderServ
         int width,
         int height,
         bool isFullScreen,
-        string gameDefinitionFilePath)
+        string gameDefinitionFilePath,
+        IEnumerable<IComponentLoader> componentLoaders)
     {
         return new RetroGameContext(
             width,
             height,
             isFullScreen,
             gameDefinitionFilePath,
-            retroGameLoaderService);
+            retroGameLoaderService,
+            componentLoaders);
     }
 }

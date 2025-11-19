@@ -30,7 +30,7 @@ public class ResourceLoaderBase
             return defaultColor;
         }
 
-        return attribute.ToColor(colorLoader, defaultColor);
+        return attribute.ToColor(colorLoader, defaultColor, 1.0f);
     }
 
     protected static Microsoft.Xna.Framework.Point ToPoint(

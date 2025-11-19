@@ -65,8 +65,14 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         Rectangle? innerMargins = null,
+        Color? tabUpTint = null,
+        Color? tabDownTint = null,
+        Color? tabPageTint = null,
+        NineSliceTexture2D? tabUpTexture = null,
+        NineSliceTexture2D? tabDownTexture = null,
+        NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
-        bool buffered = true,
+        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -79,6 +85,13 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             buffered,
             updateWatchedProperties)
     {
+        TabUpTint = tabUpTint ?? Color.White;
+        TabDownTint = tabDownTint ?? Color.White;
+        TabPageTint = tabPageTint ?? Color.White;
+        TabUpTexture = tabUpTexture;
+        TabDownTexture = tabDownTexture;
+        TabPageTexture = tabPageTexture;
+
         ContentMargins = innerMargins ?? Rectangle.Empty;
         UpdateEffectiveInnerMargins();
 

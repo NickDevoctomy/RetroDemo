@@ -23,6 +23,7 @@ public class ComponentLoaderBase
 
     protected static Color? ToColor(
         XAttribute? attribute,
+        XAttribute? alpha,
         IColorLoader colorLoader,
         Color? defaultColor)
     {
@@ -31,7 +32,8 @@ public class ComponentLoaderBase
             return defaultColor;
         }
 
-        return attribute.ToColor(colorLoader, defaultColor);
+        var alphaValue = alpha != null ? float.Parse(alpha.Value) : 1.0f;
+        return attribute.ToColor(colorLoader, defaultColor, alphaValue);
     }
 
     protected static Point ToPoint(
@@ -46,6 +48,20 @@ public class ComponentLoaderBase
         }
 
         return attribute.ToPoint(gameContext, variableReplacer);
+    }
+
+    protected static Rectangle ToRectangle(
+        XAttribute? attribute,
+        RetroGameContext gameContext,
+        IVariableReplacer variableReplacer,
+        Rectangle defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return attribute.ToRectangle(gameContext, variableReplacer);
     }
 
     protected static bool ToBool(

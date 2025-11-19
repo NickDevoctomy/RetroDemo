@@ -56,20 +56,35 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     {
         // Keep subscriptions current before drawing
         EnsureChildSubscriptions();
-        var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
 
-        var innerLocation = new Point(
+        var graphicsDevice = spriteBatch.GraphicsDevice;
+        var previousScissor = graphicsDevice.ScissorRectangle;
+        var clipRect = new Rectangle(
             location.X + InnerMargins.X,
-            location.Y + InnerMargins.Y);
+            location.Y + InnerMargins.Y,
+            Size.X - (InnerMargins.X + InnerMargins.Width),
+            Size.Y - (InnerMargins.Y + InnerMargins.Height));
+        clipRect = Rectangle.Intersect(previousScissor, clipRect);
+        graphicsDevice.ScissorRectangle = clipRect;
 
-        var innerSize = new Point(
-            Size.X - InnerMargins.X - InnerMargins.Width,
-            Size.Y - InnerMargins.Y - InnerMargins.Height);
+        DrawChildren(spriteBatch, location);
 
-        spriteBatch.Draw(
-            childrenTexture,
-            new Rectangle(innerLocation, innerSize),
-            Color.White);
+        graphicsDevice.ScissorRectangle = previousScissor;
+
+        ////var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
+
+        ////var innerLocation = new Point(
+        ////    location.X + InnerMargins.X,
+        ////    location.Y + InnerMargins.Y);
+
+        ////var innerSize = new Point(
+        ////    Size.X - InnerMargins.X - InnerMargins.Width,
+        ////    Size.Y - InnerMargins.Y - InnerMargins.Height);
+
+        ////spriteBatch.Draw(
+        ////    childrenTexture,
+        ////    new Rectangle(innerLocation, innerSize),
+        ////    Color.White);
     }
 
     protected override void OnUpdate(
@@ -110,36 +125,44 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         }
     }
 
-    protected Texture2D DrawChildrenToTexture(GraphicsDevice graphicsDevice)
+    protected void DrawChildren(SpriteBatch spriteBatch, Point location)
     {
-        var renderTarget = new RenderTarget2D(
-            graphicsDevice,
-            Size.X - (InnerMargins.X + InnerMargins.Width),
-            Size.Y - (InnerMargins.Y + InnerMargins.Height),
-            false,
-            SurfaceFormat.Color,
-            DepthFormat.None,
-            0,
-            RenderTargetUsage.PlatformContents);
-
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
-
-        var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
-        graphicsDevice.SetRenderTarget(renderTarget);
-        graphicsDevice.Clear(Color.Transparent);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
         foreach (var currentChild in Children)
         {
-            currentChild.Draw(spriteBatch);
+            currentChild.Draw(spriteBatch, location + InnerMargins.Location);
         }
-
-        spriteBatch.End();
-        graphicsDevice.SetRenderTargets(originalRenderTargets);
-
-        return renderTarget;
     }
+
+    ////protected Texture2D DrawChildrenToTexture(GraphicsDevice graphicsDevice)
+    ////{
+    ////    var renderTarget = new RenderTarget2D(
+    ////        graphicsDevice,
+    ////        Size.X - (InnerMargins.X + InnerMargins.Width),
+    ////        Size.Y - (InnerMargins.Y + InnerMargins.Height),
+    ////        false,
+    ////        SurfaceFormat.Color,
+    ////        DepthFormat.None,
+    ////        0,
+    ////        RenderTargetUsage.PlatformContents);
+
+    ////    using var spriteBatch = new SpriteBatch(graphicsDevice);
+
+    ////    var originalRenderTargets = graphicsDevice.GetRenderTargets();
+    ////    System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
+    ////    graphicsDevice.SetRenderTarget(renderTarget);
+    ////    graphicsDevice.Clear(Color.Transparent);
+    ////    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
+    ////    foreach (var currentChild in Children)
+    ////    {
+    ////        currentChild.Draw(spriteBatch);
+    ////    }
+
+    ////    spriteBatch.End();
+    ////    graphicsDevice.SetRenderTargets(originalRenderTargets);
+
+    ////    return renderTarget;
+    ////}
 
     private void EnsureChildSubscriptions()
     {
