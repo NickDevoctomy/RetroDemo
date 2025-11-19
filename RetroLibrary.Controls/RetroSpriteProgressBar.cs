@@ -38,7 +38,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         Color? fromColor = null,
         Color? toColor = null,
         SpriteFont? font = null,
-        bool buffered = true,
+        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -67,7 +67,9 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         propertyNames.Add(nameof(BorderTint));
     }
 
-    protected override void OnRedraw(SpriteBatch spriteBatch, Point location)
+    protected override void OnRedraw(
+        SpriteBatch spriteBatch,
+        Point location)
     {
         var locationOffset = new Point(
             location.X + 1,
@@ -75,17 +77,14 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         var sizeOffset = new Point(
             Size.X - 2,
             Size.Y - 2);
-        var gradientProgressTexture = BuildTexture(
-            spriteBatch.GraphicsDevice,
-            sizeOffset);
 
         int width = (int)(sizeOffset.X * Value);
 
-        spriteBatch.Draw(
-            gradientProgressTexture,
-            new Rectangle(locationOffset.X, locationOffset.Y, width, sizeOffset.Y),
-            new Rectangle(0, 0, width, sizeOffset.Y),
-            Color.White);
+        _progressTexture?.Draw(
+            width,
+            sizeOffset.Y,
+            spriteBatch,
+            new Rectangle(locationOffset, sizeOffset));
 
         if (BorderTexture != null)
         {
@@ -104,56 +103,5 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
                 new Rectangle(borderLocation, borderSize),
                 BorderTint ?? Color.White);
         }
-    }
-
-    private Texture2D BuildTexture(
-        GraphicsDevice graphicsDevice,
-        Point size)
-    {
-        if (_cachedGradientTexture != null)
-        {
-            return _cachedGradientTexture;
-        }
-
-        _cachedGradientTexture?.Dispose();
-        _cachedGradientTexture = null;
-
-        var renderTarget = new RenderTarget2D(
-            graphicsDevice,
-            size.X,
-            size.Y,
-            false,
-            SurfaceFormat.Color,
-            DepthFormat.None,
-            0,
-            RenderTargetUsage.PlatformContents);
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
-        var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
-        graphicsDevice.SetRenderTarget(renderTarget);
-        graphicsDevice.Clear(Color.Transparent);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-
-        _progressTexture ??= new LinearRetroGradientTexture2D(
-            new LinearRetroGradientOptions
-            {
-                FromColor = FromColor ?? Color.Green,
-                ToColor = ToColor ?? Color.Red,
-                GradientStops = 8,
-                FromPoint = new Point(0, 0),
-                ToPoint = new Point(size.X, 0)
-            });
-
-        _progressTexture?.Draw(
-            size.X,
-            size.Y,
-            spriteBatch,
-            new Rectangle(Point.Zero, size));
-
-        spriteBatch.End();
-        graphicsDevice.SetRenderTargets(originalRenderTargets);
-
-        _cachedGradientTexture = renderTarget;
-        return _cachedGradientTexture;
     }
 }

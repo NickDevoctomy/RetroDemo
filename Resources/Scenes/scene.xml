@@ -231,7 +231,15 @@
                             upTextureRef="buttonUp"
                             downTextureRef="buttonDown" />                    
                 </TabPage>
-                <TabPage title="Hello World!!!" />
+                <TabPage title="Hello World!!!">
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary"
+                            name="TestProgressBar"
+                            position="8,8"
+                            size="200,50"
+                            value="0.5"
+                            borderTextureRef="border"
+                            borderTint="Red" />
+                </TabPage>  
                 <TabPage title="Oranges" />
             </TabPages>
         </Sprite>        
