@@ -201,10 +201,11 @@
                 size="GameWidth,GameHeight"
                 textureRef="sunset" />
 
-        <Sprite type="RetroLibrary.Controls.MiniParalaxScroller, RetroLibrary.Controls"
+        <Sprite type="RetroLibrary.Controls.RetroSpriteMiniParallaxScroller, RetroLibrary.Controls"
                 name="ParalaxScroller"
-                viewportWidth="GameWidth"
-                viewportHeight="GameHeight">
+                position="0,0"
+                size="GameWidth,GameHeight"
+                fontRef="DefaultFont">
             <Layers>
                 <Layer
                     texturePath="Content/Textures/grass.png"

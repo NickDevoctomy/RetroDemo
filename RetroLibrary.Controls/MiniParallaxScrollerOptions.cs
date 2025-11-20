@@ -2,7 +2,7 @@
 
 public class MiniParallaxScrollerOptions
 {
-    public List<MiniParallaxScrollerLayer> Layers { get; set; } = new List<MiniParallaxScrollerLayer>();
+    public List<MiniParallaxScrollerMiniParallaxScrollerLayer> Layers { get; set; } = new List<MiniParallaxScrollerMiniParallaxScrollerLayer>();
 
     public int ViewportWidth { get; set; } = 800;
 

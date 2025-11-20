@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -6,22 +9,55 @@ using SixLabors.ImageSharp.Processing;
 
 namespace RetroLibrary.Controls;
 
-public class MiniParallaxScroller(
-    ITexture2DResourceLoader textureLoader,
-    MiniParallaxScrollerOptions options) : IDisposable
+public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
 {
-    private readonly Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new ();
-    private bool _layerTexturesCached = false;
-    private bool disposedValue;
+    [ObservableProperty]
+    private List<MiniParallaxScrollerMiniParallaxScrollerLayer> layers;
 
-    ~MiniParallaxScroller()
+    private readonly Dictionary<MiniParallaxScrollerMiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new ();
+    private bool _layerTexturesCached = false;
+    private Texture2DResourceLoader textureLoader = new (); // We need to inject this or get it from the context
+
+    public RetroSpriteMiniParallaxScroller(
+        string name,
+        Microsoft.Xna.Framework.Point position,
+        Microsoft.Xna.Framework.Point size,
+        Microsoft.Xna.Framework.Color? backgroundColor = null,
+        Microsoft.Xna.Framework.Color? foregroundColor = null,
+        List<MiniParallaxScrollerMiniParallaxScrollerLayer>? layers = null,
+        SpriteFont? font = null,
+        bool buffered = false,
+        bool updateWatchedProperties = true)
+        : base(
+            name,
+            position,
+            size,
+            backgroundColor,
+            foregroundColor,
+            font,
+            buffered,
+            updateWatchedProperties)
     {
-        Dispose(disposing: false);
+        Layers = layers ?? new List<MiniParallaxScrollerMiniParallaxScrollerLayer>();
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Dispose()
     {
-        var rect = new Microsoft.Xna.Framework.Rectangle(0, 0, options.ViewportWidth, options.ViewportHeight);
+        GC.SuppressFinalize(this);
+
+        foreach (var layerState in _layerOffsets.Values)
+        {
+            layerState.Dispose();
+        }
+
+        _layerOffsets.Clear();
+    }
+
+    protected override void OnRedraw(
+        SpriteBatch spriteBatch,
+        Microsoft.Xna.Framework.Point location)
+    {
+        var rect = new Microsoft.Xna.Framework.Rectangle(location + Position, Size);
 
         if (!_layerTexturesCached)
         {
@@ -30,7 +66,7 @@ public class MiniParallaxScroller(
         }
 
         var startYOffset = (int?)null;
-        var firstLayer = options.Layers.FirstOrDefault();
+        var firstLayer = Layers.FirstOrDefault();
         if (firstLayer != null)
         {
             if (!_layerOffsets.TryGetValue(firstLayer, out var state))
@@ -38,12 +74,12 @@ public class MiniParallaxScroller(
                 throw new Exception("Layer state not found for first layer.");
             }
 
-            startYOffset = options.ViewportHeight - state.Texture!.Bounds.Height;
+            startYOffset = Size.Y - state.Texture!.Bounds.Height;
         }
 
-        for (var i = options.Layers.Count - 1; i >= 0; i--)
+        for (var i = Layers.Count - 1; i >= 0; i--)
         {
-            var layer = options.Layers[i];
+            var layer = Layers[i];
             if (!_layerOffsets.TryGetValue(layer, out var state))
             {
                 continue;
@@ -67,43 +103,20 @@ public class MiniParallaxScroller(
         }
     }
 
-    public void Update()
+    protected override void OnUpdate(
+        MouseState mouseState, MouseState
+        previousMouseState)
     {
-        foreach (var layer in options.Layers)
+        foreach (var layer in Layers)
         {
             UpdateLayerOffsets(layer);
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                // TODO: dispose managed state (managed objects)
-            }
-
-            foreach (var layerState in _layerOffsets.Values)
-            {
-                layerState.Dispose();
-            }
-
-            _layerOffsets.Clear();
-            disposedValue = true;
         }
     }
 
     private static void AlternateFlipTile(
         SpriteBatch spriteBatch,
         int? startYOffset,
-        MiniParallaxScrollerLayer layer,
+        MiniParallaxScrollerMiniParallaxScrollerLayer layer,
         MiniParallaxScrollerLayerState state,
         Microsoft.Xna.Framework.Point fullSize,
         float offsetPixelsX,
@@ -126,7 +139,7 @@ public class MiniParallaxScroller(
 
     private void CacheLayerTextures(SpriteBatch spriteBatch)
     {
-        foreach (var layer in options.Layers)
+        foreach (var layer in Layers)
         {
             if (!_layerOffsets.TryGetValue(layer, out var state))
             {
@@ -152,7 +165,7 @@ public class MiniParallaxScroller(
         }
     }
 
-    private void UpdateLayerOffsets(MiniParallaxScrollerLayer layer)
+    private void UpdateLayerOffsets(MiniParallaxScrollerMiniParallaxScrollerLayer layer)
     {
         if (!_layerOffsets.TryGetValue(layer, out var state))
         {
@@ -161,7 +174,7 @@ public class MiniParallaxScroller(
             return;
         }
 
-        var percentPerPixel = 1f / options.ViewportWidth;
+        var percentPerPixel = 1f / Size.X;
 
         if (state.Offset < -1f)
         {

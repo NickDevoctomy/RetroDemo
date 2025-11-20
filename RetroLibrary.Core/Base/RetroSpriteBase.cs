@@ -76,7 +76,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     {
         if (!Buffered)
         {
-            System.Diagnostics.Debug.WriteLine($"Drawing unbuffered sprite '{Name}'.");
             OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
             return;
         }
