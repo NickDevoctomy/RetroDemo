@@ -16,7 +16,7 @@ public class RetroSpriteProgressBarComponentLoader(
     public bool IsApplicable(XElement element)
     {
         return element.Name == "RetroSpriteProgressBar" ||
-               element.Attribute("type")?.Value == "RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary";
+               element.Attribute("type")?.Value == "RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls";
     }
 
     public (string Id, object Value) LoadComponent(

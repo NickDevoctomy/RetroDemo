@@ -87,4 +87,18 @@ public class ComponentLoaderBase
 
         return bool.Parse(attribute.Value);
     }
+
+    protected static int ToInt(
+        XAttribute? attribute,
+        RetroGameContext gameContext,
+        IVariableReplacer variableReplacer,
+        int defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return attribute.ToInt(gameContext, variableReplacer);
+    }
 }

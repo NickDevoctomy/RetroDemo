@@ -195,13 +195,33 @@
             </TabPages>
         </Sprite>-->
 
-        <Sprite type="RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary"
+        <Sprite type="RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary.Controls"
                 name="Sunset"
                 position="0,0"
                 size="GameWidth,GameHeight"
                 textureRef="sunset" />
 
-        <Sprite type="RetroLibrary.Controls.RetroSpriteTabbedContainer, RetroLibrary"
+        <Sprite type="RetroLibrary.Controls.MiniParalaxScroller, RetroLibrary.Controls"
+                name="ParalaxScroller"
+                viewportWidth="GameWidth"
+                viewportHeight="GameHeight">
+            <Layers>
+                <Layer
+                    texturePath="Content/Textures/grass.png"
+                    scrollSpeed="6.0"
+                    yOffset="0" />
+                <Layer
+                    texturePath="Content/Textures/road.png"
+                    scrollSpeed="4.0"
+                    yOffset="30" />
+                <Layer
+                    texturePath="Content/Textures/sandyrocks.png"
+                    scrollSpeed="2.0"
+                    yOffset="60" />
+            </Layers>
+        </Sprite>
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteTabbedContainer, RetroLibrary.Controls"
                 name="TabbedContainer"
                 position="100,150"
                 size="400,300"
@@ -218,7 +238,7 @@
                 tabDownTintAlpha="0.2">
             <TabPages>
                 <TabPage title="Apple">
-                    <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary"
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
                             name="AppleTabButton"
                             position="8,8"
                             size="200,50"
@@ -232,7 +252,7 @@
                             downTextureRef="buttonDown" />                    
                 </TabPage>
                 <TabPage title="Hello World!!!">
-                    <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary"
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls"
                             name="TestProgressBar"
                             position="8,8"
                             size="200,50"
@@ -245,7 +265,7 @@
             </TabPages>
         </Sprite>        
 
-        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary"
+        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
                 name="OrangeButton"
                 position="20,60"
                 size="200,50"
@@ -258,7 +278,7 @@
                 upTextureRef="buttonUp"
                 downTextureRef="buttonDown" />
 
-        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary"
+        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
                 name="ExitButton"
                 position="GameWidth-208,8"
                 size="200,50"

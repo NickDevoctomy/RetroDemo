@@ -17,7 +17,7 @@ public class RetroSpriteNineSliceButtonComponentLoader(
     {
         return
             element.Name == "RetroSpriteNineSliceButton" ||
-            element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary";
+            element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls";
     }
 
     public (string Id, object Value) LoadComponent(

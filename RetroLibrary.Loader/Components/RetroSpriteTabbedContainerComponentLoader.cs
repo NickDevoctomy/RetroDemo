@@ -17,7 +17,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
     public bool IsApplicable(XElement element)
     {
         return element.Name == "RetroSpriteTabbedContainer" ||
-               element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteTabbedContainer, RetroLibrary";
+               element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteTabbedContainer, RetroLibrary.Controls";
     }
 
     public (string Id, object Value) LoadComponent(

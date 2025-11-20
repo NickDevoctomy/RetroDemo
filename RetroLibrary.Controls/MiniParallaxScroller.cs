@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Processing;
 namespace RetroLibrary.Controls;
 
 public class MiniParallaxScroller(
-    Texture2DResourceLoader textureLoader,
+    ITexture2DResourceLoader textureLoader,
     MiniParallaxScrollerOptions options) : IDisposable
 {
     private readonly Dictionary<MiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new ();
@@ -54,7 +54,6 @@ public class MiniParallaxScroller(
 
             var copiesRequired = (int)Math.Ceiling(((decimal)rect.Width + fullSize.X) / fullSize.X) + 1;
 
-            // We really need to cache the result of this, based on copiesRequired and FirstFlipped state
             var flip = state.FirstFlipped;
             AlternateFlipTile(
                 spriteBatch,

@@ -15,7 +15,7 @@ namespace RetroLibrary.XmlLoader.Components
         public bool IsApplicable(XElement element)
         {
             return element.Name == "RetroSpriteTexturePanel" ||
-                   element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary";
+                   element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary.Controls";
         }
 
         public (string Id, object Value) LoadComponent(

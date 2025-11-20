@@ -7,6 +7,17 @@ namespace RetroLibrary.XmlLoader.Extensions;
 
 public static class XmlExtensions
 {
+    public static int ToInt(
+        this XAttribute attribute,
+        RetroGameContext gameContext,
+        IVariableReplacer variableReplacer)
+    {
+        var rawValue = attribute.Value;
+        var value = variableReplacer.ReplaceAllVariables(gameContext, rawValue);
+
+        return int.Parse(value);
+    }
+
     public static float ToFloat(
         this XAttribute attribute,
         RetroGameContext gameContext,
