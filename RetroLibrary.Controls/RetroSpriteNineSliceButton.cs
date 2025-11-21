@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Drawing;
@@ -33,6 +34,9 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
     [ObservableProperty]
     private RelayCommand? clickCommand;
 
+    [ObservableProperty]
+    private SoundEffect? clickSound;
+
     public RetroSpriteNineSliceButton(
         string name,
         string text,
@@ -46,6 +50,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         NineSliceTexture2D? upTexture = null,
         NineSliceTexture2D? downTexture = null,
         RelayCommand? clickCommand = null,
+        SoundEffect? clickSound = null,
         SpriteFont? font = null,
         bool isVisible = true,
         bool buffered = false)
@@ -67,6 +72,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         UpTint = upTint ?? Color.White;
         DownTint = downTint ?? Color.White;
         ClickCommand = clickCommand;
+        ClickSound = clickSound;
 
         UpdateWatchedProperties();
     }
@@ -97,6 +103,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
     {
         base.OnClicked();
 
+        ClickSound?.Play();
         ClickCommand?.Execute(null);
 
         if (IsToggleButton)

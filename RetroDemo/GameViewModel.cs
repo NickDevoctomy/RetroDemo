@@ -56,9 +56,6 @@ public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
         {
             scroller.IsVisible = !scroller.IsVisible;
         }
-        else
-        {
-        }
     }
 
     [RelayCommand]
@@ -67,14 +64,7 @@ public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
         // Only works when tab is active at the moment, need to be able to search all children in all tabs
         if (game.RetroGameContext.RetroGameLoaderService.FindSpriteByName("TestProgressBar") is RetroSpriteProgressBar progress)
         {
-            var sound = game.RetroGameContext.ResourceManager.GetResource<SoundEffect>("updateSound");
-            sound.Play();
             progress.Value = (float)_rnd.NextDouble();
-        }
-        else
-        {
-            var sound = game.RetroGameContext.ResourceManager.GetResource<SoundEffect>("buttonClick1Sound");
-            sound.Play();
         }
     }
 }

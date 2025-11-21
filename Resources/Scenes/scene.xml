@@ -133,7 +133,8 @@
                             downTint="LightGreen"
                             upTextureRef="buttonUp"
                             downTextureRef="buttonDown"
-                            clickCommand="AppleTabButton_ClickedCommand"/>                    
+                            clickCommand="AppleTabButton_ClickedCommand"
+                            clickSoundRef="updateSound"/>                    
                 </TabPage>
                 <TabPage title="Hello World!!!">
                     <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls"
@@ -161,7 +162,8 @@
                 downTint="Orange"
                 upTextureRef="buttonUp"
                 downTextureRef="buttonDown"
-                clickCommand="OrangeButton_ClickedCommand"/>
+                clickCommand="OrangeButton_ClickedCommand"
+                clickSoundRef="buttonClick1Sound"/>
 
         <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
                 name="ExitButton"
