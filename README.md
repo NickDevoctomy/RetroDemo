@@ -98,6 +98,10 @@ This is a rough little project containing some proof of concept code for creatin
   - Optimized for horizontal scrolling effects
   - Automatic texture wrapping and seamless scrolling
 
+### Sound Integration 🔊
+
+ - Simple sound effect support with MonoGame's SoundEffect class
+
 ### Layout Engine
 
 * **XmlRetroGameLoderService**
@@ -133,6 +137,13 @@ This is a rough little project containing some proof of concept code for creatin
             fromColor="Yellow"
             toColor="Purple"
             gradientStops="8" />
+
+        <Sound id="buttonClick1Sound"
+               path="Content/Sounds/buttonClick1.wav" />
+        <Sound id="buttonClick2Sound"
+               path="Content/Sounds/buttonClick2.wav" />
+        <Sound id="updateSound"
+               path="Content/Sounds/updateSound.wav" />        
 
         <NineSliceTexture
             id="surface"
