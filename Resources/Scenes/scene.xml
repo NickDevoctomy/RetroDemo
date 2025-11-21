@@ -12,6 +12,13 @@
             toColor="Purple"
             gradientStops="8" />
 
+        <Sound id="buttonClick1Sound"
+               path="Content/Sounds/buttonClick1.wav" />
+        <Sound id="buttonClick2Sound"
+               path="Content/Sounds/buttonClick2.wav" />
+        <Sound id="updateSound"
+               path="Content/Sounds/updateSound.wav" />        
+
         <NineSliceTexture
             id="surface"
             path="Content/Textures/surface.png"

@@ -13,6 +13,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Sounds\buttonClick1.wav" />
+    <None Remove="Content\Sounds\buttonClick2.wav" />
     <None Remove="Content\Textures\border.png" />
     <None Remove="Content\Textures\grass.png" />
     <None Remove="Content\Textures\greybuttondown.png" />
@@ -27,6 +29,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Resources\Scenes\scene.xml" Link="Content\scene.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\buttonClick1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\buttonClick2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sounds\updateSound.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Textures\border.png">
