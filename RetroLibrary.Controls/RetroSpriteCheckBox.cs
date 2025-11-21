@@ -27,6 +27,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
         NineSliceTexture2D? boxTexture = null,
         bool isChecked = false,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
@@ -36,6 +37,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {

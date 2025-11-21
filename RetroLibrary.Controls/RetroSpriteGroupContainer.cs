@@ -43,6 +43,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         Point? labelOffset = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
@@ -53,6 +54,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
@@ -105,7 +107,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
                     LabelTint ?? Color.White);
             }
 
-            Vector2 textPosition = new (
+            Vector2 textPosition = new(
                 LabelOffset.X + ((labelWidth - textSize.X) / 2),
                 LabelOffset.Y + ((labelHeight - textSize.Y) / 2) + 2); // Hardcoded additional offset for current font but we really want this to be settable
             spriteBatch.DrawString(

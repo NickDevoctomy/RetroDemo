@@ -2,7 +2,7 @@
 
 public class ResourceManager : IResourceManager
 {
-    private readonly Dictionary<string, object> _resources = new ();
+    private readonly Dictionary<string, object> _resources = [];
 
     public IReadOnlyDictionary<string, object> Resources => _resources;
 

@@ -19,6 +19,7 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
         Color? foregroundColor = null,
         IRetroTexture2D? texture = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
@@ -28,6 +29,7 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
@@ -38,12 +40,19 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
         SpriteBatch spriteBatch,
         Point location)
     {
-        Texture?.Draw(
-                Size.X,
-                Size.Y,
-                spriteBatch,
-                new Rectangle(
-                    location,
-                    Size));
+        if (Texture is null)
+        {
+            return;
+        }
+
+        var source = new Rectangle(0, 0, Size.X, Size.Y); // full area of gradient desired subsection
+        var destination = new Rectangle(location, Size);
+
+        Texture.Draw(
+            Size.X,
+            Size.Y,
+            spriteBatch,
+            source,
+            destination);
     }
 }

@@ -28,7 +28,8 @@ namespace RetroLibrary.XmlLoader.Components
                 name,
                 ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
                 ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-                texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef"), gameContext.ResourceManager));
+                texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef"), gameContext.ResourceManager),
+                isVisible: ToBool(element.Attribute("isVisible"), true));
 
             return (name, panel);
         }

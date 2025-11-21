@@ -10,7 +10,6 @@ using RetroLibrary.Core.Resources;
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteMiniParalaxScrollerComponentLoader(
-    ITexture2DResourceLoader texture2DResourceLoader,
     IVariableReplacer variableReplacer,
     IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
 {
@@ -33,6 +32,7 @@ public class RetroSpriteMiniParalaxScrollerComponentLoader(
             foreach (var layerElement in layersRoot.Elements("Layer"))
             {
                 var layer = new MiniParallaxScrollerMiniParallaxScrollerLayer(
+                    layerElement.Attribute("name")!.Value,
                     layerElement.Attribute("texturePath")!.Value,
                     ToFloat(layerElement.Attribute("scrollSpeed"), 0f),
                     ToInt(layerElement.Attribute("yOffset"), gameContext, variableReplacer, 0));
@@ -48,6 +48,7 @@ public class RetroSpriteMiniParalaxScrollerComponentLoader(
             foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
             layers,
             font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
+            isVisible: ToBool(element.Attribute("isVisible"), true),
             buffered: ToBool(element.Attribute("buffered"), false));
 
         return (name, scroller);

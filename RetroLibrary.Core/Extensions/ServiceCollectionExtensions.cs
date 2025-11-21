@@ -12,8 +12,8 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IResourceManager, ResourceManager>();
         services.AddSingleton<IRetroGameContextFactory, RetroGameContextFactory>();
         services.AddSingleton<ITexture2DResourceLoader, Texture2DResourceLoader>();
-        services.AddScoped<IBlitterService, BlitterService>();
         services.AddSingleton<IColorLoader, ColorLoader>();
-        services.AddSingleton<IVariableReplacer, VariableReplacer>();
+        services.AddScoped<IBlitterService, BlitterService>();
+        services.AddScoped<IVariableReplacer, VariableReplacer>();
     }
 }

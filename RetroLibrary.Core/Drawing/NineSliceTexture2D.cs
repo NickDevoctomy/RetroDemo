@@ -12,9 +12,9 @@ public class NineSliceTexture2D(
     private readonly Texture2D _sourceTexture = sourceTexture;
     private readonly NineSliceTextureOptions _options = options;
 
-    private readonly Dictionary<(int width, int height), Texture2D> _textureCache = new ();
+    private readonly Dictionary<(int Width, int Height), Texture2D> _textureCache = [];
     private Texture2D? _cachedTexture;
-    private Color[] _sourceData = Array.Empty<Color>();
+    private Color[] _sourceData = [];
     private bool _setSourceData = false;
     private bool disposedValue;
 
@@ -124,11 +124,10 @@ public class NineSliceTexture2D(
                 }
 
                 _textureCache.Clear();
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
+                _sourceData = [];
             }
-
-            _cachedTexture?.Dispose();
-            _cachedTexture = null;
-            _sourceData = Array.Empty<Color>();
 
             disposedValue = true;
         }

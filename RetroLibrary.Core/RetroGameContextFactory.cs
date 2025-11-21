@@ -1,9 +1,13 @@
-﻿using RetroLibrary.Core.Components;
+﻿using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.Core;
 
-public class RetroGameContextFactory(IRetroGameLoaderService retroGameLoaderService) : IRetroGameContextFactory
+public class RetroGameContextFactory(
+    IRetroGameLoaderService retroGameLoaderService,
+    ITexture2DResourceLoader texture2DResourceLoader) : IRetroGameContextFactory
 {
     public RetroGameContext CreateRetroGameContext(
         int width,
@@ -18,6 +22,7 @@ public class RetroGameContextFactory(IRetroGameLoaderService retroGameLoaderServ
             isFullScreen,
             gameDefinitionFilePath,
             retroGameLoaderService,
-            componentLoaders);
+            componentLoaders,
+            texture2DResourceLoader);
     }
 }

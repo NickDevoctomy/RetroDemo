@@ -8,7 +8,7 @@ namespace RetroLibrary.Core.Base;
 
 public partial class RetroSpriteBase : ObservableObject, IDisposable
 {
-    private readonly List<string> _watchedProperties = new ();
+    private readonly List<string> _watchedProperties = [];
 
     [ObservableProperty]
     private string name;
@@ -37,6 +37,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isHovered;
 
+    [ObservableProperty]
+    private bool isVisible;
+
     private bool _needsRedraw = true;
     private RenderTarget2D? _offscreenRenderTarget;
 
@@ -47,6 +50,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false,
         bool updateWatchedProperties = true)
     {
@@ -56,6 +60,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         BackgroundColor = backgroundColor ?? Color.Transparent;
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
+        IsVisible = isVisible;
         Buffered = buffered;
 
         if (updateWatchedProperties)
@@ -72,8 +77,20 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     public event EventHandler? WatchedPropertyChanged;
 
+    public RetroGameContext? RetroGameContext { get; private set; }
+
+    public void Init(RetroGameContext retroGameContext)
+    {
+        RetroGameContext = retroGameContext;
+    }
+
     public void Draw(SpriteBatch spriteBatch, Point? location = null)
     {
+        if (!IsVisible)
+        {
+            return;
+        }
+
         if (!Buffered)
         {
             OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
@@ -82,25 +99,30 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
         throw new NotImplementedException("Buffered drawing is not implemented yet.");
 
-        if (_needsRedraw || _offscreenRenderTarget == null)
-        {
-            System.Diagnostics.Debug.WriteLine($"Redrawing offscreen buffer for '{Name}'.");
-            RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
-        }
+        ////if (_needsRedraw || _offscreenRenderTarget == null)
+        ////{
+        ////    System.Diagnostics.Debug.WriteLine($"Redrawing offscreen buffer for '{Name}'.");
+        ////    RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
+        ////}
 
-        if (_offscreenRenderTarget != null)
-        {
-            spriteBatch.Draw(
-                _offscreenRenderTarget,
-                new Rectangle(Position, Size),
-                Color.White);
-        }
+        ////if (_offscreenRenderTarget != null)
+        ////{
+        ////    spriteBatch.Draw(
+        ////        _offscreenRenderTarget,
+        ////        new Rectangle(Position, Size),
+        ////        Color.White);
+        ////}
     }
 
     public void Update(
             MouseState mouseState,
             MouseState previousMouseState)
     {
+        if (!IsVisible)
+        {
+            return;
+        }
+
         OnUpdate(mouseState, previousMouseState);
     }
 

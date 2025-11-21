@@ -5,8 +5,9 @@ namespace RetroLibrary.Core.Drawing;
 public interface IRetroTexture2D
 {
     public void Draw(
-        int width,
-        int height,
+        int gradientWidth,
+        int gradientHeight,
         SpriteBatch spriteBatch,
-        Microsoft.Xna.Framework.Rectangle bounds);
+        Microsoft.Xna.Framework.Rectangle sourceRectangle,
+        Microsoft.Xna.Framework.Rectangle destinationRectangle);
 }

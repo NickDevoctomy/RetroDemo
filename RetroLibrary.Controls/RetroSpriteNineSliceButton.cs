@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Core.Base;
@@ -29,6 +30,9 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
     [ObservableProperty]
     private bool isToggled;
 
+    [ObservableProperty]
+    private RelayCommand? clickCommand;
+
     public RetroSpriteNineSliceButton(
         string name,
         string text,
@@ -41,7 +45,9 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         Color? downTint = null,
         NineSliceTexture2D? upTexture = null,
         NineSliceTexture2D? downTexture = null,
+        RelayCommand? clickCommand = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false)
         : base(
             name,
@@ -50,6 +56,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             false)
     {
@@ -59,6 +66,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         DownTexture = downTexture;
         UpTint = upTint ?? Color.White;
         DownTint = downTint ?? Color.White;
+        ClickCommand = clickCommand;
 
         UpdateWatchedProperties();
     }
@@ -88,6 +96,9 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
     protected override void OnClicked()
     {
         base.OnClicked();
+
+        ClickCommand?.Execute(null);
+
         if (IsToggleButton)
         {
             IsToggled = !IsToggled;

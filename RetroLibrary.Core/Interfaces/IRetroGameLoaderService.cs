@@ -9,7 +9,11 @@ public interface IRetroGameLoaderService
 
     public Color BackgroundColor { get; }
 
+    public RetroGameViewModelBase? ViewModel { get; }
+
     public List<RetroSpriteBase> Sprites { get; }
 
     public bool LoadGame(RetroGameContext gameContext);
+
+    public RetroSpriteBase? FindSpriteByName(string name);
 }

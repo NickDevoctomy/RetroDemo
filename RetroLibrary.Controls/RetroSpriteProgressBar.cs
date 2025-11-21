@@ -24,7 +24,6 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
     private Color? toColor;
 
     private LinearRetroGradientTexture2D? _progressTexture;
-    private Texture2D? _cachedGradientTexture;
 
     public RetroSpriteProgressBar(
         string name,
@@ -38,6 +37,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         Color? fromColor = null,
         Color? toColor = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
@@ -47,6 +47,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
@@ -89,10 +90,11 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         int width = (int)(sizeOffset.X * Value);
 
         _progressTexture?.Draw(
-            width,
+            sizeOffset.X,
             sizeOffset.Y,
             spriteBatch,
-            new Rectangle(locationOffset, new Point(width, sizeOffset.Y)));
+            new Rectangle(0, 0, width, sizeOffset.Y),
+            new Rectangle(locationOffset.X, locationOffset.Y, width, sizeOffset.Y));
 
         if (BorderTexture != null)
         {

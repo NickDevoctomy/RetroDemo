@@ -10,10 +10,10 @@ namespace RetroLibrary.Controls;
 
 public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 {
-    private readonly HashSet<TabPage> _subscribedPages = new ();
+    private readonly HashSet<TabPage> _subscribedPages = [];
 
     [ObservableProperty]
-    private ObservableCollection<TabPage> tabPages = new ();
+    private ObservableCollection<TabPage> tabPages = [];
 
     [ObservableProperty]
     private int selectedIndex = -1;
@@ -72,6 +72,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         NineSliceTexture2D? tabDownTexture = null,
         NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
@@ -82,6 +83,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
@@ -221,7 +223,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine($"Property changed: {e.PropertyName}");
         base.OnPropertyChanged(e);
         if (string.IsNullOrEmpty(e.PropertyName))
         {
@@ -331,21 +332,21 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
         if (SelectedIndex < 0 || SelectedIndex >= TabPages.Count)
         {
-            Children = new ();
+            Children = [];
             _currentSelectedPage = null;
             return;
         }
 
         _currentSelectedPage = TabPages[SelectedIndex];
         _currentSelectedPage.Children.CollectionChanged += SelectedChildren_CollectionChanged;
-        Children = _currentSelectedPage.Children.ToList();
+        Children = [.. _currentSelectedPage.Children];
     }
 
     private void SelectedChildren_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         if (_currentSelectedPage != null)
         {
-            Children = _currentSelectedPage.Children.ToList();
+            Children = [.. _currentSelectedPage.Children];
         }
     }
 

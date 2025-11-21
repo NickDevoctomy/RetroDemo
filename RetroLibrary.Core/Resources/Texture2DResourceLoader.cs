@@ -4,7 +4,7 @@ namespace RetroLibrary.Core.Resources;
 
 public class Texture2DResourceLoader : ITexture2DResourceLoader
 {
-    private readonly Dictionary<string, Texture2D> _cachedTextures = new ();
+    private readonly Dictionary<string, Texture2D> _cachedTextures = [];
 
     public Texture2D FromFile(
         GraphicsDevice graphicsDevice,

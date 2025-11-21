@@ -25,11 +25,15 @@ public class RetroSpriteTabbedContainerComponentLoader(
         XElement element)
     {
         var name = element.Attribute("name")!.Value;
+        var size = ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero);
+
+        variableReplacer.DefaultParameters.Add("ParentWidth", size.X);
+        variableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
 
         var tabbedContainer = new RetroSpriteTabbedContainer(
             name,
             ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
+            size,
             ToColor(element.Attribute("foregroundColor"), null, colorLoader, Color.Black),
             innerMargins: ToRectangle(element.Attribute("innerMargins"), gameContext, variableReplacer, Rectangle.Empty),
             tabUpTint: ToColor(element.Attribute("tabUpTint"), element.Attribute("tabUpTintAlpha"), colorLoader, Color.White),
@@ -38,7 +42,8 @@ public class RetroSpriteTabbedContainerComponentLoader(
             tabUpTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabUpTextureRef"), gameContext.ResourceManager),
             tabDownTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabDownTextureRef"), gameContext.ResourceManager),
             tabPageTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabPageTextureRef"), gameContext.ResourceManager),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager));
+            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
+            isVisible: ToBool(element.Attribute("isVisible"), true));
 
         var tabPagesRoot = element.Element("TabPages");
         if (tabPagesRoot != null)

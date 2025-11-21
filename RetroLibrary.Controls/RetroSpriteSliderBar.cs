@@ -66,6 +66,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         NineSliceTexture2D? sliderBarTexture = null,
         Color? sliderBarTint = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
@@ -75,6 +76,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {

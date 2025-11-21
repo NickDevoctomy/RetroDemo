@@ -1,9 +1,9 @@
 ﻿using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using RetroLibrary.Controls;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Common;
-using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
 
@@ -17,7 +17,9 @@ public class XmlRetroGameLoaderService(
 
     public Color BackgroundColor { get; private set; } = Color.Transparent;
 
-    public List<RetroSpriteBase> Sprites { get; private set; } = new ();
+    public RetroGameViewModelBase? ViewModel { get; private set; }
+
+    public List<RetroSpriteBase> Sprites { get; private set; } = [];
 
     public bool LoadGame(RetroGameContext gameContext)
     {
@@ -37,6 +39,19 @@ public class XmlRetroGameLoaderService(
         BackgroundColor = colorLoader.ColorFromName(
             bgColor,
             Color.Transparent).GetValueOrDefault();
+
+        var viewModelTypeAttribute = document.Root.Attribute("viewModelType");
+        if (viewModelTypeAttribute != null)
+        {
+            var viewModelTypeName = viewModelTypeAttribute.Value;
+            var viewModelType = Type.GetType(viewModelTypeName);
+            var viewModelInstance = Activator.CreateInstance(viewModelType!, gameContext.Game);
+            ViewModel = viewModelInstance as RetroGameViewModelBase;
+            if (ViewModel == null)
+            {
+                throw new Exception($"The specified view model type '{viewModelTypeName}' is not a valid RetroGameViewModelBase.");
+            }
+        }
 
         var resourcesRoot = document.Root.Element("Resources");
         if (resourcesRoot != null)
@@ -69,6 +84,44 @@ public class XmlRetroGameLoaderService(
             }
         }
 
+        Sprites.ForEach(x => x.Init(gameContext));
+
         return true;
+    }
+
+    public RetroSpriteBase? FindSpriteByName(string name)
+    {
+        foreach (var sprite in Sprites)
+        {
+            var found = FindSpriteRecursive(sprite, name);
+            if (found != null)
+            {
+                return found;
+            }
+        }
+
+        return null;
+    }
+
+    private RetroSpriteBase? FindSpriteRecursive(RetroSpriteBase current, string name)
+    {
+        if (current.Name == name)
+        {
+            return current;
+        }
+
+        if (current is RetroSpriteContainer container)
+        {
+            foreach (var child in container.Children)
+            {
+                var found = FindSpriteRecursive(child, name);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+        }
+
+        return null;
     }
 }

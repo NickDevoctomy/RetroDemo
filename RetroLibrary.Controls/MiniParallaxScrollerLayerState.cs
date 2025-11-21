@@ -15,6 +15,9 @@ public class MiniParallaxScrollerLayerState : IDisposable
 
     public Texture2D? TextureFlipped { get; set; }
 
+    // New composite texture that contains the horizontally tiled (alternating flipped) pattern
+    public Texture2D? CompositeTexture { get; set; }
+
     public float Offset { get; set; }
 
     public bool FirstFlipped { get; set; }
@@ -31,14 +34,15 @@ public class MiniParallaxScrollerLayerState : IDisposable
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                Texture?.Dispose();
+                Texture = null;
+
+                TextureFlipped?.Dispose();
+                TextureFlipped = null;
+
+                CompositeTexture?.Dispose();
+                CompositeTexture = null;
             }
-
-            Texture?.Dispose();
-            Texture = null;
-
-            TextureFlipped?.Dispose();
-            TextureFlipped = null;
 
             disposedValue = true;
         }

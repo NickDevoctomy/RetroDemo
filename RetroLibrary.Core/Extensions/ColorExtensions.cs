@@ -6,9 +6,9 @@ namespace RetroLibrary.Core.Extensions;
 
 public static class ColorExtensions
 {
-    private static readonly Dictionary<Color, string> NamesByColor = new ();
-    private static readonly Dictionary<string, Color> ColorsByName = new ();
-    private static readonly object LockObject = new ();
+    private static readonly Dictionary<Color, string> NamesByColor = [];
+    private static readonly Dictionary<string, Color> ColorsByName = [];
+    private static readonly object LockObject = new();
 
     public static string? ToName(this Color color)
     {

@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using RetroLibrary.Core.Interfaces;
 
 namespace RetroLibrary.Core.Base;
 
 public class RetroGameBase : Game
 {
-    private readonly RetroGameContext _retroGameContext;
     private double _frameCounter;
     private double _elapsedTime;
     private int _fps;
@@ -16,15 +14,17 @@ public class RetroGameBase : Game
 
     public RetroGameBase(RetroGameContext retroGameContext)
     {
-        _retroGameContext = retroGameContext;
-        _retroGameContext.Initialse(this);
-        Graphics = _retroGameContext.GraphicsDeviceManager!;
+        RetroGameContext = retroGameContext;
+        RetroGameContext.Initialse(this);
+        Graphics = RetroGameContext.GraphicsDeviceManager!;
         IsMouseVisible = true;
     }
 
     public int Fps => _fps;
 
     public GraphicsDeviceManager Graphics { get; private set; }
+
+    public RetroGameContext RetroGameContext { get; init; }
 
     protected virtual void OnLoadContent()
     {
@@ -37,7 +37,7 @@ public class RetroGameBase : Game
         MouseState previousState)
     {
         // !!! Causing flicker for some reason or another
-        foreach (var sprite in _retroGameContext.RetroGameLoaderService.Sprites)
+        foreach (var sprite in RetroGameContext.RetroGameLoaderService.Sprites)
         {
             sprite.Update(
                 currentState,
@@ -49,10 +49,17 @@ public class RetroGameBase : Game
         GameTime gameTime,
         SpriteBatch spriteBatch)
     {
-        foreach (var sprite in _retroGameContext.RetroGameLoaderService.Sprites)
+        var timings = new Dictionary<string, TimeSpan>();
+        foreach (var sprite in RetroGameContext.RetroGameLoaderService.Sprites)
         {
+            var startedAt = DateTime.Now;
             sprite.Draw(spriteBatch);
+            var elapsed = DateTime.Now - startedAt;
+            timings.Add(sprite.Name, elapsed);
         }
+
+        var slowest = timings.OrderByDescending(t => t.Value).FirstOrDefault();
+        System.Diagnostics.Debug.WriteLine($"Slowest sprite = {slowest.Key} - {slowest.Value}");
     }
 
     protected virtual void OnUnloadContent()
@@ -62,7 +69,7 @@ public class RetroGameBase : Game
 
     protected override void LoadContent()
     {
-        _retroGameContext.LoadGameDefinition();
+        RetroGameContext.LoadGameDefinition();
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         OnLoadContent();
     }
@@ -101,12 +108,17 @@ public class RetroGameBase : Game
             _elapsedTime = 0;
         }
 
-        GraphicsDevice.Clear(_retroGameContext.RetroGameLoaderService.BackgroundColor);
+        GraphicsDevice.Clear(RetroGameContext.RetroGameLoaderService.BackgroundColor);
 
         _spriteBatch!.Begin(
-            SpriteSortMode.Immediate,
+            SpriteSortMode.Deferred,
             BlendState.AlphaBlend,
-            null,
+            new SamplerState
+            {
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp,
+                Filter = TextureFilter.Point
+            },
             null,
             new RasterizerState
             {
@@ -117,11 +129,11 @@ public class RetroGameBase : Game
             gameTime,
             _spriteBatch!);
 
-        _spriteBatch?.DrawString(
-            _retroGameContext.ResourceManager.GetResource<SpriteFont>("DefaultFont"),
-            $"FPS: {_fps}",
-            new Vector2(10, 10),
-            Color.White);
+        ////_spriteBatch?.DrawString(
+        ////    RetroGameContext.ResourceManager.GetResource<SpriteFont>("DefaultFont"),
+        ////    $"FPS: {_fps}",
+        ////    new Vector2(10, 10),
+        ////    Color.White);
 
         _spriteBatch!.End();
     }

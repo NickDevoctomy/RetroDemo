@@ -1,5 +1,6 @@
 ﻿<Scene name="Main"
-       backgroundColor="red">
+       backgroundColor="red"
+       viewModelType="RetroDemo.GameViewModel, RetroDemo">
 
     <Resources>
         <Font id="DefaultFont" />
@@ -56,166 +57,40 @@
     </Resources>
 
     <Components>
-        <!--<MiniParallaxScroller
-            name="Parallax"
-            viewportWidth="auto"
-            viewportHeight="auto">
-            <Layers>
-                <Layer
-                    path="Content/Textures/grass.png"
-                    speed="6.0"
-                    startYOffset="0" />
-                <Layer
-                    path="Content/Textures/road.png"
-                    speed="4.0"
-                    startYOffset="30" />
-                <Layer
-                    path="Content/Textures/sandyrocks.png"
-                    speed="2.0"
-                    startYOffset="60" />
-            </Layers>
-        </MiniParallaxScroller>
-
-        <Sprite type="RetroLibrary.RetroSpriteTabbedContainer, RetroLibrary"
-                name="TabbedContainer"
-                x="25"
-                y="35"
-                width="400"
-                height="300"
-                foregroundColor="White">
-            <TabAppearance
-                pageTextureRef="surfaceGrey"
-                pageTint="LightGray"
-                pageAlpha="0.5"
-                tabUpTextureRef="tab"
-                tabUpTint="LightGray"
-                tabUpAlpha="0.1"
-                tabDownTextureRef="tab"
-                tabDownTint="LightGray"
-                tabDownAlpha="0.5" />
-            <TabPages>
-
-                <TabPage title="Apple">
-                    <Sprite type="RetroLibrary.RetroSpriteGroupContainer, RetroLibrary"
-                            name="TestGroupContainer"
-                            x="8"
-                            y="8"
-                            width="380"
-                            height="250"
-                            text="Some really long text in here!"
-                            foregroundColor="White">
-                        <Border
-                            textureRef="surface"
-                            tint="LightGray"
-                            alpha="0.5"
-                            outerTopMargin="8" />
-                        <GroupLabel
-                            textureRef="surface"
-                            tint="Red" />
-                        <InnerMargins
-                            left="8"
-                            top="32"
-                            right="8"
-                            bottom="8" />
-                        <Children>
-                            <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
-                                    name="TestButton"
-                                    x="0"
-                                    y="0"
-                                    width="200"
-                                    height="50"
-                                    text="Toggle Button"
-                                    isToggleButton="true"
-                                    foregroundColor="White"
-                                    upTint="LightGray"
-                                    downTint="Red"
-                                    upTextureRef="buttonUp"
-                                    downTextureRef="buttonDown" />
-                            <Sprite type="RetroLibrary.RetroSpriteLabel, RetroLibrary"
-                                    name="TestProgressBarLabel"
-                                    x="0"
-                                    y="50"
-                                    width="200"
-                                    height="32"
-                                    text="Progress Bar:"
-                                    foregroundColor="Black" />
-                            <Sprite type="RetroLibrary.RetroSpriteProgressBar, RetroLibrary"
-                                    name="TestProgressBar"
-                                    x="0"
-                                    y="83"
-                                    width="200"
-                                    height="32"
-                                    value="0.5"
-                                    borderTextureRef="border"
-                                    borderTint="Red" />
-                            <Sprite type="RetroLibrary.RetroSpriteCheckBox, RetroLibrary"
-                                    name="TestCheckBox"
-                                    x="0"
-                                    y="120"
-                                    width="150"
-                                    height="32"
-                                    text="Check Me!"
-                                    foregroundColor="Black"
-                                    boxTextureRef="surface"
-                                    isChecked="false" />
-                        </Children>
-                    </Sprite>
-                </TabPage>
-
-                <TabPage title="Hello World!!!">
-                    <Sprite type="RetroLibrary.RetroSpriteSliderBar, RetroLibrary"
-                            name="TestSliderBar"
-                            x="8"
-                            y="8"
-                            width="350"
-                            height="32"
-                            sliderBarTextureRef="surfaceGrey"
-                            sliderBarTint="DarkGray"
-                            buttonTextureRef="surfaceGrey"
-                            buttonTint="Red"
-                            buttonHoverTint="LightPink" />
-                </TabPage>
-
-                <TabPage title="Oranges">
-                    <Sprite type="RetroLibrary.RetroSpriteNineSliceButton, RetroLibrary"
-                            name="OrangeButton"
-                            x="8"
-                            y="8"
-                            width="200"
-                            height="50"
-                            text="Orange"
-                            isToggleButton="false"
-                            foregroundColor="White"
-                            upTint="Orange"
-                            downTint="Orange"
-                            upTextureRef="buttonUp"
-                            downTextureRef="buttonDown" />
-                </TabPage>
-
-            </TabPages>
-        </Sprite>-->
-
         <Sprite type="RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary.Controls"
                 name="Sunset"
                 position="0,0"
                 size="GameWidth,GameHeight"
                 textureRef="sunset" />
 
+        <Sprite type="RetroLibrary.Controls.RetroSpriteLabel, RetroLibrary.Controls"
+                name="FpsLabel"
+                position="8,8"
+                size="200,32"
+                text="FPS = 000"
+                fontRef="DefaultFont"
+                foregroundColor="white">
+        </Sprite>        
+
         <Sprite type="RetroLibrary.Controls.RetroSpriteMiniParallaxScroller, RetroLibrary.Controls"
                 name="ParalaxScroller"
                 position="0,0"
                 size="GameWidth,GameHeight"
-                fontRef="DefaultFont">
+                fontRef="DefaultFont"
+                isVisible="false">
             <Layers>
                 <Layer
+                    name="Grass"
                     texturePath="Content/Textures/grass.png"
                     scrollSpeed="6.0"
                     yOffset="0" />
                 <Layer
+                    name="Road"
                     texturePath="Content/Textures/road.png"
                     scrollSpeed="4.0"
                     yOffset="30" />
                 <Layer
+                    name="Sand"
                     texturePath="Content/Textures/sandyrocks.png"
                     scrollSpeed="2.0"
                     yOffset="60" />
@@ -250,13 +125,14 @@
                             upTint="LightGreen"
                             downTint="LightGreen"
                             upTextureRef="buttonUp"
-                            downTextureRef="buttonDown" />                    
+                            downTextureRef="buttonDown"
+                            clickCommand="AppleTabButton_ClickedCommand"/>                    
                 </TabPage>
                 <TabPage title="Hello World!!!">
                     <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls"
                             name="TestProgressBar"
                             position="8,8"
-                            size="200,50"
+                            size="ParentWidth-16,50"
                             value="0.75"
                             borderTextureRef="border"
                             borderTint="Red">
@@ -277,7 +153,8 @@
                 upTint="Orange"
                 downTint="Orange"
                 upTextureRef="buttonUp"
-                downTextureRef="buttonDown" />
+                downTextureRef="buttonDown"
+                clickCommand="OrangeButton_ClickedCommand"/>
 
         <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
                 name="ExitButton"
@@ -289,6 +166,7 @@
                 upTint="Green"
                 downTint="Green"
                 upTextureRef="buttonUp"
-                downTextureRef="buttonDown"/>
+                downTextureRef="buttonDown"        
+                clickCommand="ExitButton_ClickedCommand"/>
     </Components>
 </Scene>

@@ -8,10 +8,10 @@ namespace RetroLibrary.Controls;
 
 public partial class RetroSpriteContainer : RetroSpriteBase
 {
-    private readonly HashSet<RetroSpriteBase> _subscribedChildren = new ();
+    private readonly HashSet<RetroSpriteBase> _subscribedChildren = [];
 
     [ObservableProperty]
-    private List<RetroSpriteBase> children = new ();
+    private List<RetroSpriteBase> children = [];
 
     [ObservableProperty]
     private Rectangle innerMargins;
@@ -27,6 +27,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Color? foregroundColor = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
@@ -36,6 +37,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {

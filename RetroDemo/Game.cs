@@ -1,36 +1,27 @@
-﻿using RetroLibrary.Core;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
 
 namespace RetroDemo;
 
-public class Game : RetroGameBase
+public class Game(RetroGameContext retroGameContext)
+    : RetroGameBase(retroGameContext)
 {
-    ////private readonly Random _rnd = new(Environment.TickCount);
 
-    public Game(RetroGameContext retroGameContext)
-        : base(retroGameContext)
+    protected override void OnUpdate(
+        GameTime gameTime,
+        MouseState currentState,
+        MouseState previousState)
     {
+        base.OnUpdate(
+            gameTime,
+            currentState,
+            previousState);
+
+        if (RetroGameContext.RetroGameLoaderService.ViewModel is GameViewModel gameViewModel)
+        {
+            gameViewModel.Fps = Fps;
+        }
     }
-
-    ////private void ExitButton_Clicked(object? sender, EventArgs e)
-    ////{
-    ////    this.Exit();
-    ////}
-
-    ////private void TestButton_Clicking(object? sender, EventArgs e)
-    ////{
-    ////    if (sender is RetroSpriteNineSliceButton button)
-    ////    {
-    ////        button.Text = "Clicking";
-    ////    }
-    ////}
-
-    ////private void TestButton_Clicked(object? sender, EventArgs e)
-    ////{
-    ////    if (sender is RetroSpriteNineSliceButton button)
-    ////    {
-    ////        button.Text = "Clicked!";
-    ////        _testProgressBar!.Value = (float)_rnd.NextDouble();
-    ////    }
-    ////}
 }

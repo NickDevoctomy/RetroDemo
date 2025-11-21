@@ -11,12 +11,12 @@ namespace RetroLibrary.Controls;
 
 public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
 {
+    private readonly Dictionary<MiniParallaxScrollerMiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = [];
+
     [ObservableProperty]
     private List<MiniParallaxScrollerMiniParallaxScrollerLayer> layers;
 
-    private readonly Dictionary<MiniParallaxScrollerMiniParallaxScrollerLayer, MiniParallaxScrollerLayerState> _layerOffsets = new ();
-    private bool _layerTexturesCached = false;
-    private Texture2DResourceLoader textureLoader = new (); // We need to inject this or get it from the context
+    private bool _layerTexturesCached;
 
     public RetroSpriteMiniParallaxScroller(
         string name,
@@ -26,6 +26,7 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         Microsoft.Xna.Framework.Color? foregroundColor = null,
         List<MiniParallaxScrollerMiniParallaxScrollerLayer>? layers = null,
         SpriteFont? font = null,
+        bool isVisible = true,
         bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
@@ -35,16 +36,16 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
-        Layers = layers ?? new List<MiniParallaxScrollerMiniParallaxScrollerLayer>();
+        Layers = layers ?? [];
     }
 
     public override void Dispose()
     {
         GC.SuppressFinalize(this);
-
         foreach (var layerState in _layerOffsets.Values)
         {
             layerState.Dispose();
@@ -57,8 +58,6 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         SpriteBatch spriteBatch,
         Microsoft.Xna.Framework.Point location)
     {
-        var rect = new Microsoft.Xna.Framework.Rectangle(location + Position, Size);
-
         if (!_layerTexturesCached)
         {
             CacheLayerTextures(spriteBatch);
@@ -67,73 +66,42 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
 
         var startYOffset = (int?)null;
         var firstLayer = Layers.FirstOrDefault();
-        if (firstLayer != null)
+        if (firstLayer != null && _layerOffsets.TryGetValue(firstLayer, out var firstState) && firstState.Texture != null)
         {
-            if (!_layerOffsets.TryGetValue(firstLayer, out var state))
-            {
-                throw new Exception("Layer state not found for first layer.");
-            }
-
-            startYOffset = Size.Y - state.Texture!.Bounds.Height;
+            startYOffset = Size.Y - firstState.Texture.Bounds.Height;
         }
 
         for (var i = Layers.Count - 1; i >= 0; i--)
         {
             var layer = Layers[i];
-            if (!_layerOffsets.TryGetValue(layer, out var state))
+            if (!_layerOffsets.TryGetValue(layer, out var state) || state.Texture == null || state.CompositeTexture == null)
             {
                 continue;
             }
 
-            var fullSize = state.Texture!.Bounds.Size;
-            var offsetPixelsX = state.Offset * fullSize.X;
+            var tileWidth = state.Texture.Width;
+            var offsetPixelsX = state.Offset * tileWidth;
 
-            var copiesRequired = (int)Math.Ceiling(((decimal)rect.Width + fullSize.X) / fullSize.X) + 1;
+            ////System.Diagnostics.Debug.WriteLine($"Drawing paralax layer {layer.Name}, with a width of {state.CompositeTexture.Width}.");
 
-            var flip = state.FirstFlipped;
-            AlternateFlipTile(
-                spriteBatch,
-                startYOffset,
-                layer,
-                state,
-                fullSize,
-                offsetPixelsX,
-                copiesRequired,
-                flip);
+            spriteBatch.Draw(
+                state.CompositeTexture,
+                new Microsoft.Xna.Framework.Rectangle(
+                    (int)offsetPixelsX,
+                    startYOffset.GetValueOrDefault() - layer.YOffset,
+                    state.CompositeTexture.Width,
+                    state.CompositeTexture.Height),
+                Microsoft.Xna.Framework.Color.White);
         }
     }
 
     protected override void OnUpdate(
-        MouseState mouseState, MouseState
-        previousMouseState)
+        MouseState mouseState,
+        MouseState previousMouseState)
     {
         foreach (var layer in Layers)
         {
             UpdateLayerOffsets(layer);
-        }
-    }
-
-    private static void AlternateFlipTile(
-        SpriteBatch spriteBatch,
-        int? startYOffset,
-        MiniParallaxScrollerMiniParallaxScrollerLayer layer,
-        MiniParallaxScrollerLayerState state,
-        Microsoft.Xna.Framework.Point fullSize,
-        float offsetPixelsX,
-        int copiesRequired,
-        bool flip)
-    {
-        for (var x = 0; x < copiesRequired - 1; x++)
-        {
-            var image = flip ? state.TextureFlipped : state.Texture;
-            var curOffsetX = offsetPixelsX + (x * fullSize.X);
-
-            spriteBatch.Draw(
-                image,
-                new Microsoft.Xna.Framework.Rectangle((int)curOffsetX, startYOffset.GetValueOrDefault() - layer.YOffset, fullSize.X, fullSize.Y),
-                Microsoft.Xna.Framework.Color.White);
-
-            flip = !flip;
         }
     }
 
@@ -143,26 +111,64 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         {
             if (!_layerOffsets.TryGetValue(layer, out var state))
             {
-                continue;
+                state = new MiniParallaxScrollerLayerState();
+                _layerOffsets.Add(layer, state);
             }
 
             if (state.Texture == null)
             {
-                state.Texture = textureLoader.FromFile(
-                    spriteBatch.GraphicsDevice,
-                    layer.TexturePath);
+                state.Texture = RetroGameContext!.Texture2DResourceLoader.FromFile(spriteBatch.GraphicsDevice, layer.TexturePath);
 
                 using var image = Image.Load<Rgba32>(layer.TexturePath);
-                image.Mutate(ctx =>
-                {
-                    ctx.Flip(FlipMode.Horizontal);
-                });
-                using var ms = new MemoryStream();
-                image.SaveAsPng(ms);
-                ms.Seek(0, SeekOrigin.Begin);
-                state.TextureFlipped = Texture2D.FromStream(spriteBatch.GraphicsDevice, ms);
+                using var flipped = image.Clone(ctx => ctx.Flip(FlipMode.Horizontal));
+                using var msFlipped = new MemoryStream();
+                flipped.SaveAsPng(msFlipped);
+                msFlipped.Seek(0, SeekOrigin.Begin);
+                state.TextureFlipped = Texture2D.FromStream(spriteBatch.GraphicsDevice, msFlipped);
+            }
+
+            if (state.CompositeTexture == null && state.Texture != null && state.TextureFlipped != null)
+            {
+                BuildCompositeTexture(
+                    spriteBatch.GraphicsDevice,
+                    layer,
+                    state);
             }
         }
+    }
+
+    private void BuildCompositeTexture(
+        GraphicsDevice graphicsDevice,
+        MiniParallaxScrollerMiniParallaxScrollerLayer layer,
+        MiniParallaxScrollerLayerState state)
+    {
+        state.CompositeTexture?.Dispose();
+        state.CompositeTexture = null;
+
+        using var sourceImage = Image.Load<Rgba32>(layer.TexturePath);
+        using var flippedImage = sourceImage.Clone(ctx => ctx.Flip(FlipMode.Horizontal));
+
+        var tileWidth = sourceImage.Width;
+        var tileHeight = sourceImage.Height;
+
+        var baseTilesNeeded = (int)Math.Ceiling((Size.X + tileWidth) / (float)tileWidth) + 1;
+        var tilesNeeded = baseTilesNeeded;
+        var compositeWidth = tilesNeeded * tileWidth;
+
+        using var composite = new Image<Rgba32>(compositeWidth, tileHeight);
+
+        var flip = state.FirstFlipped;
+        for (var i = 0; i < tilesNeeded; i++)
+        {
+            var src = flip ? flippedImage : sourceImage;
+            composite.Mutate(ctx => ctx.DrawImage(src, new Point(i * tileWidth, 0), 1f));
+            flip = !flip;
+        }
+
+        using var ms = new MemoryStream();
+        composite.SaveAsPng(ms);
+        ms.Seek(0, SeekOrigin.Begin);
+        state.CompositeTexture = Texture2D.FromStream(graphicsDevice, ms);
     }
 
     private void UpdateLayerOffsets(MiniParallaxScrollerMiniParallaxScrollerLayer layer)
@@ -175,13 +181,10 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         }
 
         var percentPerPixel = 1f / Size.X;
-
-        if (state.Offset < -1f)
-        {
-            state.Offset += 1f;
-            state.FirstFlipped = !state.FirstFlipped;
-        }
-
         state.Offset -= layer.ScrollSpeed * percentPerPixel;
+        if (state.Offset < -2f) // wrap after two cycles
+        {
+            state.Offset += 2f;
+        }
     }
 }

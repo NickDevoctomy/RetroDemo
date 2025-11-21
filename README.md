@@ -105,6 +105,7 @@ This is a rough little project containing some proof of concept code for creatin
   - Parses XML files to create and configure RetroSprite controls
   - Supports nested containers and complex layouts
   - Simplifies UI creation with declarative syntax
+  - View model suppport with data binding
 
 ### Key Features ✨
 
@@ -115,6 +116,183 @@ This is a rough little project containing some proof of concept code for creatin
 - **Flexible Texturing**: 9-slice scaling and gradient generation
 - **Container System**: Hierarchical UI layout with automatic input handling
 - **Layout Loading**: XML-based layout definitions for easy UI creation
+
+### Example Layout Xml
+
+```xml
+<Scene name="Main"
+       backgroundColor="red"
+       viewModelType="RetroDemo.GameViewModel, RetroDemo">
+
+    <Resources>
+        <Font id="DefaultFont" />
+        <RadialRetroGradient
+            id="sunset"
+            centrePoint="GameWidth/2,GameHeight-80"
+            radius="GameWidth"
+            fromColor="Yellow"
+            toColor="Purple"
+            gradientStops="8" />
+
+        <NineSliceTexture
+            id="surface"
+            path="Content/Textures/surface.png"
+            top="4"
+            left="4"
+            bottom="4"
+            right="4" />
+        <NineSliceTexture
+            id="surfaceGrey"
+            path="Content/Textures/surfacegrey.png"
+            top="4"
+            left="4"
+            bottom="4"
+            right="4" />
+        <NineSliceTexture
+            id="border"
+            path="Content/Textures/border.png"
+            top="4"
+            left="4"
+            bottom="4"
+            right="4" />
+        <NineSliceTexture
+            id="buttonUp"
+            path="Content/Textures/greybuttonup.png"
+            top="4"
+            left="4"
+            bottom="8"
+            right="4" />
+        <NineSliceTexture
+            id="buttonDown"
+            path="Content/Textures/greybuttondown.png"
+            top="6"
+            left="4"
+            bottom="6"
+            right="4" />
+        <NineSliceTexture
+            id="tab"
+            path="Content/Textures/tab.png"
+            top="4"
+            left="4"
+            bottom="4"
+            right="4" />
+    </Resources>
+
+    <Components>
+        <Sprite type="RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary.Controls"
+                name="Sunset"
+                position="0,0"
+                size="GameWidth,GameHeight"
+                textureRef="sunset" />
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteLabel, RetroLibrary.Controls"
+                name="FpsLabel"
+                position="8,8"
+                size="200,32"
+                text="FPS = 000"
+                fontRef="DefaultFont"
+                foregroundColor="white">
+        </Sprite>        
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteMiniParallaxScroller, RetroLibrary.Controls"
+                name="ParalaxScroller"
+                position="0,0"
+                size="GameWidth,GameHeight"
+                fontRef="DefaultFont"
+                isVisible="false">
+            <Layers>
+                <Layer
+                    name="Grass"
+                    texturePath="Content/Textures/grass.png"
+                    scrollSpeed="6.0"
+                    yOffset="0" />
+                <Layer
+                    name="Road"
+                    texturePath="Content/Textures/road.png"
+                    scrollSpeed="4.0"
+                    yOffset="30" />
+                <Layer
+                    name="Sand"
+                    texturePath="Content/Textures/sandyrocks.png"
+                    scrollSpeed="2.0"
+                    yOffset="60" />
+            </Layers>
+        </Sprite>
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteTabbedContainer, RetroLibrary.Controls"
+                name="TabbedContainer"
+                position="100,150"
+                size="400,300"
+                foregroundColor="White"
+                fontRef="DefaultFont"
+                tabPageTextureRef="surfaceGrey"
+                tabPageTint="LightGray"
+                tabPageTintAlpha="0.2"
+                tabUpTextureRef="tab"
+                tabUpTint="LightGray"
+                tabUpTintAlpha="0.5"
+                tabDownTextureRef="tab"
+                tabDownTint="LightGray"
+                tabDownTintAlpha="0.2">
+            <TabPages>
+                <TabPage title="Apple">
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
+                            name="AppleTabButton"
+                            position="8,8"
+                            size="200,50"
+                            text="Do stuff!"
+                            fontRef="DefaultFont"
+                            isToggleButton="false"
+                            foregroundColor="White"
+                            upTint="LightGreen"
+                            downTint="LightGreen"
+                            upTextureRef="buttonUp"
+                            downTextureRef="buttonDown"
+                            clickCommand="AppleTabButton_ClickedCommand"/>                    
+                </TabPage>
+                <TabPage title="Hello World!!!">
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls"
+                            name="TestProgressBar"
+                            position="8,8"
+                            size="ParentWidth-16,50"
+                            value="0.75"
+                            borderTextureRef="border"
+                            borderTint="Red">
+                    </Sprite>
+                </TabPage>  
+                <TabPage title="Oranges" />
+            </TabPages>
+        </Sprite>        
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
+                name="OrangeButton"
+                position="20,60"
+                size="200,50"
+                text="Orange"
+                fontRef="DefaultFont"
+                isToggleButton="false"
+                foregroundColor="White"
+                upTint="Orange"
+                downTint="Orange"
+                upTextureRef="buttonUp"
+                downTextureRef="buttonDown"
+                clickCommand="OrangeButton_ClickedCommand"/>
+
+        <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
+                name="ExitButton"
+                position="GameWidth-208,8"
+                size="200,50"
+                text="Exit"
+                fontRef="DefaultFont"
+                foregroundColor="White"
+                upTint="Green"
+                downTint="Green"
+                upTextureRef="buttonUp"
+                downTextureRef="buttonDown"        
+                clickCommand="ExitButton_ClickedCommand"/>
+    </Components>
+</Scene>
+```
 
 ### Screenshots 📸
 

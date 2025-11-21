@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xna.Framework;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
@@ -100,5 +101,32 @@ public class ComponentLoaderBase
         }
 
         return attribute.ToInt(gameContext, variableReplacer);
+    }
+
+    protected static RelayCommand? GetRelayCommand(
+        XAttribute? attribute,
+        RetroGameContext gameContext)
+    {
+        if (attribute != null && gameContext.RetroGameLoaderService.ViewModel != null)
+        {
+            var path = attribute.Value;
+            var relayCommand = gameContext.RetroGameLoaderService.ViewModel.GetRelayCommandByPath(path);
+            return relayCommand;
+        }
+
+        return null;
+    }
+
+    protected static T ToEnum<T>(
+        XAttribute? attribute,
+        T defaultValue)
+        where T : struct
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return Enum.Parse<T>(attribute.Value, false);
     }
 }

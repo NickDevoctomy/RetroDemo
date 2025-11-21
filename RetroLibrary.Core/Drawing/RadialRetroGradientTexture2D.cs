@@ -9,8 +9,6 @@ namespace RetroLibrary.Core.Drawing;
 
 public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : IRetroTexture2D, IDisposable
 {
-    private int _cachedWidth;
-    private int _cachedHeight;
     private Texture2D? _cachedTexture;
     private bool disposedValue;
 
@@ -20,19 +18,21 @@ public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : 
     }
 
     public void Draw(
-        int width,
-        int height,
+        int gradientWidth,
+        int gradientHeight,
         SpriteBatch spriteBatch,
-        Microsoft.Xna.Framework.Rectangle bounds)
+        Microsoft.Xna.Framework.Rectangle sourceRectangle,
+        Microsoft.Xna.Framework.Rectangle destinationRectangle)
     {
         var texture = _cachedTexture ?? CreateGradient(
             spriteBatch.GraphicsDevice,
-            width,
-            height,
+            gradientWidth,
+            gradientHeight,
             options);
         spriteBatch.Draw(
             texture,
-            bounds,
+            destinationRectangle,
+            sourceRectangle,
             Microsoft.Xna.Framework.Color.White);
     }
 
@@ -48,17 +48,15 @@ public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : 
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
+                _cachedTexture?.Dispose();
+                _cachedTexture = null;
             }
-
-            _cachedTexture?.Dispose();
-            _cachedTexture = null;
 
             disposedValue = true;
         }
     }
 
-    private static Texture2D CreateGradient(
+    private Texture2D CreateGradient(
         GraphicsDevice graphicsDevice,
         int width,
         int height,
@@ -87,6 +85,8 @@ public class RadialRetroGradientTexture2D(RadialRetroGradientOptions options) : 
         image.SaveAsPng(ms);
         ms.Seek(0, SeekOrigin.Begin);
 
-        return Texture2D.FromStream(graphicsDevice, ms);
+        _cachedTexture = Texture2D.FromStream(graphicsDevice, ms);
+
+        return _cachedTexture;
     }
 }

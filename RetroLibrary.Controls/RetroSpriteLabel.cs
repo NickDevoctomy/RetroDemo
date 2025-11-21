@@ -26,9 +26,10 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle,
-        VerticalAlignment veritcalAlignment = VerticalAlignment.Middle,
+        VerticalAlignment verticalAlignment = VerticalAlignment.Middle,
         SpriteFont? font = null,
-        bool buffered = true,
+        bool isVisible = true,
+        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -37,12 +38,13 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            isVisible,
             buffered,
             updateWatchedProperties)
     {
         Text = text;
         HorizontalAlignment = horizontalAlignment;
-        VerticalAlignment = veritcalAlignment;
+        VerticalAlignment = verticalAlignment;
     }
 
     public override void SetWatchedProperties(List<string> propertyNames)
@@ -57,7 +59,6 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         SpriteBatch spriteBatch,
         Point location)
     {
-        // Only centre aligned for now
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
             Vector2 textSize = Font.MeasureString(Text);
@@ -65,7 +66,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             Vector2 textPosition = textSize.Align(
                 new Rectangle(location, Size),
                 HorizontalAlignment,
-                (VerticalAlignment)VerticalAlignment);
+                VerticalAlignment);
 
             spriteBatch.DrawString(
                 Font,

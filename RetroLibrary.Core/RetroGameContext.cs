@@ -13,7 +13,8 @@ public class RetroGameContext(
     bool isFullScreen,
     string gameDefinitionFilePath,
     IRetroGameLoaderService retroGameLoaderService,
-    IEnumerable<IComponentLoader> componentLoaders)
+    IEnumerable<IComponentLoader> componentLoaders,
+    ITexture2DResourceLoader texture2DResourceLoader)
 {
     public int Width { get; } = width;
 
@@ -22,6 +23,8 @@ public class RetroGameContext(
     public bool IsFullScreen { get; } = isFullScreen;
 
     public string GameDefinitionFilePath { get; } = gameDefinitionFilePath;
+
+    public RetroGameBase? Game { get; private set; }
 
     public GraphicsDeviceManager? GraphicsDeviceManager { get; private set; }
 
@@ -33,6 +36,8 @@ public class RetroGameContext(
 
     public IEnumerable<IComponentLoader> ComponentLoaders { get; } = componentLoaders;
 
+    public ITexture2DResourceLoader Texture2DResourceLoader { get; } = texture2DResourceLoader;
+
     public void Initialse(RetroGameBase retroGameBase)
     {
         GraphicsDeviceManager = new GraphicsDeviceManager(retroGameBase)
@@ -42,6 +47,7 @@ public class RetroGameContext(
             IsFullScreen = IsFullScreen
         };
         GraphicsDeviceManager.ApplyChanges();
+        Game = retroGameBase;
         ContentManager = retroGameBase.Content;
         ContentManager.RootDirectory = "Content";
     }
