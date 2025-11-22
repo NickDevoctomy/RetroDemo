@@ -14,7 +14,7 @@ public interface IRetroGameLoaderService
 
     public List<RetroSpriteBase> Sprites { get; }
 
-    public IBinder Binder { get; }
+    public IBinder? Binder { get; }
 
     public bool LoadGame(RetroGameContext gameContext);
 

@@ -23,7 +23,7 @@ public class XmlRetroGameLoaderService(
 
     public List<RetroSpriteBase> Sprites { get; private set; } = [];
 
-    public IBinder Binder { get; private set; }
+    public IBinder? Binder { get; private set; }
 
     public bool LoadGame(RetroGameContext gameContext)
     {

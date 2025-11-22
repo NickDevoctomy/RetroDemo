@@ -71,7 +71,7 @@
                 textureRef="sunset" />
         
         <Sprite type="RetroLibrary.Controls.RetroSpriteLabel, RetroLibrary.Controls"
-                name="FpsLabel2"
+                name="FpsLabel"
                 position="8,8"
                 size="200,32"
                 text="{binding Path=FpsLabelText}"

@@ -60,7 +60,6 @@ public class BindingParser : IBindingParser
             throw new FormatException("Binding string is empty.");
         }
 
-        // Expected tokens: path=PropertyName, source=ViewModelPropertyName, target=BoundPropertyName
         var tokens = work.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var rawToken in tokens)
         {
@@ -79,17 +78,19 @@ public class BindingParser : IBindingParser
 
                 switch (name.ToLowerInvariant())
                 {
-                    case "path": // backward compatible original usage meaning source path
+                    case "path":
                     case "source":
                         {
-                            result.Path = value; // store source property name
+                            result.Path = value;
                             break;
                         }
+
                     case "target":
                         {
-                            result.BoundPropertyName = value; // explicit bound property
+                            result.BoundPropertyName = value;
                             break;
                         }
+
                     default:
                         {
                             break;
@@ -98,7 +99,6 @@ public class BindingParser : IBindingParser
             }
             else
             {
-                // If single token provided treat as source path
                 result.Path ??= UnwrapQuotes(token);
             }
         }

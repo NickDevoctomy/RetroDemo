@@ -1,5 +1,5 @@
-﻿using RetroLibrary.Core.Base;
-using System.Reflection;
+﻿using System.Reflection;
+using RetroLibrary.Core.Base;
 
 namespace RetroLibrary.Core.Binding;
 
@@ -16,7 +16,6 @@ public class RetroGameViewModelBinder : IBinder
 
     public void AddBinding(BindingInfo bindingInfo)
     {
-        // Resolve source info (from view model)
         if (!string.IsNullOrWhiteSpace(bindingInfo.Path))
         {
             var sourceProp = _viewModel.GetType().GetProperty(
@@ -29,25 +28,12 @@ public class RetroGameViewModelBinder : IBinder
             }
         }
 
-        // Resolve target property: explicit BoundPropertyName overrides Path usage
-        var targetPropertyName = bindingInfo.BoundPropertyName ?? bindingInfo.BoundProperty?.Name;
-        if (string.IsNullOrWhiteSpace(targetPropertyName))
-        {
-            // If no explicit target property specified, try common conventions: Text, Value, Content
-            var candidateNames = new[] { bindingInfo.BoundPropertyName, "Text", "Value", "Content" };
-            var boundObjectType = bindingInfo.BoundObject!.GetType();
-            var found = candidateNames.Where(x => !string.IsNullOrWhiteSpace(x))
-                                       .Select(name => boundObjectType.GetProperty(name!, BindingFlags.Public | BindingFlags.Instance))
-                                       .FirstOrDefault(p => p != null);
-            if (found != null)
-            {
-                bindingInfo.BoundProperty = found;
-            }
-        }
-        else
+        if (!string.IsNullOrWhiteSpace(bindingInfo.BoundPropertyName))
         {
             var boundObjectType = bindingInfo.BoundObject!.GetType();
-            var boundProperty = boundObjectType.GetProperty(targetPropertyName!, BindingFlags.Public | BindingFlags.Instance);
+            var boundProperty = boundObjectType.GetProperty(
+                bindingInfo.BoundPropertyName,
+                BindingFlags.Public | BindingFlags.Instance);
             if (boundProperty != null)
             {
                 bindingInfo.BoundProperty = boundProperty;
@@ -56,7 +42,6 @@ public class RetroGameViewModelBinder : IBinder
 
         _bindings.Add(bindingInfo);
 
-        // Perform initial push of value if source resolved
         if (bindingInfo.SourceProperty != null && bindingInfo.BoundProperty != null)
         {
             var initialValue = bindingInfo.SourceProperty.GetValue(bindingInfo.SourceObject);
@@ -71,12 +56,13 @@ public class RetroGameViewModelBinder : IBinder
         var affectedBindings = _bindings.Where(x => x.Path == e.PropertyName && x.SourceObject == sender);
         foreach (var binding in affectedBindings)
         {
-            if (binding.SourceProperty == null)
+            if (binding.SourceProperty == null || binding.BoundProperty == null)
             {
                 continue;
             }
+
             var value = binding.SourceProperty.GetValue(binding.SourceObject);
-            binding.BoundProperty?.SetValue(binding.BoundObject, value);
+            binding.BoundProperty.SetValue(binding.BoundObject, value);
         }
     }
 }

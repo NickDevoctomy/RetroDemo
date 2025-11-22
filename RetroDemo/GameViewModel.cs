@@ -11,7 +11,7 @@ public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
     private Random _rnd = new(Environment.TickCount);
 
     [ObservableProperty]
-    private string fpsLabelText;
+    private string fpsLabelText = "FPS : ?";
 
     [RelayCommand]
     private void ExitButton_Clicked()
