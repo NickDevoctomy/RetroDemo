@@ -42,6 +42,7 @@ public class RetroSpriteLabelComponentLoader(
             verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle),
             buffered: false);
 
+        // This needs to be nicer, bit more dynamic than this.
         if (isTextBound)
         {
             var bindingInfo = bindingParser.Parse(label, textAttribute);
