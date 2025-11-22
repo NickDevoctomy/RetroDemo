@@ -27,8 +27,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Color? foregroundColor = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -36,8 +35,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
-            isVisible,
-            updateWatchedProperties)
+            isVisible)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
         EnsureChildSubscriptions();

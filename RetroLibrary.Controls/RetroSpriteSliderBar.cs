@@ -65,41 +65,12 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         Color? foregroundColor = null,
         NineSliceTexture2D? sliderBarTexture = null,
         Color? sliderBarTint = null,
-        SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
-        : base(
-            name,
-            position,
-            size,
-            backgroundColor,
-            foregroundColor,
-            font,
-            isVisible,
-            updateWatchedProperties)
-    {
-        SliderBarTexture = sliderBarTexture;
-        SliderBarTint = sliderBarTint ?? Color.White;
-        if (valueFrequency == ValueFrequency.Integer)
-        {
-            Value = (int)Value;
-        }
-    }
-
-    public RetroSpriteSliderBar(
-        string name,
-        Point position,
-        Point size,
-        Color? backgroundColor = null,
-        Color? foregroundColor = null,
-        NineSliceTexture2D? sliderBarTexture = null,
-        Color? sliderBarTint = null,
         NineSliceTexture2D? buttonTexture = null,
         Color? buttonTint = null,
         Color? buttonHoverTint = null,
         ValueFrequency valueFrequency = ValueFrequency.Integer,
         SpriteFont? font = null,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -107,7 +78,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
-            updateWatchedProperties)
+            isVisible)
     {
         SliderBarTexture = sliderBarTexture;
         SliderBarTint = sliderBarTint ?? Color.White;

@@ -2,6 +2,8 @@
 
 public class BindingParser : IBindingParser
 {
+    private const string Keyword = "binding";
+
     public bool IsBindingString(string? value)
     {
         ArgumentException.ThrowIfNullOrEmpty(value);
@@ -16,12 +18,7 @@ public class BindingParser : IBindingParser
             return false;
         }
 
-        const string keyword = "binding";
-        if (work.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
-        {
-            work = work[keyword.Length..].Trim();
-        }
-        else
+        if (!work.StartsWith(Keyword, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
@@ -41,10 +38,9 @@ public class BindingParser : IBindingParser
             work = work[1..^1].Trim();
         }
 
-        const string keyword = "binding";
-        if (work.StartsWith(keyword, StringComparison.OrdinalIgnoreCase))
+        if (work.StartsWith(Keyword, StringComparison.OrdinalIgnoreCase))
         {
-            work = work[keyword.Length..].Trim();
+            work = work[Keyword.Length..].Trim();
         }
         else
         {

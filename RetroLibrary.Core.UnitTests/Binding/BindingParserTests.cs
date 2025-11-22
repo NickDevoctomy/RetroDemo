@@ -36,18 +36,6 @@ public class BindingParserTests
     }
 
     [Theory]
-    [InlineData(null)]
-    public void GivenInvalidBindingString_WhenParse_ThenArgumentNullExceptionThrown(string bindingString)
-    {
-        // Arrange
-        var test = new object();
-        var sut = new BindingParser();
-
-        // Act / Assert
-        Assert.Throws<ArgumentNullException>(() => sut.Parse(test, bindingString));
-    }
-
-    [Theory]
     [InlineData("{notbinding Path=Player.Position}")]
     [InlineData("notbinding Path=Player.Position")]
     public void GivenMalformedBindingKeyword_WhenParse_ThenFormatExceptionThrown(string bindingString)

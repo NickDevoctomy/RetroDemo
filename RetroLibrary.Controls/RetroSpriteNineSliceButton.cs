@@ -60,8 +60,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
-            isVisible,
-            false)
+            isVisible)
     {
         Text = text;
         IsToggleButton = isToggleButton;

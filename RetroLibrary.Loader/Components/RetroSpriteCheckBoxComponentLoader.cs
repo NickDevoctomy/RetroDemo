@@ -12,8 +12,7 @@ namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteCheckBoxComponentLoader(
     IVariableReplacer variableReplacer,
-    IColorLoader colorLoader,
-    IBindingParser bindingParser) : ComponentLoaderBase, IComponentLoader
+    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {

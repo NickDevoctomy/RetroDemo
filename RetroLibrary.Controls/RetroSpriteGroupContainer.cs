@@ -43,8 +43,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         Point? labelOffset = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -53,8 +52,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
-            isVisible,
-            updateWatchedProperties)
+            isVisible)
     {
         Text = text;
         BorderTexture = borderTexture;

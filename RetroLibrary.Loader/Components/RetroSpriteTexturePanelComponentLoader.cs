@@ -9,8 +9,7 @@ using RetroLibrary.Core.Drawing;
 namespace RetroLibrary.XmlLoader.Components
 {
     internal class RetroSpriteTexturePanelComponentLoader(
-            IVariableReplacer variableReplacer,
-            IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+            IVariableReplacer variableReplacer) : ComponentLoaderBase, IComponentLoader
     {
         public bool IsApplicable(XElement element)
         {

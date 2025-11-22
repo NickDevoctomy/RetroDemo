@@ -72,8 +72,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         NineSliceTexture2D? tabDownTexture = null,
         NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -82,8 +81,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
-            isVisible,
-            updateWatchedProperties)
+            isVisible)
     {
         TabUpTint = tabUpTint ?? Color.White;
         TabDownTint = tabDownTint ?? Color.White;

@@ -166,8 +166,19 @@
                             boxTextureRef="surface"
                             fontRef="DefaultFont">                        
                     </Sprite>
-                </TabPage>  
-                <TabPage title="Oranges" />
+                </TabPage>
+                <TabPage title="Oranges">
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteSliderBar, RetroLibrary.Controls"
+                            name="TestSliderBar"
+                            position="8,8"
+                            size="ParentWidth-16,32"
+                            sliderBarTextureRef="surface"
+                            sliderBarTint="Green"
+                            buttonTextureRef="surface"
+                            buttonTint="blue"
+                            buttonHoverTint="Yellow"
+                            fontRef="DefaultFont"/> 
+                </TabPage>
             </TabPages>
         </Sprite>        
 

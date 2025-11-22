@@ -28,8 +28,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle,
         VerticalAlignment verticalAlignment = VerticalAlignment.Middle,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -37,8 +36,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
-            isVisible,
-            updateWatchedProperties)
+            isVisible)
     {
         Text = text;
         HorizontalAlignment = horizontalAlignment;

@@ -8,8 +8,6 @@ namespace RetroLibrary.Core.Base;
 
 public partial class RetroSpriteBase : ObservableObject, IDisposable
 {
-    ////private readonly List<string> _watchedProperties = [];
-
     [ObservableProperty]
     private string name;
 
@@ -46,8 +44,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool updateWatchedProperties = true)
+        bool isVisible = true)
     {
         Name = name;
         Position = position;
@@ -56,11 +53,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
         IsVisible = isVisible;
-
-        ////if (updateWatchedProperties)
-        ////{
-        ////    UpdateWatchedProperties();
-        ////}
     }
 
     public event EventHandler? Clicking;
@@ -68,8 +60,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     public event EventHandler? Released;
 
     public event EventHandler? Clicked;
-
-    public event EventHandler? WatchedPropertyChanged;
 
     public RetroGameContext? RetroGameContext { get; private set; }
 
@@ -107,17 +97,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         _offscreenRenderTarget?.Dispose();
         _offscreenRenderTarget = null;
     }
-
-    ////public void UpdateWatchedProperties()
-    ////{
-    ////    SetWatchedProperties(_watchedProperties);
-    ////}
-
-    ////public virtual void SetWatchedProperties(List<string> propertyNames)
-    ////{
-    ////    _watchedProperties.Add(nameof(Size));
-    ////    _watchedProperties.Add(nameof(IsPressed));
-    ////}
 
     protected virtual void OnUpdate(
         MouseState mouseState,
