@@ -69,15 +69,15 @@
                 position="0,0"
                 size="GameWidth,GameHeight"
                 textureRef="sunset" />
-
+        
         <Sprite type="RetroLibrary.Controls.RetroSpriteLabel, RetroLibrary.Controls"
-                name="FpsLabel"
+                name="FpsLabel2"
                 position="8,8"
                 size="200,32"
-                text="FPS = 000"
+                text="{binding Path=FpsLabelText}"
                 fontRef="DefaultFont"
                 foregroundColor="white">
-        </Sprite>        
+        </Sprite>
 
         <Sprite type="RetroLibrary.Controls.RetroSpriteMiniParallaxScroller, RetroLibrary.Controls"
                 name="ParalaxScroller"

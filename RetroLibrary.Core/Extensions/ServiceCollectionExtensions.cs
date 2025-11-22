@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Resources;
@@ -15,5 +16,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IColorLoader, ColorLoader>();
         services.AddScoped<IBlitterService, BlitterService>();
         services.AddScoped<IVariableReplacer, VariableReplacer>();
+        services.AddScoped<IBindingParser, BindingParser>();
     }
 }

@@ -21,7 +21,7 @@ public class Game(RetroGameContext retroGameContext)
 
         if (RetroGameContext.RetroGameLoaderService.ViewModel is GameViewModel gameViewModel)
         {
-            gameViewModel.Fps = Fps;
+            gameViewModel.FpsLabelText = $"FPS : {Fps}";
         }
     }
 }

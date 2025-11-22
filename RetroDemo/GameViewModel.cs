@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Xna.Framework.Audio;
 using RetroLibrary.Controls;
-using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
 
 namespace RetroDemo;
@@ -11,35 +9,9 @@ namespace RetroDemo;
 public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
 {
     private Random _rnd = new(Environment.TickCount);
-    private RetroSpriteLabel? _fpsLabel;
 
     [ObservableProperty]
-    private int fps;
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == nameof(Fps))
-        {
-            // Need tp implement binding for label text
-            var label = GetFpsLabel();
-            if (label != null)
-            {
-                label.Text = $"FPS: {Fps}";
-            }
-        }
-    }
-
-    private RetroSpriteLabel? GetFpsLabel()
-    {
-        if (game.RetroGameContext.RetroGameLoaderService.FindSpriteByName("FpsLabel") is RetroSpriteLabel fpsLabel)
-        {
-            _fpsLabel = fpsLabel;
-        }
-
-        return _fpsLabel;
-    }
+    private string fpsLabelText;
 
     [RelayCommand]
     private void ExitButton_Clicked()

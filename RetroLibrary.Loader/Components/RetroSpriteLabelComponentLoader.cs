@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Enums;
@@ -11,7 +12,8 @@ namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteLabelComponentLoader(
     IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IColorLoader colorLoader,
+    IBindingParser bindingParser) : ComponentLoaderBase, IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -25,9 +27,12 @@ public class RetroSpriteLabelComponentLoader(
     {
         var name = element.Attribute("name")!.Value;
 
+        var textAttribute = element.Attribute("text")?.Value ?? string.Empty;
+        var isTextBound = bindingParser.IsBindingString(textAttribute);
+
         var label = new RetroSpriteLabel(
             name,
-            element.Attribute("text")?.Value ?? string.Empty,
+            isTextBound ? string.Empty : textAttribute,
             ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
             ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
             font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
@@ -36,6 +41,13 @@ public class RetroSpriteLabelComponentLoader(
             horizontalAlignment: ToEnum(element.Attribute("horizontalAlignment"), HorizontalAlignment.Left),
             verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle),
             buffered: false);
+
+        if (isTextBound)
+        {
+            var bindingInfo = bindingParser.Parse(label, textAttribute);
+            bindingInfo.BoundPropertyName ??= nameof(RetroSpriteLabel.Text);
+            gameContext.RetroGameLoaderService.Binder.AddBinding(bindingInfo);
+        }
 
         return (name, label);
     }

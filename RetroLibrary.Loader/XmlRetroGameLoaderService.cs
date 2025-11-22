@@ -1,9 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System.Reflection;
+using System.Xml.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
@@ -21,6 +22,8 @@ public class XmlRetroGameLoaderService(
     public RetroGameViewModelBase? ViewModel { get; private set; }
 
     public List<RetroSpriteBase> Sprites { get; private set; } = [];
+
+    public IBinder Binder { get; private set; }
 
     public bool LoadGame(RetroGameContext gameContext)
     {
@@ -53,6 +56,8 @@ public class XmlRetroGameLoaderService(
                 throw new Exception($"The specified view model type '{viewModelTypeName}' is not a valid RetroGameViewModelBase.");
             }
         }
+
+        Binder = new RetroGameViewModelBinder(ViewModel!);
 
         var resourcesRoot = document.Root.Element("Resources");
         if (resourcesRoot != null)
