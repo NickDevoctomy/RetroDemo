@@ -73,7 +73,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -84,7 +83,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             innerMargins,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         TabUpTint = tabUpTint ?? Color.White;
@@ -99,25 +97,6 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
         TabPages.CollectionChanged += TabPages_CollectionChanged;
         EnsurePageSubscriptions();
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(TabPages));
-        propertyNames.Add(nameof(TabUpTexture));
-        propertyNames.Add(nameof(TabDownTexture));
-        propertyNames.Add(nameof(TabUpTint));
-        propertyNames.Add(nameof(TabDownTint));
-        propertyNames.Add(nameof(TabHeaderHeight));
-        propertyNames.Add(nameof(TabHorizontalPadding));
-        propertyNames.Add(nameof(TabSpacing));
-        propertyNames.Add(nameof(TabLeftPadding));
-        propertyNames.Add(nameof(TabPageTexture));
-        propertyNames.Add(nameof(TabPageTint));
-        propertyNames.Add(nameof(TabOverlapPixels));
-        propertyNames.Add(nameof(ContentMargins));
-        propertyNames.Add(nameof(Font));
     }
 
     protected override void OnRedraw(

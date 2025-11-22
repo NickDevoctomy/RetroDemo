@@ -27,7 +27,6 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         List<MiniParallaxScrollerMiniParallaxScrollerLayer>? layers = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -37,7 +36,6 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Layers = layers ?? [];

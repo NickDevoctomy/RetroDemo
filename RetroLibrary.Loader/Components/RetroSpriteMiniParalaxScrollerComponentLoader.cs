@@ -5,7 +5,6 @@ using RetroLibrary.Controls;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
-using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
@@ -48,8 +47,7 @@ public class RetroSpriteMiniParalaxScrollerComponentLoader(
             foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
             layers,
             font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            isVisible: ToBool(element.Attribute("isVisible"), true),
-            buffered: ToBool(element.Attribute("buffered"), false));
+            isVisible: ToBool(element.Attribute("isVisible"), true));
 
         return (name, scroller);
     }

@@ -37,8 +37,7 @@ public class RetroSpriteProgressBarComponentLoader(
             fromColor: ToColor(element.Attribute("fromColor"), element.Attribute("fromColorAlpha"), colorLoader, null),
             toColor: ToColor(element.Attribute("toColor"), element.Attribute("toColorAlpha"), colorLoader, null),
             font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            isVisible: ToBool(element.Attribute("isVisible"), true),
-            buffered: ToBool(element.Attribute("buffered"), false));
+            isVisible: ToBool(element.Attribute("isVisible"), true));
 
         return (name, progressBar);
     }

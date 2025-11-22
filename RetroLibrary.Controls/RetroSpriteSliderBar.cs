@@ -67,7 +67,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         Color? sliderBarTint = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -77,7 +76,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         SliderBarTexture = sliderBarTexture;
@@ -101,7 +99,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         Color? buttonHoverTint = null,
         ValueFrequency valueFrequency = ValueFrequency.Integer,
         SpriteFont? font = null,
-        bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -110,7 +107,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
-            buffered,
             updateWatchedProperties)
     {
         SliderBarTexture = sliderBarTexture;
@@ -132,26 +128,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         SliderBarTexture = null;
         ButtonTexture?.Dispose();
         ButtonTexture = null;
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(SliderBarTexture));
-        propertyNames.Add(nameof(SliderBarTint));
-        propertyNames.Add(nameof(Minimum));
-        propertyNames.Add(nameof(Maximum));
-        propertyNames.Add(nameof(Value));
-        propertyNames.Add(nameof(ButtonMarginLeft));
-        propertyNames.Add(nameof(ButtonMarginRight));
-        propertyNames.Add(nameof(ButtonTexture));
-        propertyNames.Add(nameof(ButtonTint));
-        propertyNames.Add(nameof(ButtonHoverTint));
-        propertyNames.Add(nameof(BarHeight));
-        propertyNames.Add(nameof(ButtonWidth));
-        propertyNames.Add(nameof(ButtonHeight));
-        propertyNames.Add(nameof(IsThumbHovered));
-        propertyNames.Add(nameof(ValueFrequency));
     }
 
     protected override void OnRedraw(SpriteBatch spriteBatch, Point location)

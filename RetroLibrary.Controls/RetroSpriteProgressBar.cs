@@ -38,7 +38,6 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         Color? toColor = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -48,7 +47,6 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Value = value;
@@ -64,16 +62,6 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             FromPoint = new Point(0, 0),
             ToPoint = new Point(Size.X, 0)
         });
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(Value));
-        propertyNames.Add(nameof(FromColor));
-        propertyNames.Add(nameof(ToColor));
-        propertyNames.Add(nameof(BorderTexture));
-        propertyNames.Add(nameof(BorderTint));
     }
 
     protected override void OnRedraw(

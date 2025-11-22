@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Enums;
+using RetroLibrary.Core.Extensions;
 
 namespace RetroLibrary.Controls;
 
@@ -28,7 +30,6 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
         bool isChecked = false,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -38,21 +39,11 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Text = text;
         BoxTexture = boxTexture;
         IsChecked = isChecked;
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(Text));
-        propertyNames.Add(nameof(BoxTexture));
-        propertyNames.Add(nameof(IsHovered));
-        propertyNames.Add(nameof(IsChecked));
     }
 
     protected override void OnClicked()
@@ -65,6 +56,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
         SpriteBatch spriteBatch,
         Point location)
     {
+        // location already includes this sprite's Position from base Draw.
         if (BoxTexture != null)
         {
             var boxTexture = BoxTexture.BuildTexture(
@@ -81,12 +73,12 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
                     boxTexture.Height),
                 Color.White);
 
-            if (IsChecked)
+            if (IsChecked && Font != null)
             {
                 spriteBatch.DrawString(
                     Font,
                     "X",
-                    new Vector2(6, 6),
+                    new Vector2(location.X + 6, location.Y + 6),
                     ForegroundColor);
             }
         }
@@ -100,14 +92,18 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
                 Size.Y);
 
             var textSize = Font.MeasureString(Text);
-            var textPosition = new Vector2(
-                textRect.X,
-                textRect.Y + ((textRect.Height - textSize.Y) / 2));
+
+            var aligned = textSize.Align(
+                textRect,
+                HorizontalAlignment.Left,
+                VerticalAlignment.Middle);
+
+            aligned.Y += 2; // slight nudge to center vertically better
 
             spriteBatch.DrawString(
                 Font,
                 Text,
-                textPosition,
+                aligned,
                 ForegroundColor);
         }
     }

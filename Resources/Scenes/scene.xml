@@ -134,7 +134,20 @@
                             upTextureRef="buttonUp"
                             downTextureRef="buttonDown"
                             clickCommand="AppleTabButton_ClickedCommand"
-                            clickSoundRef="updateSound"/>                    
+                            clickSoundRef="updateSound"/>
+
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"
+                            name="AppleTabButton"
+                            position="8,60"
+                            size="200,50"
+                            text="Do nothing!"
+                            fontRef="DefaultFont"
+                            isToggleButton="false"
+                            foregroundColor="White"
+                            upTint="LightGreen"
+                            downTint="LightGreen"
+                            upTextureRef="buttonUp"
+                            downTextureRef="buttonDown"/>
                 </TabPage>
                 <TabPage title="Hello World!!!">
                     <Sprite type="RetroLibrary.Controls.RetroSpriteProgressBar, RetroLibrary.Controls"
@@ -143,7 +156,15 @@
                             size="ParentWidth-16,50"
                             value="0.75"
                             borderTextureRef="border"
-                            borderTint="Red">
+                            borderTint="Red" />
+                    
+                    <Sprite type="RetroLibrary.Controls.RetroSpriteCheckBox, RetroLibrary.Controls"
+                            name="TestCheckBox"
+                            text="Check me!"
+                            position="8,64"
+                            size="200,24"
+                            boxTextureRef="surface"
+                            fontRef="DefaultFont">                        
                     </Sprite>
                 </TabPage>  
                 <TabPage title="Oranges" />

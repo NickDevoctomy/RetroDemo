@@ -8,7 +8,7 @@ namespace RetroLibrary.Core.Base;
 
 public partial class RetroSpriteBase : ObservableObject, IDisposable
 {
-    private readonly List<string> _watchedProperties = [];
+    ////private readonly List<string> _watchedProperties = [];
 
     [ObservableProperty]
     private string name;
@@ -29,9 +29,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private SpriteFont? font;
 
     [ObservableProperty]
-    private bool buffered;
-
-    [ObservableProperty]
     private bool isPressed;
 
     [ObservableProperty]
@@ -40,7 +37,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isVisible;
 
-    private bool _needsRedraw = true;
     private RenderTarget2D? _offscreenRenderTarget;
 
     public RetroSpriteBase(
@@ -51,7 +47,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? foregroundColor = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
     {
         Name = name;
@@ -61,12 +56,11 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
         IsVisible = isVisible;
-        Buffered = buffered;
 
-        if (updateWatchedProperties)
-        {
-            UpdateWatchedProperties();
-        }
+        ////if (updateWatchedProperties)
+        ////{
+        ////    UpdateWatchedProperties();
+        ////}
     }
 
     public event EventHandler? Clicking;
@@ -91,27 +85,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             return;
         }
 
-        if (!Buffered)
-        {
-            OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
-            return;
-        }
-
-        throw new NotImplementedException("Buffered drawing is not implemented yet.");
-
-        ////if (_needsRedraw || _offscreenRenderTarget == null)
-        ////{
-        ////    System.Diagnostics.Debug.WriteLine($"Redrawing offscreen buffer for '{Name}'.");
-        ////    RedrawOffscreenBuffer(spriteBatch.GraphicsDevice);
-        ////}
-
-        ////if (_offscreenRenderTarget != null)
-        ////{
-        ////    spriteBatch.Draw(
-        ////        _offscreenRenderTarget,
-        ////        new Rectangle(Position, Size),
-        ////        Color.White);
-        ////}
+        OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
     }
 
     public void Update(
@@ -134,16 +108,16 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         _offscreenRenderTarget = null;
     }
 
-    public void UpdateWatchedProperties()
-    {
-        SetWatchedProperties(_watchedProperties);
-    }
+    ////public void UpdateWatchedProperties()
+    ////{
+    ////    SetWatchedProperties(_watchedProperties);
+    ////}
 
-    public virtual void SetWatchedProperties(List<string> propertyNames)
-    {
-        _watchedProperties.Add(nameof(Size));
-        _watchedProperties.Add(nameof(IsPressed));
-    }
+    ////public virtual void SetWatchedProperties(List<string> propertyNames)
+    ////{
+    ////    _watchedProperties.Add(nameof(Size));
+    ////    _watchedProperties.Add(nameof(IsPressed));
+    ////}
 
     protected virtual void OnUpdate(
         MouseState mouseState,
@@ -189,22 +163,6 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         // We don't draw anything in the base class
     }
 
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (!Buffered || string.IsNullOrEmpty(e.PropertyName))
-        {
-            return;
-        }
-
-        if (_watchedProperties.Contains(e.PropertyName))
-        {
-            OnWatchedPropertyChanged(e.PropertyName);
-            _needsRedraw = true;
-        }
-    }
-
     protected virtual void OnClicking()
     {
         Clicking?.Invoke(this, EventArgs.Empty);
@@ -218,39 +176,5 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     protected virtual void OnReleased()
     {
         Released?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void RedrawOffscreenBuffer(GraphicsDevice graphicsDevice)
-    {
-        _offscreenRenderTarget ??= new RenderTarget2D(
-                graphicsDevice,
-                Size.X,
-                Size.Y,
-                false,
-                SurfaceFormat.Color,
-                DepthFormat.None,
-                0,
-                RenderTargetUsage.PreserveContents);
-
-        var originalRenderTargets = graphicsDevice.GetRenderTargets();
-        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
-        graphicsDevice.SetRenderTarget(_offscreenRenderTarget);             // Switching render target causes flicker
-        graphicsDevice.Clear(BackgroundColor);
-
-        using var spriteBatch = new SpriteBatch(graphicsDevice);
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-        OnRedraw(spriteBatch, Point.Zero);
-
-        spriteBatch.End();
-        graphicsDevice.SetRenderTargets(originalRenderTargets);
-
-        _needsRedraw = false;
-    }
-
-    private void OnWatchedPropertyChanged(string propertyName)
-    {
-        _needsRedraw = true;
-        WatchedPropertyChanged?.Invoke(this, EventArgs.Empty);
     }
 }

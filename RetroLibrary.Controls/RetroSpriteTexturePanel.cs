@@ -20,7 +20,6 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
         IRetroTexture2D? texture = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -30,7 +29,6 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Texture = texture;

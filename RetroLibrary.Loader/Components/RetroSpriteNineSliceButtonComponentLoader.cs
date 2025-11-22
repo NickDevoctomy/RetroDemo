@@ -41,7 +41,6 @@ public class RetroSpriteNineSliceButtonComponentLoader(
             upTexture: GetResource<NineSliceTexture2D>(element.Attribute("upTextureRef"), gameContext.ResourceManager),
             downTexture: GetResource<NineSliceTexture2D>(element.Attribute("downTextureRef"), gameContext.ResourceManager),
             isVisible: ToBool(element.Attribute("isVisible"), true),
-            buffered: ToBool(element.Attribute("buffered"), false),
             clickCommand: GetRelayCommand(element.Attribute("clickCommand"), gameContext),
             clickSound: GetResource<SoundEffect>(element.Attribute("clickSoundRef"), gameContext.ResourceManager));
 

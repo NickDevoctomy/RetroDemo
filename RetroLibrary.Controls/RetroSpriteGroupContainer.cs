@@ -44,7 +44,6 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -55,7 +54,6 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             innerMargins,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Text = text;

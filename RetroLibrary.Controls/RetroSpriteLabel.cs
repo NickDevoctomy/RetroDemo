@@ -29,7 +29,6 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         VerticalAlignment verticalAlignment = VerticalAlignment.Middle,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = false,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -39,20 +38,11 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         Text = text;
         HorizontalAlignment = horizontalAlignment;
         VerticalAlignment = verticalAlignment;
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(Text));
-        propertyNames.Add(nameof(HorizontalAlignment));
-        propertyNames.Add(nameof(VerticalAlignment));
     }
 
     protected override void OnRedraw(

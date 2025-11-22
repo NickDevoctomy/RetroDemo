@@ -28,7 +28,6 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
         bool isVisible = true,
-        bool buffered = true,
         bool updateWatchedProperties = true)
         : base(
             name,
@@ -38,25 +37,16 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             updateWatchedProperties)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
         EnsureChildSubscriptions();
     }
 
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(ChildrenChangeVersion));
-        propertyNames.Add(nameof(InnerMargins));
-    }
-
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
         Point location)
     {
-        // Keep subscriptions current before drawing
         EnsureChildSubscriptions();
 
         var graphicsDevice = spriteBatch.GraphicsDevice;
@@ -72,21 +62,6 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         DrawChildren(spriteBatch, location);
 
         graphicsDevice.ScissorRectangle = previousScissor;
-
-        ////var childrenTexture = DrawChildrenToTexture(spriteBatch.GraphicsDevice);
-
-        ////var innerLocation = new Point(
-        ////    location.X + InnerMargins.X,
-        ////    location.Y + InnerMargins.Y);
-
-        ////var innerSize = new Point(
-        ////    Size.X - InnerMargins.X - InnerMargins.Width,
-        ////    Size.Y - InnerMargins.Y - InnerMargins.Height);
-
-        ////spriteBatch.Draw(
-        ////    childrenTexture,
-        ////    new Rectangle(innerLocation, innerSize),
-        ////    Color.White);
     }
 
     protected override void OnUpdate(
@@ -134,37 +109,6 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             currentChild.Draw(spriteBatch, location + InnerMargins.Location);
         }
     }
-
-    ////protected Texture2D DrawChildrenToTexture(GraphicsDevice graphicsDevice)
-    ////{
-    ////    var renderTarget = new RenderTarget2D(
-    ////        graphicsDevice,
-    ////        Size.X - (InnerMargins.X + InnerMargins.Width),
-    ////        Size.Y - (InnerMargins.Y + InnerMargins.Height),
-    ////        false,
-    ////        SurfaceFormat.Color,
-    ////        DepthFormat.None,
-    ////        0,
-    ////        RenderTargetUsage.PlatformContents);
-
-    ////    using var spriteBatch = new SpriteBatch(graphicsDevice);
-
-    ////    var originalRenderTargets = graphicsDevice.GetRenderTargets();
-    ////    System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}: Switching render target.");
-    ////    graphicsDevice.SetRenderTarget(renderTarget);
-    ////    graphicsDevice.Clear(Color.Transparent);
-    ////    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-    ////    foreach (var currentChild in Children)
-    ////    {
-    ////        currentChild.Draw(spriteBatch);
-    ////    }
-
-    ////    spriteBatch.End();
-    ////    graphicsDevice.SetRenderTargets(originalRenderTargets);
-
-    ////    return renderTarget;
-    ////}
 
     private void EnsureChildSubscriptions()
     {

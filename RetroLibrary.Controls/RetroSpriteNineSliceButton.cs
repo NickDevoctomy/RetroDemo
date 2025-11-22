@@ -52,8 +52,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         RelayCommand? clickCommand = null,
         SoundEffect? clickSound = null,
         SpriteFont? font = null,
-        bool isVisible = true,
-        bool buffered = false)
+        bool isVisible = true)
         : base(
             name,
             position,
@@ -62,7 +61,6 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
             foregroundColor,
             font,
             isVisible,
-            buffered,
             false)
     {
         Text = text;
@@ -73,21 +71,6 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         DownTint = downTint ?? Color.White;
         ClickCommand = clickCommand;
         ClickSound = clickSound;
-
-        UpdateWatchedProperties();
-    }
-
-    public override void SetWatchedProperties(List<string> propertyNames)
-    {
-        base.SetWatchedProperties(propertyNames);
-        propertyNames.Add(nameof(Text));
-        propertyNames.Add(nameof(UpTexture));
-        propertyNames.Add(nameof(DownTexture));
-        propertyNames.Add(nameof(UpTint));
-        propertyNames.Add(nameof(DownTint));
-        propertyNames.Add(nameof(Font));
-        propertyNames.Add(nameof(IsHovered));
-        propertyNames.Add(nameof(IsToggled));
     }
 
     public override void Dispose()
