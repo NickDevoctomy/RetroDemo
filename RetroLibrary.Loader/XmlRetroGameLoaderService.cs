@@ -26,8 +26,6 @@ public class XmlRetroGameLoaderService(
 
     public List<RetroSpriteBase> Sprites { get; private set; } = [];
 
-    public IBinder? Binder { get; private set; }
-
     public IEnumerable<IComponentLoader> ComponentLoaders { get; init; } = componentLoaders;
 
     public bool LoadGame(RetroGameContext gameContext)
@@ -61,8 +59,6 @@ public class XmlRetroGameLoaderService(
                 throw new Exception($"The specified view model type '{viewModelTypeName}' is not a valid RetroGameViewModelBase.");
             }
         }
-
-        Binder = new RetroGameViewModelBinder(ViewModel!);
 
         var resourcesRoot = document.Root.Element("Resources");
         if (resourcesRoot != null)
@@ -114,7 +110,9 @@ public class XmlRetroGameLoaderService(
         return null;
     }
 
-    private static RetroSpriteBase? FindSpriteRecursive(RetroSpriteBase current, string name)
+    private static RetroSpriteBase? FindSpriteRecursive(
+        RetroSpriteBase current,
+        string name)
     {
         if (current.Name == name)
         {

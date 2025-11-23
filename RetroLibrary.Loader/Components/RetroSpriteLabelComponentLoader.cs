@@ -29,7 +29,6 @@ public class RetroSpriteLabelComponentLoader(
         XElement element)
     {
         var name = element.Attribute("name")!.Value;
-
         var textAttribute = element.Attribute("text")?.Value ?? string.Empty;
         var isTextBound = bindingParser.IsBindingString(textAttribute);
 
@@ -49,7 +48,7 @@ public class RetroSpriteLabelComponentLoader(
         {
             var bindingInfo = bindingParser.Parse(label, textAttribute);
             bindingInfo.BoundPropertyName ??= nameof(RetroSpriteLabel.Text);
-            gameContext.RetroGameLoaderService.Binder!.AddBinding(bindingInfo);
+            gameContext.RetroGameLoaderService.ViewModel.Binder.AddBinding(bindingInfo);
         }
 
         return (name, label);
