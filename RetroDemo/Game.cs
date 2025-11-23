@@ -8,7 +8,6 @@ namespace RetroDemo;
 public class Game(RetroGameContext retroGameContext)
     : RetroGameBase(retroGameContext)
 {
-
     protected override void OnUpdate(
         GameTime gameTime,
         MouseState currentState,

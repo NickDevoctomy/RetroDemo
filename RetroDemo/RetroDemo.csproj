@@ -85,6 +85,10 @@
         <PackageReference Include="SixLabors.ImageSharp" />
         <PackageReference Include="System.ValueTuple" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="StyleCop.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>        
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\RetroLibrary.Controls\RetroLibrary.Controls.csproj" />

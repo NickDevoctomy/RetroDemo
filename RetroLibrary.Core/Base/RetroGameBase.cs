@@ -26,6 +26,11 @@ public class RetroGameBase : Game
 
     public RetroGameContext RetroGameContext { get; init; }
 
+    public void SetTargetFps(int targetFps)
+    {
+        TargetElapsedTime = TimeSpan.FromSeconds(1.0 / targetFps);
+    }
+
     protected virtual void OnLoadContent()
     {
         _previousMouseState = Mouse.GetState();
@@ -36,7 +41,6 @@ public class RetroGameBase : Game
         MouseState currentState,
         MouseState previousState)
     {
-        // !!! Causing flicker for some reason or another
         foreach (var sprite in RetroGameContext.RetroGameLoaderService.Sprites)
         {
             sprite.Update(
@@ -128,12 +132,6 @@ public class RetroGameBase : Game
         OnDraw(
             gameTime,
             _spriteBatch!);
-
-        ////_spriteBatch?.DrawString(
-        ////    RetroGameContext.ResourceManager.GetResource<SpriteFont>("DefaultFont"),
-        ////    $"FPS: {_fps}",
-        ////    new Vector2(10, 10),
-        ////    Color.White);
 
         _spriteBatch!.End();
     }

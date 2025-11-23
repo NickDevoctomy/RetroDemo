@@ -19,7 +19,7 @@
         <PackageReference Include="MonoGame.Framework.DesktopGL" />
         <PackageReference Include="MonoGame.Library.SDL" />
         <PackageReference Include="SixLabors.ImageSharp" />
-        <PackageReference Include="SixLabors.ImageSharp.Drawing" />        
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" />   
     </ItemGroup>
 
 </Project>
