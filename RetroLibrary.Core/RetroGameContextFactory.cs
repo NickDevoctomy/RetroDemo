@@ -14,8 +14,7 @@ public class RetroGameContextFactory(
         int width,
         int height,
         bool isFullScreen,
-        string gameDefinitionFilePath,
-        IEnumerable<IComponentLoader> componentLoaders)
+        string gameDefinitionFilePath)
     {
         return new RetroGameContext(
             width,
@@ -23,7 +22,6 @@ public class RetroGameContextFactory(
             isFullScreen,
             gameDefinitionFilePath,
             retroGameLoaderService,
-            componentLoaders,
             texture2DResourceLoader);
     }
 }

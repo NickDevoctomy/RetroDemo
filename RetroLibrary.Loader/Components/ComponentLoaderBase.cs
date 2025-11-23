@@ -8,62 +8,14 @@ using RetroLibrary.XmlLoader.Extensions;
 
 namespace RetroLibrary.XmlLoader.Components;
 
-public class ComponentLoaderBase
+public class ComponentLoaderBase(
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
 {
-    protected static T? GetResource<T>(
-        XAttribute? attribute,
-        IResourceManager resourceManager)
-    {
-        if (attribute == null)
-        {
-            return default;
-        }
+    protected IColorLoader ColorLoader => colorLoader;
 
-        return resourceManager.GetResource<T>(attribute.Value);
-    }
-
-    protected static Color? ToColor(
-        XAttribute? attribute,
-        XAttribute? alpha,
-        IColorLoader colorLoader,
-        Color? defaultColor)
-    {
-        if (attribute == null)
-        {
-            return defaultColor;
-        }
-
-        var alphaValue = alpha != null ? float.Parse(alpha.Value) : 1.0f;
-        return attribute.ToColor(colorLoader, defaultColor, alphaValue);
-    }
-
-    protected static Point ToPoint(
-        XAttribute? attribute,
-        RetroGameContext gameContext,
-        IVariableReplacer variableReplacer,
-        Point defaultValue)
-    {
-        if (attribute == null)
-        {
-            return defaultValue;
-        }
-
-        return attribute.ToPoint(gameContext, variableReplacer);
-    }
-
-    protected static Rectangle ToRectangle(
-        XAttribute? attribute,
-        RetroGameContext gameContext,
-        IVariableReplacer variableReplacer,
-        Rectangle defaultValue)
-    {
-        if (attribute == null)
-        {
-            return defaultValue;
-        }
-
-        return attribute.ToRectangle(gameContext, variableReplacer);
-    }
+    protected IVariableReplacer VariableReplacer => variableReplacer;
 
     protected static float ToFloat(
         XAttribute? attribute,
@@ -87,20 +39,6 @@ public class ComponentLoaderBase
         }
 
         return bool.Parse(attribute.Value);
-    }
-
-    protected static int ToInt(
-        XAttribute? attribute,
-        RetroGameContext gameContext,
-        IVariableReplacer variableReplacer,
-        int defaultValue)
-    {
-        if (attribute == null)
-        {
-            return defaultValue;
-        }
-
-        return attribute.ToInt(gameContext, variableReplacer);
     }
 
     protected static RelayCommand? GetRelayCommand(
@@ -128,5 +66,68 @@ public class ComponentLoaderBase
         }
 
         return Enum.Parse<T>(attribute.Value, false);
+    }
+
+    protected T? GetResource<T>(XAttribute? attribute)
+    {
+        if (attribute == null)
+        {
+            return default;
+        }
+
+        return resourceManager.GetResource<T>(attribute.Value);
+    }
+
+    protected int ToInt(
+        XAttribute? attribute,
+        RetroGameContext gameContext,
+        int defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return attribute.ToInt(gameContext, VariableReplacer);
+    }
+
+    protected Color? ToColor(
+        XAttribute? attribute,
+        XAttribute? alpha,
+        Color? defaultColor)
+    {
+        if (attribute == null)
+        {
+            return defaultColor;
+        }
+
+        var alphaValue = alpha != null ? float.Parse(alpha.Value) : 1.0f;
+        return attribute.ToColor(ColorLoader, defaultColor, alphaValue);
+    }
+
+    protected Point ToPoint(
+        XAttribute? attribute,
+        RetroGameContext gameContext,
+        Point defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return attribute.ToPoint(gameContext, VariableReplacer);
+    }
+
+    protected Rectangle ToRectangle(
+        XAttribute? attribute,
+        RetroGameContext gameContext,
+        Rectangle defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        return attribute.ToRectangle(gameContext, VariableReplacer);
     }
 }

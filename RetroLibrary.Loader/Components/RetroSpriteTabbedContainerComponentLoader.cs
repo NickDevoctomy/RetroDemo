@@ -7,12 +7,15 @@ using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteTabbedContainerComponentLoader(
-    IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -25,24 +28,24 @@ public class RetroSpriteTabbedContainerComponentLoader(
         XElement element)
     {
         var name = element.Attribute("name")!.Value;
-        var size = ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero);
+        var size = ToPoint(element.Attribute("size"), gameContext, Point.Zero);
 
-        variableReplacer.DefaultParameters.Add("ParentWidth", size.X);
-        variableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
+        VariableReplacer.DefaultParameters.Add("ParentWidth", size.X);
+        VariableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
 
         var tabbedContainer = new RetroSpriteTabbedContainer(
             name,
-            ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
+            ToPoint(element.Attribute("position"), gameContext, Point.Zero),
             size,
-            ToColor(element.Attribute("foregroundColor"), null, colorLoader, Color.Black),
-            innerMargins: ToRectangle(element.Attribute("innerMargins"), gameContext, variableReplacer, Rectangle.Empty),
-            tabUpTint: ToColor(element.Attribute("tabUpTint"), element.Attribute("tabUpTintAlpha"), colorLoader, Color.White),
-            tabDownTint: ToColor(element.Attribute("tabDownTint"), element.Attribute("tabDownTintAlpha"), colorLoader, Color.White),
-            tabPageTint: ToColor(element.Attribute("tabPageTint"), element.Attribute("tabPageTintAlpha"), colorLoader, Color.White),
-            tabUpTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabUpTextureRef"), gameContext.ResourceManager),
-            tabDownTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabDownTextureRef"), gameContext.ResourceManager),
-            tabPageTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabPageTextureRef"), gameContext.ResourceManager),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
+            ToColor(element.Attribute("foregroundColor"), null, Color.Black),
+            innerMargins: ToRectangle(element.Attribute("innerMargins"), gameContext, Rectangle.Empty),
+            tabUpTint: ToColor(element.Attribute("tabUpTint"), element.Attribute("tabUpTintAlpha"), Color.White),
+            tabDownTint: ToColor(element.Attribute("tabDownTint"), element.Attribute("tabDownTintAlpha"), Color.White),
+            tabPageTint: ToColor(element.Attribute("tabPageTint"), element.Attribute("tabPageTintAlpha"), Color.White),
+            tabUpTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabUpTextureRef")),
+            tabDownTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabDownTextureRef")),
+            tabPageTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabPageTextureRef")),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             isVisible: ToBool(element.Attribute("isVisible"), true));
 
         var tabPagesRoot = element.Element("TabPages");
@@ -55,7 +58,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
                 var childSprites = curTabPage.Elements();
                 foreach (var curChildSprite in childSprites)
                 {
-                    var componentLoader = gameContext.ComponentLoaders.Single(loader => loader.IsApplicable(curChildSprite));
+                    var componentLoader = gameContext.RetroGameLoaderService.ComponentLoaders.Single(loader => loader.IsApplicable(curChildSprite));
                     (string id, object value) = componentLoader.LoadComponent(
                         gameContext,
                         curChildSprite);

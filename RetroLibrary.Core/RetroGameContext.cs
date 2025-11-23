@@ -15,7 +15,6 @@ public class RetroGameContext(
     bool isFullScreen,
     string gameDefinitionFilePath,
     IRetroGameLoaderService retroGameLoaderService,
-    IEnumerable<IComponentLoader> componentLoaders,
     ITexture2DResourceLoader texture2DResourceLoader)
 {
     public int Width { get; } = width;
@@ -35,8 +34,6 @@ public class RetroGameContext(
     public IRetroGameLoaderService RetroGameLoaderService { get; } = retroGameLoaderService;
 
     public IResourceManager ResourceManager { get; } = new ResourceManager();
-
-    public IEnumerable<IComponentLoader> ComponentLoaders { get; } = componentLoaders;
 
     public ITexture2DResourceLoader Texture2DResourceLoader { get; } = texture2DResourceLoader;
 

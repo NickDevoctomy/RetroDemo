@@ -6,12 +6,15 @@ using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteProgressBarComponentLoader(
-    IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -28,15 +31,15 @@ public class RetroSpriteProgressBarComponentLoader(
         var progressBar = new RetroSpriteProgressBar(
             name,
             value: ToFloat(element.Attribute("value"), 0f),
-            position: ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            size: ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), element.Attribute("backgroundColorAlpha"), colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), element.Attribute("foregroundColorAlpha"), colorLoader, null),
-            borderTexture: GetResource<NineSliceTexture2D>(element.Attribute("borderTextureRef"), gameContext.ResourceManager),
-            borderTint: ToColor(element.Attribute("borderTint"), element.Attribute("borderTintAlpha"), colorLoader, null),
-            fromColor: ToColor(element.Attribute("fromColor"), element.Attribute("fromColorAlpha"), colorLoader, null),
-            toColor: ToColor(element.Attribute("toColor"), element.Attribute("toColorAlpha"), colorLoader, null),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
+            position: ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+            size: ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), element.Attribute("backgroundColorAlpha"), null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), element.Attribute("foregroundColorAlpha"), null),
+            borderTexture: GetResource<NineSliceTexture2D>(element.Attribute("borderTextureRef")),
+            borderTint: ToColor(element.Attribute("borderTint"), element.Attribute("borderTintAlpha"), null),
+            fromColor: ToColor(element.Attribute("fromColor"), element.Attribute("fromColorAlpha"), null),
+            toColor: ToColor(element.Attribute("toColor"), element.Attribute("toColorAlpha"), null),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             isVisible: ToBool(element.Attribute("isVisible"), true));
 
         return (name, progressBar);

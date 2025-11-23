@@ -7,12 +7,15 @@ using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteCheckBoxComponentLoader(
-    IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -29,12 +32,12 @@ public class RetroSpriteCheckBoxComponentLoader(
         var checkBox = new RetroSpriteCheckBox(
             name,
             element.Attribute("text")!.Value,
-            ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
-            boxTexture: GetResource<NineSliceTexture2D>(element.Attribute("boxTextureRef"), gameContext.ResourceManager),
+            ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+            ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
+            boxTexture: GetResource<NineSliceTexture2D>(element.Attribute("boxTextureRef")),
             isChecked: ToBool(element.Attribute("isChecked"), false),
             isVisible: ToBool(element.Attribute("isVisible"), true));
 

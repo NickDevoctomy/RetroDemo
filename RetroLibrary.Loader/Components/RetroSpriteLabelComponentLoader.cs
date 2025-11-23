@@ -7,13 +7,16 @@ using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Enums;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteLabelComponentLoader(
+    IResourceManager resourceManager,
     IVariableReplacer variableReplacer,
     IColorLoader colorLoader,
-    IBindingParser bindingParser) : ComponentLoaderBase, IComponentLoader
+    IBindingParser bindingParser)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -33,11 +36,11 @@ public class RetroSpriteLabelComponentLoader(
         var label = new RetroSpriteLabel(
             name,
             isTextBound ? string.Empty : textAttribute,
-            ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
+            ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+            ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
             horizontalAlignment: ToEnum(element.Attribute("horizontalAlignment"), HorizontalAlignment.Left),
             verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle));
 

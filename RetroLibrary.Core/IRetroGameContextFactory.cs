@@ -9,6 +9,5 @@ public interface IRetroGameContextFactory
         int width,
         int height,
         bool isFullScreen,
-        string gameDefinitionFilePath,
-        IEnumerable<IComponentLoader> componentLoaders);
+        string gameDefinitionFilePath);
 }

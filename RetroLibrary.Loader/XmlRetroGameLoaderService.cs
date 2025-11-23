@@ -6,14 +6,17 @@ using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
+using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader;
 
 public class XmlRetroGameLoaderService(
+    IResourceManager resourceManager,
     IColorLoader colorLoader,
-    IEnumerable<IResourceLoader> resourceLoaders) : IRetroGameLoaderService
+    IEnumerable<IResourceLoader> resourceLoaders,
+    IEnumerable<IComponentLoader> componentLoaders) : IRetroGameLoaderService
 {
     public string Name { get; private set; } = "Retro Game";
 
@@ -24,6 +27,8 @@ public class XmlRetroGameLoaderService(
     public List<RetroSpriteBase> Sprites { get; private set; } = [];
 
     public IBinder? Binder { get; private set; }
+
+    public IEnumerable<IComponentLoader> ComponentLoaders { get; init; } = componentLoaders;
 
     public bool LoadGame(RetroGameContext gameContext)
     {
@@ -69,7 +74,7 @@ public class XmlRetroGameLoaderService(
                     gameContext,
                     resourceElement);
 
-                gameContext.ResourceManager.AddResource(id, value);
+                resourceManager.AddResource(id, value);
             }
         }
 
@@ -78,7 +83,7 @@ public class XmlRetroGameLoaderService(
         {
             foreach (var componentElement in componentsRoot.Elements())
             {
-                var componentLoader = gameContext.ComponentLoaders.Single(loader => loader.IsApplicable(componentElement));
+                var componentLoader = ComponentLoaders.Single(loader => loader.IsApplicable(componentElement));
                 (string id, object value) = componentLoader.LoadComponent(
                     gameContext,
                     componentElement);
@@ -109,7 +114,7 @@ public class XmlRetroGameLoaderService(
         return null;
     }
 
-    private RetroSpriteBase? FindSpriteRecursive(RetroSpriteBase current, string name)
+    private static RetroSpriteBase? FindSpriteRecursive(RetroSpriteBase current, string name)
     {
         if (current.Name == name)
         {

@@ -5,12 +5,15 @@ using RetroLibrary.Controls;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteMiniParalaxScrollerComponentLoader(
-    IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -34,19 +37,19 @@ public class RetroSpriteMiniParalaxScrollerComponentLoader(
                     layerElement.Attribute("name")!.Value,
                     layerElement.Attribute("texturePath")!.Value,
                     ToFloat(layerElement.Attribute("scrollSpeed"), 0f),
-                    ToInt(layerElement.Attribute("yOffset"), gameContext, variableReplacer, 0));
+                    ToInt(layerElement.Attribute("yOffset"), gameContext, 0));
                 layers.Add(layer);
             }
         }
 
         var scroller = new RetroSpriteMiniParallaxScroller(
             name,
-            ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
+            ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+            ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
             layers,
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             isVisible: ToBool(element.Attribute("isVisible"), true));
 
         return (name, scroller);

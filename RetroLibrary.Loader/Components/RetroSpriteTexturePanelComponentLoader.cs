@@ -5,11 +5,15 @@ using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components
 {
     internal class RetroSpriteTexturePanelComponentLoader(
-            IVariableReplacer variableReplacer) : ComponentLoaderBase, IComponentLoader
+        IResourceManager resourceManager,
+        IColorLoader colorLoader,
+        IVariableReplacer variableReplacer)
+        : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
     {
         public bool IsApplicable(XElement element)
         {
@@ -25,9 +29,9 @@ namespace RetroLibrary.XmlLoader.Components
 
             var panel = new RetroSpriteTexturePanel(
                 name,
-                ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-                ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
-                texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef"), gameContext.ResourceManager),
+                ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+                ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+                texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef")),
                 isVisible: ToBool(element.Attribute("isVisible"), true));
 
             return (name, panel);

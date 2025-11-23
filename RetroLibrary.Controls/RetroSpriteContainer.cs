@@ -38,15 +38,12 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             isVisible)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
-        EnsureChildSubscriptions();
     }
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
         Point location)
     {
-        EnsureChildSubscriptions();
-
         var graphicsDevice = spriteBatch.GraphicsDevice;
         var previousScissor = graphicsDevice.ScissorRectangle;
         var clipRect = new Rectangle(
@@ -69,8 +66,6 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         base.OnUpdate(
             mouseState,
             previousMouseState);
-
-        EnsureChildSubscriptions();
 
         foreach (var currentChild in Children)
         {
@@ -106,31 +101,5 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         {
             currentChild.Draw(spriteBatch, location + InnerMargins.Location);
         }
-    }
-
-    private void EnsureChildSubscriptions()
-    {
-        foreach (var child in Children)
-        {
-            if (_subscribedChildren.Contains(child))
-            {
-                continue;
-            }
-
-            child.WatchedPropertyChanged += Child_WatchedPropertyChanged;
-            _subscribedChildren.Add(child);
-        }
-
-        var removed = _subscribedChildren.Where(c => !Children.Contains(c)).ToList();
-        foreach (var child in removed)
-        {
-            child.WatchedPropertyChanged -= Child_WatchedPropertyChanged;
-            _subscribedChildren.Remove(child);
-        }
-    }
-
-    private void Child_WatchedPropertyChanged(object? sender, EventArgs e)
-    {
-        ChildrenChangeVersion++;
     }
 }

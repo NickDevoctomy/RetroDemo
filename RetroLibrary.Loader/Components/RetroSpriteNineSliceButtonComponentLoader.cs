@@ -7,12 +7,15 @@ using RetroLibrary.Core;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Resources;
 
 namespace RetroLibrary.XmlLoader.Components;
 
 public class RetroSpriteNineSliceButtonComponentLoader(
-    IVariableReplacer variableReplacer,
-    IColorLoader colorLoader) : ComponentLoaderBase, IComponentLoader
+    IResourceManager resourceManager,
+    IColorLoader colorLoader,
+    IVariableReplacer variableReplacer)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -30,19 +33,19 @@ public class RetroSpriteNineSliceButtonComponentLoader(
         var button = new RetroSpriteNineSliceButton(
             name,
             element.Attribute("text")!.Value,
-            ToPoint(element.Attribute("position"), gameContext, variableReplacer, Point.Zero),
-            ToPoint(element.Attribute("size"), gameContext, variableReplacer, Point.Zero),
+            ToPoint(element.Attribute("position"), gameContext, Point.Zero),
+            ToPoint(element.Attribute("size"), gameContext, Point.Zero),
             ToBool(element.Attribute("isToggle"), false),
-            font: GetResource<SpriteFont>(element.Attribute("fontRef"), gameContext.ResourceManager),
-            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, colorLoader, null),
-            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, colorLoader, null),
-            upTint: ToColor(element.Attribute("upTint"), null, colorLoader, null),
-            downTint: ToColor(element.Attribute("downTint"), null, colorLoader, null),
-            upTexture: GetResource<NineSliceTexture2D>(element.Attribute("upTextureRef"), gameContext.ResourceManager),
-            downTexture: GetResource<NineSliceTexture2D>(element.Attribute("downTextureRef"), gameContext.ResourceManager),
+            font: GetResource<SpriteFont>(element.Attribute("fontRef")),
+            backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
+            foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
+            upTint: ToColor(element.Attribute("upTint"), null, null),
+            downTint: ToColor(element.Attribute("downTint"), null, null),
+            upTexture: GetResource<NineSliceTexture2D>(element.Attribute("upTextureRef")),
+            downTexture: GetResource<NineSliceTexture2D>(element.Attribute("downTextureRef")),
             isVisible: ToBool(element.Attribute("isVisible"), true),
             clickCommand: GetRelayCommand(element.Attribute("clickCommand"), gameContext),
-            clickSound: GetResource<SoundEffect>(element.Attribute("clickSoundRef"), gameContext.ResourceManager));
+            clickSound: GetResource<SoundEffect>(element.Attribute("clickSoundRef")));
 
         return (name, (object)button);
     }
