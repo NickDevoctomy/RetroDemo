@@ -1,7 +1,10 @@
-﻿using System.Xml.Linq;
+﻿using System.Reflection;
+using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xna.Framework;
 using RetroLibrary.Core;
+using RetroLibrary.Core.Attributes;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Resources;
 using RetroLibrary.XmlLoader.Extensions;
@@ -16,6 +19,48 @@ public class ComponentLoaderBase(
     protected IColorLoader ColorLoader => colorLoader;
 
     protected IVariableReplacer VariableReplacer => variableReplacer;
+
+    protected static void ApplyBindings(
+        object boundObject,
+        RetroGameContext gameContext,
+        IBindingParser bindingParser)
+    {
+        if (boundObject == null)
+        {
+            return;
+        }
+
+        var type = boundObject.GetType();
+
+        var propertyTargets = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .Where(p => p.GetCustomAttribute<RetroSpriteBindablePropertyAttribute>() != null)
+            .ToList();
+
+        var fieldTargets = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+            .Where(f => f.GetCustomAttribute<RetroSpriteBindablePropertyAttribute>() != null)
+            .Select(f => char.ToUpperInvariant(f.Name[0]) + f.Name.Substring(1))
+            .Select(propName => type.GetProperty(propName, BindingFlags.Public | BindingFlags.Instance))
+            .Where(p => p != null)
+            .ToList();
+
+        foreach (var prop in propertyTargets.Concat(fieldTargets))
+        {
+            if (prop!.PropertyType != typeof(string))
+            {
+                continue;
+            }
+
+            var currentValue = prop.GetValue(boundObject) as string ?? string.Empty;
+            if (!bindingParser.IsBindingString(currentValue))
+            {
+                continue;
+            }
+
+            var bindingInfo = bindingParser.Parse(boundObject, currentValue);
+            bindingInfo.BoundPropertyName ??= prop.Name;
+            gameContext.RetroGameLoaderService.ViewModel?.Binder.AddBinding(bindingInfo);
+        }
+    }
 
     protected static float ToFloat(
         XAttribute? attribute,
@@ -68,7 +113,8 @@ public class ComponentLoaderBase(
         return Enum.Parse<T>(attribute.Value, false);
     }
 
-    protected T? GetResource<T>(XAttribute? attribute)
+    protected T? GetResource<T>(
+        XAttribute? attribute)
     {
         if (attribute == null)
         {

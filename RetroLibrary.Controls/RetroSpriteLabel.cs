@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RetroLibrary.Core.Attributes;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Enums;
 using RetroLibrary.Core.Extensions;
@@ -9,6 +10,7 @@ namespace RetroLibrary.Controls;
 
 public partial class RetroSpriteLabel : RetroSpriteBase
 {
+    [RetroSpriteBindableProperty]
     [ObservableProperty]
     private string text = string.Empty;
 

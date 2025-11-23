@@ -29,12 +29,10 @@ public class RetroSpriteLabelComponentLoader(
         XElement element)
     {
         var name = element.Attribute("name")!.Value;
-        var textAttribute = element.Attribute("text")?.Value ?? string.Empty;
-        var isTextBound = bindingParser.IsBindingString(textAttribute);
 
         var label = new RetroSpriteLabel(
             name,
-            isTextBound ? string.Empty : textAttribute,
+            element.Attribute("text")?.Value ?? string.Empty,
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
             ToPoint(element.Attribute("size"), gameContext, Point.Zero),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
@@ -43,13 +41,7 @@ public class RetroSpriteLabelComponentLoader(
             horizontalAlignment: ToEnum(element.Attribute("horizontalAlignment"), HorizontalAlignment.Left),
             verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle));
 
-        // This needs to be nicer, bit more dynamic than this.
-        if (isTextBound)
-        {
-            var bindingInfo = bindingParser.Parse(label, textAttribute);
-            bindingInfo.BoundPropertyName ??= nameof(RetroSpriteLabel.Text);
-            gameContext.RetroGameLoaderService.ViewModel.Binder.AddBinding(bindingInfo);
-        }
+        ApplyBindings(label, gameContext, bindingParser);
 
         return (name, label);
     }

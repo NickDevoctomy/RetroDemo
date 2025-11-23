@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
@@ -14,7 +15,8 @@ namespace RetroLibrary.XmlLoader.Components;
 public class RetroSpriteTabbedContainerComponentLoader(
     IResourceManager resourceManager,
     IColorLoader colorLoader,
-    IVariableReplacer variableReplacer)
+    IVariableReplacer variableReplacer,
+    IBindingParser bindingParser)
     : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
@@ -74,6 +76,8 @@ public class RetroSpriteTabbedContainerComponentLoader(
                     children);
 
                 tabbedContainer.TabPages.Add(tabPage);
+
+                ApplyBindings(tabPage, gameContext, bindingParser);
             }
         }
 
