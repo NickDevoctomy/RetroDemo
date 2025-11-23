@@ -1,4 +1,6 @@
-﻿namespace RetroLibrary.Core.Binding;
+﻿using RetroLibrary.Core.Enums;
+
+namespace RetroLibrary.Core.Binding;
 
 public class BindingParser : IBindingParser
 {
@@ -49,7 +51,7 @@ public class BindingParser : IBindingParser
 
         var result = new BindingInfo
         {
-            BoundObject = boundObject
+            DestinationObject = boundObject
         };
         if (string.IsNullOrWhiteSpace(work))
         {
@@ -84,6 +86,12 @@ public class BindingParser : IBindingParser
                     case "target":
                         {
                             result.BoundPropertyName = value;
+                            break;
+                        }
+
+                    case "mode":
+                        {
+                            result.Mode = Enum.Parse<BindingMode>(value, true);
                             break;
                         }
 
