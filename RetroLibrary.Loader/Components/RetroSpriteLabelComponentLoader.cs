@@ -32,9 +32,9 @@ public class RetroSpriteLabelComponentLoader(
 
         var label = new RetroSpriteLabel(
             name,
-            element.Attribute("text")?.Value ?? string.Empty,
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
             ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            text: ToBindingValue(element.Attribute("text"), bindingParser, new BindingValue<string>(value: string.Empty)),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
             foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),

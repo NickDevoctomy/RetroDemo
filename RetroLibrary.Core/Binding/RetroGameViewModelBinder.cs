@@ -46,7 +46,8 @@ public class RetroGameViewModelBinder : IBinder
         if (bindingInfo.SourceProperty != null && bindingInfo.DestinationProperty != null)
         {
             var initialValue = bindingInfo.SourceProperty.GetValue(bindingInfo.SourceObject);
-            bindingInfo.DestinationProperty.SetValue(bindingInfo.DestinationObject, initialValue);
+            var bindingValue = bindingInfo.DestinationProperty.GetValue(bindingInfo.DestinationObject) as IBindingValue;
+            bindingValue?.SetValue(initialValue);
         }
 
         // !!! This needs testing, no idea if it works yet.
@@ -95,7 +96,8 @@ public class RetroGameViewModelBinder : IBinder
             }
 
             var value = binding.SourceProperty.GetValue(binding.SourceObject);
-            binding.DestinationProperty.SetValue(binding.DestinationObject, value);
+            var bindingValue = binding.DestinationProperty.GetValue(binding.DestinationObject) as IBindingValue;
+            bindingValue?.SetValue(value);
         }
     }
 }

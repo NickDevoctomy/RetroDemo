@@ -71,8 +71,11 @@ public class RetroSpriteTabbedContainerComponentLoader(
                     }
                 }
 
+                var isBindingString = bindingParser.IsBindingString(curTabPage.Attribute("title")?.Value);
+
                 var tabPage = new TabPage(
-                    curTabPage.Attribute("title")?.Value ?? "Tab Page",
+                    isBindingString ? new BindingValue<string>(bindingString: curTabPage.Attribute("title")!.Value!) :
+                    new BindingValue<string>(value: curTabPage.Attribute("title")?.Value),
                     children);
 
                 tabbedContainer.TabPages.Add(tabPage);

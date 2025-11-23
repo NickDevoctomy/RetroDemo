@@ -366,7 +366,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
         if (Font != null && tabIndex >= 0 && tabIndex < TabPages.Count)
         {
-            var title = TabPages[tabIndex].Title ?? string.Empty;
+            var title = TabPages[tabIndex].Title?.Value ?? string.Empty;
             if (!string.IsNullOrEmpty(title))
             {
                 var textSize = Font.MeasureString(title);
@@ -390,7 +390,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             int w;
             if (Font != null)
             {
-                var title = TabPages[i].Title ?? string.Empty;
+                var title = TabPages[i].Title?.Value ?? string.Empty;
                 var size = Font.MeasureString(title);
                 w = (int)size.X + (TabHorizontalPadding * 2);
             }

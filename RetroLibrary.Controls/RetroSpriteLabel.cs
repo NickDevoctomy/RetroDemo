@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Core.Attributes;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Enums;
 using RetroLibrary.Core.Extensions;
 
@@ -12,7 +13,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
 {
     [RetroSpriteBindableProperty]
     [ObservableProperty]
-    private string text = string.Empty;
+    private BindingValue<string>? text;
 
     [ObservableProperty]
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle;
@@ -22,9 +23,9 @@ public partial class RetroSpriteLabel : RetroSpriteBase
 
     public RetroSpriteLabel(
         string name,
-        string text,
         Point position,
         Point size,
+        BindingValue<string>? text = null,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Middle,
@@ -40,7 +41,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             font,
             isVisible)
     {
-        Text = text;
+        Text = text ?? new BindingValue<string>(string.Empty);
         HorizontalAlignment = horizontalAlignment;
         VerticalAlignment = verticalAlignment;
     }
@@ -49,9 +50,9 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         SpriteBatch spriteBatch,
         Point location)
     {
-        if (Font != null && !string.IsNullOrEmpty(Text))
+        if (Font != null && !string.IsNullOrEmpty(Text?.Value))
         {
-            Vector2 textSize = Font.MeasureString(Text);
+            Vector2 textSize = Font.MeasureString(Text.Value);
 
             Vector2 textPosition = textSize.Align(
                 new Rectangle(location, Size),
@@ -60,7 +61,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
 
             spriteBatch.DrawString(
                 Font,
-                Text,
+                Text.Value,
                 textPosition,
                 ForegroundColor);
         }

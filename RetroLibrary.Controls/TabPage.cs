@@ -2,16 +2,17 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using RetroLibrary.Core.Attributes;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 
 namespace RetroLibrary.Controls;
 
 public partial class TabPage(
-    string title,
+    BindingValue<string> title,
     ObservableCollection<RetroSpriteBase> children) : ObservableObject
 {
     [RetroSpriteBindableProperty]
     [ObservableProperty]
-    private string title = title;
+    private BindingValue<string> title = title;
 
     [ObservableProperty]
     private ObservableCollection<RetroSpriteBase> children = children;

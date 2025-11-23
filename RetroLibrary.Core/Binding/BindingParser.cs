@@ -8,7 +8,10 @@ public class BindingParser : IBindingParser
 
     public bool IsBindingString(string? value)
     {
-        ArgumentException.ThrowIfNullOrEmpty(value);
+        if (value == null)
+        {
+            return false;
+        }
 
         var work = value.Trim();
         if (work.StartsWith('{') && work.EndsWith('}'))

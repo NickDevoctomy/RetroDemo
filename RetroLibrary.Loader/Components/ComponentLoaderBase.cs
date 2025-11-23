@@ -45,18 +45,19 @@ public class ComponentLoaderBase(
 
         foreach (var prop in propertyTargets.Concat(fieldTargets))
         {
-            if (prop!.PropertyType != typeof(string))
+            var supported = prop!.PropertyType.IsAssignableTo(typeof(IBindingValue));
+            if (!supported)
             {
                 continue;
             }
 
-            var currentValue = prop.GetValue(boundObject) as string ?? string.Empty;
-            if (!bindingParser.IsBindingString(currentValue))
+            var currentValue = prop.GetValue(boundObject) as IBindingValue;
+            if (!currentValue!.HasBindingString)
             {
                 continue;
             }
 
-            var bindingInfo = bindingParser.Parse(boundObject, currentValue);
+            var bindingInfo = bindingParser.Parse(boundObject, currentValue.BindingString!);
             bindingInfo.BoundPropertyName ??= prop.Name;
             gameContext.RetroGameLoaderService.ViewModel?.Binder.AddBinding(bindingInfo);
         }
@@ -122,6 +123,24 @@ public class ComponentLoaderBase(
         }
 
         return resourceManager.GetResource<T>(attribute.Value);
+    }
+
+    protected BindingValue<T>? ToBindingValue<T>(
+        XAttribute? attribute,
+        IBindingParser bindingParser,
+        BindingValue<T>? defaultValue)
+    {
+        if (attribute == null)
+        {
+            return defaultValue;
+        }
+
+        //// work out if this is a bindingsting or value
+        var isBindingString = bindingParser.IsBindingString(attribute.Value);
+
+        return isBindingString ?
+            new BindingValue<T>(bindingString: attribute.Value) :
+            new BindingValue<T>(attribute.Value);
     }
 
     protected int ToInt(
