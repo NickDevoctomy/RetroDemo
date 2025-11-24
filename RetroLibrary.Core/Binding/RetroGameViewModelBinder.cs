@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using CommunityToolkit.Mvvm.ComponentModel;
 using RetroLibrary.Core.Base;
 
 namespace RetroLibrary.Core.Binding;
@@ -41,43 +40,36 @@ public class RetroGameViewModelBinder : IBinder
             }
         }
 
+        bindingInfo.InitializeDestinationValue();
         _bindings.Add(bindingInfo);
+
+        var destinationValue = bindingInfo.DestinationProperty?.GetValue(bindingInfo.DestinationObject) as IBindingValue;
+        if (destinationValue != null)
+        {
+            destinationValue.ValueChanged += BindingValue_ValueChanged;
+        }
 
         if (bindingInfo.SourceProperty != null && bindingInfo.DestinationProperty != null)
         {
             var initialValue = bindingInfo.SourceProperty.GetValue(bindingInfo.SourceObject);
-            var bindingValue = bindingInfo.DestinationProperty.GetValue(bindingInfo.DestinationObject) as IBindingValue;
-            bindingValue?.SetValue(initialValue);
-        }
-
-        // !!! This needs testing, no idea if it works yet.
-        var observableObject = bindingInfo.DestinationObject as ObservableObject;
-        if (observableObject != null &&
-            bindingInfo.Mode == Enums.BindingMode.TwoWay)
-        {
-            observableObject.PropertyChanged += ObservableObject_PropertyChanged;
+            destinationValue?.SetValue(initialValue);
         }
     }
 
-    // !!! This needs testing, no idea if it works yet.
-    private void ObservableObject_PropertyChanged(
+    private void BindingValue_ValueChanged(
         object? sender,
-        System.ComponentModel.PropertyChangedEventArgs e)
+        BindingValueChangedEventArgs e)
     {
-        var affectedBindings = _bindings.Where(x => x.Path == e.PropertyName && x.DestinationObject == sender);
-        foreach (var binding in affectedBindings)
+        var binding = _bindings.SingleOrDefault(x => x.DestinationValue == sender);
+        if (binding == null ||
+            binding.Mode == Enums.BindingMode.OneTime ||
+            binding.Mode == Enums.BindingMode.OneWay)
         {
-            if (binding.SourceProperty == null ||
-                binding.DestinationProperty == null ||
-                binding.Mode == Enums.BindingMode.OneTime ||
-                binding.Mode == Enums.BindingMode.OneWay)
-            {
-                continue;
-            }
-
-            var value = binding.DestinationProperty.GetValue(binding.DestinationObject);
-            binding.SourceProperty.SetValue(binding.SourceObject, value);
+            return;
         }
+
+        var value = binding.DestinationProperty!.GetValue(binding.DestinationObject) as IBindingValue;
+        binding.SourceProperty!.SetValue(binding.SourceObject, value!.GetValue());
     }
 
     private void ViewModel_PropertyChanged(

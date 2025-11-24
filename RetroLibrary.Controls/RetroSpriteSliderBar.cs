@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Core.Attributes;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Enums;
 
@@ -22,8 +24,9 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
     [ObservableProperty]
     private float maximum = 100;
 
+    [RetroSpriteBindableProperty]
     [ObservableProperty]
-    private float value = 50;
+    private BindingValue<float> value = new(50);
 
     [ObservableProperty]
     private float buttonMarginLeft = 8;
@@ -63,6 +66,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
+        BindingValue<float>? value = null,
         NineSliceTexture2D? sliderBarTexture = null,
         Color? sliderBarTint = null,
         NineSliceTexture2D? buttonTexture = null,
@@ -80,6 +84,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             font,
             isVisible)
     {
+        Value = value ?? new BindingValue<float>(50);
         SliderBarTexture = sliderBarTexture;
         SliderBarTint = sliderBarTint ?? Color.White;
         ButtonTexture = buttonTexture;
@@ -88,7 +93,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         ValueFrequency = valueFrequency;
         if (this.valueFrequency == ValueFrequency.Integer)
         {
-            Value = (int)Value;
+            Value.SetValue(Math.Round(Value.Value, 0));
         }
     }
 
@@ -186,29 +191,29 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         {
             if (ValueFrequency == ValueFrequency.Integer)
             {
-                Value = ClampAndRound(Value);
+                Value.SetValue(ClampAndRound(Value.Value));
             }
         }
         else if (e.PropertyName == nameof(Value))
         {
             if (ValueFrequency == ValueFrequency.Integer)
             {
-                Value = ClampAndRound(Value);
+                Value.SetValue(ClampAndRound(Value.Value));
             }
             else
             {
-                Value = MathHelper.Clamp(Value, Minimum, Maximum);
+                Value.SetValue(MathHelper.Clamp(Value.Value, Minimum, Maximum));
             }
         }
         else if (e.PropertyName == nameof(Minimum) || e.PropertyName == nameof(Maximum))
         {
             if (ValueFrequency == ValueFrequency.Integer)
             {
-                Value = ClampAndRound(Value);
+                Value.SetValue(ClampAndRound(Value.Value));
             }
             else
             {
-                Value = MathHelper.Clamp(Value, Minimum, Maximum);
+                Value.SetValue(MathHelper.Clamp(Value.Value, Minimum, Maximum));
             }
         }
     }
@@ -229,7 +234,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         float travel = MathF.Max(0, maxCenterX - minCenterX);
 
         float range = MathF.Max(0.0001f, Maximum - Minimum);
-        float t = MathHelper.Clamp((Value - Minimum) / range, 0f, 1f);
+        float t = MathHelper.Clamp((Value.Value - Minimum) / range, 0f, 1f);
 
         float centerX = minCenterX + (t * travel);
 
@@ -256,6 +261,6 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             newValue = (float)Math.Round(newValue);
         }
 
-        Value = newValue;
+        Value.SetValue(newValue);
     }
 }

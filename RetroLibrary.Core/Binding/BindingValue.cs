@@ -2,6 +2,8 @@
 
 public class BindingValue<T> : IBindingValue
 {
+    private T? _value;
+
     public BindingValue(string bindingString)
     {
         BindingString = bindingString;
@@ -12,11 +14,31 @@ public class BindingValue<T> : IBindingValue
         Value = value;
     }
 
+    public event EventHandler<BindingValueChangedEventArgs>? ValueChanged;
+
     public string? BindingString { get; set; }
 
     public bool HasBindingString => !string.IsNullOrEmpty(BindingString);
 
-    public T? Value { get; set; }
+    public T? Value
+    {
+        get
+        {
+            return _value;
+        }
+
+        set
+        {
+            if (!EqualityComparer<T?>.Default.Equals(_value, value))
+            {
+                var prevValue = _value;
+                _value = value;
+                ValueChanged?.Invoke(this, new BindingValueChangedEventArgs(
+                    prevValue,
+                    value));
+            }
+        }
+    }
 
     public void SetValue(T? value)
     {
@@ -29,5 +51,10 @@ public class BindingValue<T> : IBindingValue
         {
             SetValue(typedValue);
         }
+    }
+
+    public object? GetValue()
+    {
+        return Value;
     }
 }

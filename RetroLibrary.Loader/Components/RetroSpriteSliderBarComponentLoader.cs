@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
@@ -13,7 +14,8 @@ namespace RetroLibrary.XmlLoader.Components;
 public class RetroSpriteSliderBarComponentLoader(
     IResourceManager resourceManager,
     IColorLoader colorLoader,
-    IVariableReplacer variableReplacer)
+    IVariableReplacer variableReplacer,
+    IBindingParser bindingParser)
     : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
@@ -34,12 +36,15 @@ public class RetroSpriteSliderBarComponentLoader(
             size: ToPoint(element.Attribute("size"), gameContext, Point.Zero),
             backgroundColor: ToColor(element.Attribute("backgroundColor"), element.Attribute("backgroundColorAlpha"), null),
             foregroundColor: ToColor(element.Attribute("foregroundColor"), element.Attribute("foregroundColorAlpha"), null),
+            value: ToBindingValue(element.Attribute("value"), bindingParser, new BindingValue<float>(50f)),
             sliderBarTexture: GetResource<NineSliceTexture2D>(element.Attribute("sliderBarTextureRef")),
             sliderBarTint: ToColor(element.Attribute("sliderBarTint"), element.Attribute("sliderBarTintAlpha"), Color.White),
             buttonTexture: GetResource<NineSliceTexture2D>(element.Attribute("buttonTextureRef")),
             buttonTint: ToColor(element.Attribute("buttonTint"), element.Attribute("buttonAlpha"), Color.White),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             isVisible: ToBool(element.Attribute("isVisible"), true));
+
+        ApplyBindings(slider, gameContext, bindingParser);
 
         return (name, slider);
     }

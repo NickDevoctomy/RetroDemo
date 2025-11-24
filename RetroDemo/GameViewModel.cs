@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroLibrary.Controls;
 using RetroLibrary.Core.Base;
+using RetroLibrary.Core.Binding;
 
 namespace RetroDemo;
 
@@ -12,6 +13,9 @@ public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
 
     [ObservableProperty]
     private string fpsLabelText = "FPS : ?";
+
+    [ObservableProperty]
+    private float sliderValue = 75f;
 
     [RelayCommand]
     private void ExitButton_Clicked()

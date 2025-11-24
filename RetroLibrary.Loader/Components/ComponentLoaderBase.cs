@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Xna.Framework;
@@ -38,7 +39,7 @@ public class ComponentLoaderBase(
 
         var fieldTargets = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
             .Where(f => f.GetCustomAttribute<RetroSpriteBindablePropertyAttribute>() != null)
-            .Select(f => char.ToUpperInvariant(f.Name[0]) + f.Name.Substring(1))
+            .Select(f => char.ToUpperInvariant(f.Name[0]) + f.Name[1..])
             .Select(propName => type.GetProperty(propName, BindingFlags.Public | BindingFlags.Instance))
             .Where(p => p != null)
             .ToList();
@@ -72,7 +73,7 @@ public class ComponentLoaderBase(
             return defaultValue;
         }
 
-        return float.Parse(attribute.Value);
+        return float.Parse(attribute.Value, CultureInfo.InvariantCulture);
     }
 
     protected static bool ToBool(
@@ -111,7 +112,7 @@ public class ComponentLoaderBase(
             return defaultValue;
         }
 
-        return Enum.Parse<T>(attribute.Value, false);
+        return Enum.Parse<T>(attribute.Value, ignoreCase: false);
     }
 
     protected T? GetResource<T>(
@@ -135,12 +136,11 @@ public class ComponentLoaderBase(
             return defaultValue;
         }
 
-        //// work out if this is a bindingsting or value
         var isBindingString = bindingParser.IsBindingString(attribute.Value);
 
         return isBindingString ?
             new BindingValue<T>(bindingString: attribute.Value) :
-            new BindingValue<T>(attribute.Value);
+            new BindingValue<T>(ConvertAttributeValue<T>(attribute.Value));
     }
 
     protected int ToInt(
@@ -166,7 +166,7 @@ public class ComponentLoaderBase(
             return defaultColor;
         }
 
-        var alphaValue = alpha != null ? float.Parse(alpha.Value) : 1.0f;
+        var alphaValue = alpha != null ? float.Parse(alpha.Value, CultureInfo.InvariantCulture) : 1.0f;
         return attribute.ToColor(ColorLoader, defaultColor, alphaValue);
     }
 
@@ -194,5 +194,48 @@ public class ComponentLoaderBase(
         }
 
         return attribute.ToRectangle(gameContext, VariableReplacer);
+    }
+
+    private static T? ConvertAttributeValue<T>(string raw)
+    {
+        var type = typeof(T);
+        object? result = null;
+        try
+        {
+            if (type == typeof(string))
+            {
+                result = raw;
+            }
+            else if (type == typeof(int) && int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var i))
+            {
+                result = i;
+            }
+            else if (type == typeof(float) && float.TryParse(raw, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var f))
+            {
+                result = f;
+            }
+            else if (type == typeof(double) && double.TryParse(raw, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var d))
+            {
+                result = d;
+            }
+            else if (type == typeof(bool) && bool.TryParse(raw, out var b))
+            {
+                result = b;
+            }
+            else if (type.IsEnum && Enum.TryParse(type, raw, true, out var e))
+            {
+                result = e;
+            }
+            else
+            {
+                result = Convert.ChangeType(raw, type, CultureInfo.InvariantCulture);
+            }
+        }
+        catch
+        {
+            result = null;
+        }
+
+        return (T?)result;
     }
 }
