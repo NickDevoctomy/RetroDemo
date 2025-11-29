@@ -39,6 +39,7 @@ public class RetroGameContext(
 
     public void Initialse(RetroGameBase retroGameBase)
     {
+        System.Diagnostics.Debug.WriteLine($"Initialising Graphics Device {Width} x {Height}, FullScreen = {IsFullScreen}.");
         GraphicsDeviceManager = new GraphicsDeviceManager(retroGameBase)
         {
             PreferredBackBufferWidth = Width,
