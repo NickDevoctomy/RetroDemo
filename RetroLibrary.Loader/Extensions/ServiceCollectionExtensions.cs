@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
 {
     public static void AddRetroLibraryXmlLoader(this IServiceCollection services)
     {
+        services.AddScoped<IRetroGamePreLoaderService, XmlRetroGamePreLoaderService>();
         services.AddScoped<IRetroGameLoaderService, XmlRetroGameLoaderService>();
         AddAllOfType<IResourceLoader>(services);
         AddAllOfType<IComponentLoader>(services);

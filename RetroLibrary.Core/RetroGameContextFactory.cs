@@ -7,6 +7,7 @@ using RetroLibrary.Core.Resources;
 namespace RetroLibrary.Core;
 
 public class RetroGameContextFactory(
+    IRetroGamePreLoaderService retroGamePreLoaderService,
     IRetroGameLoaderService retroGameLoaderService,
     ITexture2DResourceLoader texture2DResourceLoader) : IRetroGameContextFactory
 {
@@ -21,6 +22,7 @@ public class RetroGameContextFactory(
             height,
             isFullScreen,
             gameDefinitionFilePath,
+            retroGamePreLoaderService,
             retroGameLoaderService,
             texture2DResourceLoader);
     }

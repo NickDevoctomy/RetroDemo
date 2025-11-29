@@ -1,9 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using RetroLibrary.Core.Base;
-using RetroLibrary.Core.Binding;
-using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
 
@@ -14,6 +11,7 @@ public class RetroGameContext(
     int height,
     bool isFullScreen,
     string gameDefinitionFilePath,
+    IRetroGamePreLoaderService retroGamePreLoaderService,
     IRetroGameLoaderService retroGameLoaderService,
     ITexture2DResourceLoader texture2DResourceLoader)
 {
@@ -31,6 +29,8 @@ public class RetroGameContext(
 
     public ContentManager? ContentManager { get; private set; }
 
+    public IRetroGamePreLoaderService RetroGamePreLoaderService { get; } = retroGamePreLoaderService;
+
     public IRetroGameLoaderService RetroGameLoaderService { get; } = retroGameLoaderService;
 
     public IResourceManager ResourceManager { get; } = new ResourceManager();
@@ -39,12 +39,14 @@ public class RetroGameContext(
 
     public void Initialse(RetroGameBase retroGameBase)
     {
+        var configutation = RetroGamePreLoaderService.PreLoad(this);
+
         System.Diagnostics.Debug.WriteLine($"Initialising Graphics Device {Width} x {Height}, FullScreen = {IsFullScreen}.");
         GraphicsDeviceManager = new GraphicsDeviceManager(retroGameBase)
         {
-            PreferredBackBufferWidth = Width,
-            PreferredBackBufferHeight = Height,
-            IsFullScreen = IsFullScreen
+            PreferredBackBufferWidth = configutation.Width,
+            PreferredBackBufferHeight = configutation.Height,
+            IsFullScreen = configutation.IsFullScreen
         };
         GraphicsDeviceManager.ApplyChanges();
         Game = retroGameBase;

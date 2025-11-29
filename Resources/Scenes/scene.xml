@@ -1,6 +1,9 @@
 ﻿<Scene name="Main"
        backgroundColor="red"
-       viewModelType="RetroDemo.GameViewModel, RetroDemo">
+       viewModelType="RetroDemo.GameViewModel, RetroDemo"
+       width="1024"
+       height="576"
+       isFullScreen="true">
 
     <Resources>
         <Font id="DefaultFont" />
