@@ -9,12 +9,16 @@ services.AddRetroLibraryCoreServices();
 services.AddRetroLibraryXmlLoader();
 using var serviceProvider = services.BuildServiceProvider();
 
+var contentLocation = File.Exists("Content/scene.xml")
+    ? "Content"
+    : "bin/Debug/net8.0/Content";
+
 var contextFactory = serviceProvider.GetRequiredService<IRetroGameContextFactory>();
 var retroGameContext = contextFactory.CreateRetroGameContext(
     800,
     600,
     false,
-    "Content/scene.xml");
+    Path.Combine(contentLocation, "scene.xml"));
 using var game = new Game(retroGameContext);
 game.SetTargetFps(59);
 game.Run();
