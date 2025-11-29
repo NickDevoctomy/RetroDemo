@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroLibrary.Controls;
 using RetroLibrary.Core.Base;
-using RetroLibrary.Core.Binding;
 
 namespace RetroDemo;
 
