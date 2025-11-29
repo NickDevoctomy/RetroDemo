@@ -1,11 +1,9 @@
-﻿using RetroLibrary.Core.Base;
-using RetroLibrary.Core.Components;
-
-namespace RetroLibrary.Core;
+﻿namespace RetroLibrary.Core;
 
 public interface IRetroGameContextFactory
 {
     public RetroGameContext CreateRetroGameContext(
+        string[] args,
         int width,
         int height,
         bool isFullScreen,

@@ -15,6 +15,7 @@ var contentLocation = File.Exists("Content/scene.xml")
 
 var contextFactory = serviceProvider.GetRequiredService<IRetroGameContextFactory>();
 var retroGameContext = contextFactory.CreateRetroGameContext(
+    args,
     1024,
     576,
     true,

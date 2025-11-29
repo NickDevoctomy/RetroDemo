@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
-using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
