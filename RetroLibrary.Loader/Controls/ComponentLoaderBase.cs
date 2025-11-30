@@ -10,7 +10,7 @@ using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Resources;
 using RetroLibrary.XmlLoader.Extensions;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.XmlLoader.Controls;
 
 public class ComponentLoaderBase(
     IResourceManager resourceManager,

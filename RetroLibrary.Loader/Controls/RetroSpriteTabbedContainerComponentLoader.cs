@@ -10,14 +10,17 @@ using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.SubLoaders;
+using RetroLibrary.XmlLoader.SubLoaders.Interfaces;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.XmlLoader.Controls;
 
 public class RetroSpriteTabbedContainerComponentLoader(
     IResourceManager resourceManager,
     IColorLoader colorLoader,
     IVariableReplacer variableReplacer,
-    IBindingParser bindingParser)
+    IBindingParser bindingParser,
+    IEnumerable<ISubLoader> subLoaders)
     : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
@@ -40,14 +43,12 @@ public class RetroSpriteTabbedContainerComponentLoader(
         var childCompositorElement = element.Element("ChildCompositor");
         if (childCompositorElement != null)
         {
-            var loader = new ContainerChildCompositorLoader();
-
+            var loader = subLoaders.Single(x => x.ElementName == "ChildCompositor");
             var type = childCompositorElement.Attribute("type")!.Value;
             var childCompositorProperties = childCompositorElement
                 .Attributes()
                 .Where(x => x.Name != "type")
                 .ToDictionary(x => x.Name.LocalName, x => x.Value);
-
             compositor = loader.Load(type, childCompositorProperties);
         }
 

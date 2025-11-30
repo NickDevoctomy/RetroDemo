@@ -7,7 +7,7 @@ using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Resources;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.XmlLoader.Controls;
 
 public class RetroSpriteMiniParalaxScrollerComponentLoader(
     IResourceManager resourceManager,

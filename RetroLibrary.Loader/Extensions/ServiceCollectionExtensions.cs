@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Interfaces;
 using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.SubLoaders.Interfaces;
 
 namespace RetroLibrary.XmlLoader.Extensions;
 
@@ -14,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRetroGameLoaderService, XmlRetroGameLoaderService>();
         AddAllOfType<IResourceLoader>(services);
         AddAllOfType<IComponentLoader>(services);
+        AddAllOfType<ISubLoader>(services);
     }
 
     private static void AddAllOfType<T>(IServiceCollection services)

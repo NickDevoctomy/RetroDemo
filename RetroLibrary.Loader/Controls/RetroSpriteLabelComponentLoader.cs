@@ -3,23 +3,25 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
 using RetroLibrary.Core;
+using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
-using RetroLibrary.Core.Drawing;
+using RetroLibrary.Core.Enums;
 using RetroLibrary.Core.Resources;
 
-namespace RetroLibrary.XmlLoader.Components;
+namespace RetroLibrary.XmlLoader.Controls;
 
-public class RetroSpriteCheckBoxComponentLoader(
+public class RetroSpriteLabelComponentLoader(
     IResourceManager resourceManager,
+    IVariableReplacer variableReplacer,
     IColorLoader colorLoader,
-    IVariableReplacer variableReplacer)
+    IBindingParser bindingParser)
     : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
-        return element.Name == "RetroSpriteCheckBox" ||
-               element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteCheckBox, RetroLibrary.Controls";
+        return element.Name == "RetroSpriteLabel" ||
+               element.Attribute("type")!.Value == "RetroLibrary.Controls.RetroSpriteLabel, RetroLibrary.Controls";
     }
 
     public (string Id, object Value) LoadComponent(
@@ -28,18 +30,19 @@ public class RetroSpriteCheckBoxComponentLoader(
     {
         var name = element.Attribute("name")!.Value;
 
-        var checkBox = new RetroSpriteCheckBox(
+        var label = new RetroSpriteLabel(
             name,
-            element.Attribute("text")!.Value,
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
             ToPoint(element.Attribute("size"), gameContext, Point.Zero),
+            text: ToBindingValue(element.Attribute("text"), bindingParser, new BindingValue<string>(value: string.Empty)),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
             backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
             foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
-            boxTexture: GetResource<NineSliceTexture2D>(element.Attribute("boxTextureRef")),
-            isChecked: ToBool(element.Attribute("isChecked"), false),
-            isVisible: ToBool(element.Attribute("isVisible"), true));
+            horizontalAlignment: ToEnum(element.Attribute("horizontalAlignment"), HorizontalAlignment.Left),
+            verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle));
 
-        return (name, checkBox);
+        ApplyBindings(label, gameContext, bindingParser);
+
+        return (name, label);
     }
 }

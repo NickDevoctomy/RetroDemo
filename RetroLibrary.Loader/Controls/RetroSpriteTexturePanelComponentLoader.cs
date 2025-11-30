@@ -7,7 +7,7 @@ using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Resources;
 
-namespace RetroLibrary.XmlLoader.Components
+namespace RetroLibrary.XmlLoader.Controls
 {
     internal class RetroSpriteTexturePanelComponentLoader(
         IResourceManager resourceManager,
