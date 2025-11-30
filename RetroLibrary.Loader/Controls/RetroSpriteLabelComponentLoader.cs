@@ -8,6 +8,7 @@ using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Enums;
 using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.SubLoaders.Interfaces;
 
 namespace RetroLibrary.XmlLoader.Controls;
 
@@ -15,8 +16,9 @@ public class RetroSpriteLabelComponentLoader(
     IResourceManager resourceManager,
     IVariableReplacer variableReplacer,
     IColorLoader colorLoader,
-    IBindingParser bindingParser)
-    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
+    IBindingParser bindingParser,
+    IEnumerable<ISubLoader> subLoaders)
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer, subLoaders), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {

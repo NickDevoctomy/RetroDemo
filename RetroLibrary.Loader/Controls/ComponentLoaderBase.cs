@@ -9,13 +9,15 @@ using RetroLibrary.Core.Binding;
 using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Resources;
 using RetroLibrary.XmlLoader.Extensions;
+using RetroLibrary.XmlLoader.SubLoaders.Interfaces;
 
 namespace RetroLibrary.XmlLoader.Controls;
 
 public class ComponentLoaderBase(
     IResourceManager resourceManager,
     IColorLoader colorLoader,
-    IVariableReplacer variableReplacer)
+    IVariableReplacer variableReplacer,
+    IEnumerable<ISubLoader> subLoaders)
 {
     protected IColorLoader ColorLoader => colorLoader;
 
@@ -194,6 +196,22 @@ public class ComponentLoaderBase(
         }
 
         return attribute.ToRectangle(gameContext, VariableReplacer);
+    }
+
+    protected T? SubLoader<T>(XElement? element)
+    {
+        if (element == null)
+        {
+            return default;
+        }
+
+        var loader = subLoaders.Single(x => x.ElementName == "ChildCompositor");
+        var type = element.Attribute("type")!.Value;
+        var childCompositorProperties = element
+            .Attributes()
+            .Where(x => x.Name != "type")
+            .ToDictionary(x => x.Name.LocalName, x => x.Value);
+        return (T?)loader.Load(type, childCompositorProperties);
     }
 
     private static T? ConvertAttributeValue<T>(string raw)

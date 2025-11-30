@@ -6,14 +6,16 @@ using RetroLibrary.Core.Common;
 using RetroLibrary.Core.Components;
 using RetroLibrary.Core.Drawing;
 using RetroLibrary.Core.Resources;
+using RetroLibrary.XmlLoader.SubLoaders.Interfaces;
 
 namespace RetroLibrary.XmlLoader.Controls
 {
     internal class RetroSpriteTexturePanelComponentLoader(
         IResourceManager resourceManager,
         IColorLoader colorLoader,
-        IVariableReplacer variableReplacer)
-        : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
+        IVariableReplacer variableReplacer,
+        IEnumerable<ISubLoader> subLoaders)
+        : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer, subLoaders), IComponentLoader
     {
         public bool IsApplicable(XElement element)
         {

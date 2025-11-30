@@ -21,7 +21,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
     IVariableReplacer variableReplacer,
     IBindingParser bindingParser,
     IEnumerable<ISubLoader> subLoaders)
-    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer), IComponentLoader
+    : ComponentLoaderBase(resourceManager, colorLoader, variableReplacer, subLoaders), IComponentLoader
 {
     public bool IsApplicable(XElement element)
     {
@@ -39,18 +39,8 @@ public class RetroSpriteTabbedContainerComponentLoader(
         VariableReplacer.DefaultParameters.Add("ParentWidth", size.X);
         VariableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
 
-        var compositor = default(IContainerChildCompositor?);
         var childCompositorElement = element.Element("ChildCompositor");
-        if (childCompositorElement != null)
-        {
-            var loader = subLoaders.Single(x => x.ElementName == "ChildCompositor");
-            var type = childCompositorElement.Attribute("type")!.Value;
-            var childCompositorProperties = childCompositorElement
-                .Attributes()
-                .Where(x => x.Name != "type")
-                .ToDictionary(x => x.Name.LocalName, x => x.Value);
-            compositor = loader.Load(type, childCompositorProperties);
-        }
+        var compositor = SubLoader<IContainerChildCompositor>(childCompositorElement);
 
         var tabbedContainer = new RetroSpriteTabbedContainer(
             name,
