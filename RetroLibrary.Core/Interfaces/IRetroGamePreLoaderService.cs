@@ -4,5 +4,7 @@ namespace RetroLibrary.Core.Interfaces;
 
 public interface IRetroGamePreLoaderService
 {
-    public RetroGameConfiguration PreLoad(RetroGameContext retroGameContext);
+    public RetroGameConfiguration PreLoad(
+        string[] args,
+        RetroGameContext retroGameContext);
 }

@@ -7,19 +7,13 @@ using RetroLibrary.Core.Resources;
 namespace RetroLibrary.Core;
 
 public class RetroGameContext(
-    int width,
-    int height,
-    bool isFullScreen,
+    string[] args,
     string gameDefinitionFilePath,
     IRetroGamePreLoaderService retroGamePreLoaderService,
     IRetroGameLoaderService retroGameLoaderService,
     ITexture2DResourceLoader texture2DResourceLoader)
 {
-    public int Width { get; } = width;
-
-    public int Height { get; } = height;
-
-    public bool IsFullScreen { get; } = isFullScreen;
+    public string[] Args { get; } = args;
 
     public string GameDefinitionFilePath { get; } = gameDefinitionFilePath;
 
@@ -39,9 +33,9 @@ public class RetroGameContext(
 
     public void Initialse(RetroGameBase retroGameBase)
     {
-        var configutation = RetroGamePreLoaderService.PreLoad(this);
+        var configutation = RetroGamePreLoaderService.PreLoad(Args, this);
 
-        System.Diagnostics.Debug.WriteLine($"Initialising Graphics Device {Width} x {Height}, FullScreen = {IsFullScreen}.");
+        System.Diagnostics.Debug.WriteLine($"Initialising Graphics Device {configutation.Width} x {configutation.Height}, FullScreen = {configutation.IsFullScreen}.");
         GraphicsDeviceManager = new GraphicsDeviceManager(retroGameBase)
         {
             PreferredBackBufferWidth = configutation.Width,

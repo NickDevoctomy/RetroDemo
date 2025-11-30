@@ -10,16 +10,10 @@ public class RetroGameContextFactory(
 {
     public RetroGameContext CreateRetroGameContext(
         string[] args,
-        int width,
-        int height,
-        bool isFullScreen,
         string gameDefinitionFilePath)
     {
-        // parse args here so things can be overridden from command line if needed in future
         return new RetroGameContext(
-            width,
-            height,
-            isFullScreen,
+            args,
             gameDefinitionFilePath,
             retroGamePreLoaderService,
             retroGameLoaderService,

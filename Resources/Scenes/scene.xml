@@ -170,7 +170,7 @@
                             fontRef="DefaultFont">                        
                     </Sprite>
                 </TabPage>
-                <TabPage title="{binding Path=FpsLabelText}">
+                <TabPage title="{binding Path=SliderValueText}">
                     <Sprite type="RetroLibrary.Controls.RetroSpriteSliderBar, RetroLibrary.Controls"
                             name="TestSliderBar"
                             position="8,8"

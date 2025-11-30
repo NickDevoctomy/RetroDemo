@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RetroLibrary.Controls;
 using RetroLibrary.Core.Base;
@@ -13,7 +14,20 @@ public partial class GameViewModel(RetroGameBase game) : RetroGameViewModelBase
     private string fpsLabelText = "FPS : ?";
 
     [ObservableProperty]
+    private string sliderValueText = "Value = 75";
+
+    [ObservableProperty]
     private float sliderValue = 75f;
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(SliderValue))
+        {
+            SliderValueText = $"Value = {SliderValue}";
+        }
+    }
 
     [RelayCommand]
     private void ExitButton_Clicked()
