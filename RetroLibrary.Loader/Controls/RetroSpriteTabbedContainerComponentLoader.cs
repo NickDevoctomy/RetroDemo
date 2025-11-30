@@ -39,9 +39,6 @@ public class RetroSpriteTabbedContainerComponentLoader(
         VariableReplacer.DefaultParameters.Add("ParentWidth", size.X);
         VariableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
 
-        var childCompositorElement = element.Element("ChildCompositor");
-        var compositor = SubLoader<IContainerChildCompositor>(childCompositorElement);
-
         var tabbedContainer = new RetroSpriteTabbedContainer(
             name,
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
@@ -55,7 +52,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
             tabDownTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabDownTextureRef")),
             tabPageTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabPageTextureRef")),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
-            childCompositor: compositor,
+            childCompositor: SubLoader<IContainerChildCompositor>(element.Element("ChildCompositor")),
             isVisible: ToBool(element.Attribute("isVisible"), true));
 
         var tabPagesRoot = element.Element("TabPages");
