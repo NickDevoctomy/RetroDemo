@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Controls.Interfaces;
 using RetroLibrary.Core.Drawing;
 
 namespace RetroLibrary.Controls;
@@ -72,6 +73,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         NineSliceTexture2D? tabDownTexture = null,
         NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
+        IContainerChildCompositor? childCompositor = null,
         bool isVisible = true)
         : base(
             name,
@@ -81,6 +83,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
+            childCompositor,
             isVisible)
     {
         TabUpTint = tabUpTint ?? Color.White;

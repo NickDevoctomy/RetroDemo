@@ -10,4 +10,6 @@ public interface IContainerChildCompositor
     public void SetParentContainer(RetroSpriteContainer parentContainer);
 
     public Point GetChildPosition(RetroSpriteBase retroSpriteBase);
+
+    public void SetProperties(IDictionary<string, string> properties);
 }

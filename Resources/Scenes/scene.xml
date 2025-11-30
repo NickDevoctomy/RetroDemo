@@ -122,6 +122,9 @@
                 tabDownTextureRef="tab"
                 tabDownTint="LightGray"
                 tabDownTintAlpha="0.2">
+            <!--<ChildCompositor type="RetroLibrary.Controls.ContainerChildCompositors.StackContainerChildCompositor, RetroLibrary.Controls"
+                                      direction="vertical">
+            </ChildCompositor>-->            
             <TabPages>
                 <TabPage title="Apple">
                     <Sprite type="RetroLibrary.Controls.RetroSpriteNineSliceButton, RetroLibrary.Controls"

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using RetroLibrary.Controls.Interfaces;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Enums;
@@ -40,5 +41,13 @@ public class StackContainerChildCompositor : IContainerChildCompositor
     public void SetParentContainer(RetroSpriteContainer parentContainer)
     {
         ParentContainer = parentContainer;
+    }
+
+    public void SetProperties(IDictionary<string, string> properties)
+    {
+        if (properties.TryGetValue("Direction", out var directionValue))
+        {
+            Direction = Enum.Parse<Direction>(directionValue.ToString() ?? "Vertical");
+        }
     }
 }

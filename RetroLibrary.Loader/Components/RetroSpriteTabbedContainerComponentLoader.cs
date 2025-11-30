@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RetroLibrary.Controls;
+using RetroLibrary.Controls.Interfaces;
 using RetroLibrary.Core;
 using RetroLibrary.Core.Base;
 using RetroLibrary.Core.Binding;
@@ -35,6 +36,21 @@ public class RetroSpriteTabbedContainerComponentLoader(
         VariableReplacer.DefaultParameters.Add("ParentWidth", size.X);
         VariableReplacer.DefaultParameters.Add("ParentHeight", size.Y);
 
+        var compositor = default(IContainerChildCompositor?);
+        var childCompositorElement = element.Element("ChildCompositor");
+        if (childCompositorElement != null)
+        {
+            var loader = new ContainerChildCompositorLoader();
+
+            var type = childCompositorElement.Attribute("type")!.Value;
+            var childCompositorProperties = childCompositorElement
+                .Attributes()
+                .Where(x => x.Name != "type")
+                .ToDictionary(x => x.Name.LocalName, x => x.Value);
+
+            compositor = loader.Load(type, childCompositorProperties);
+        }
+
         var tabbedContainer = new RetroSpriteTabbedContainer(
             name,
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
@@ -48,6 +64,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
             tabDownTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabDownTextureRef")),
             tabPageTexture: GetResource<NineSliceTexture2D>(element.Attribute("tabPageTextureRef")),
             font: GetResource<SpriteFont>(element.Attribute("fontRef")),
+            childCompositor: compositor,
             isVisible: ToBool(element.Attribute("isVisible"), true));
 
         var tabPagesRoot = element.Element("TabPages");

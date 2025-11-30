@@ -22,7 +22,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     private int childrenChangeVersion;
 
     [ObservableProperty]
-    private IContainerChildCompositor? containerChildCompositor;
+    private IContainerChildCompositor? childCompositor;
 
     public RetroSpriteContainer(
         string name,
@@ -32,6 +32,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Color? foregroundColor = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
+        IContainerChildCompositor? childCompositor = null,
         bool isVisible = true)
         : base(
             name,
@@ -43,8 +44,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             isVisible)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
-        ContainerChildCompositor = new ChildOwnusContainerChildCompositor();
-        ContainerChildCompositor.SetParentContainer(this);
+        ChildCompositor = childCompositor ?? new ChildOwnusContainerChildCompositor();
+        ChildCompositor.SetParentContainer(this);
     }
 
     protected override void OnRedraw(
@@ -106,7 +107,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     {
         foreach (var currentChild in Children)
         {
-            var position = ContainerChildCompositor!.GetChildPosition(currentChild);
+            var position = ChildCompositor!.GetChildPosition(currentChild);
             position += location + InnerMargins.Location; // Container offsets
             currentChild.DrawAtPosition(spriteBatch, position);
         }

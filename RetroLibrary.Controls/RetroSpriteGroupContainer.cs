@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RetroLibrary.Controls.Interfaces;
 using RetroLibrary.Core.Drawing;
 
 namespace RetroLibrary.Controls;
@@ -43,6 +44,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         Point? labelOffset = null,
         Rectangle? innerMargins = null,
         SpriteFont? font = null,
+        IContainerChildCompositor? childCompositor = null,
         bool isVisible = true)
         : base(
             name,
@@ -52,6 +54,7 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             foregroundColor,
             innerMargins,
             font,
+            childCompositor,
             isVisible)
     {
         Text = text;

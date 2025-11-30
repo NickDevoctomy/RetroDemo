@@ -18,4 +18,9 @@ public class ChildOwnusContainerChildCompositor : IContainerChildCompositor
     {
         ParentContainer = parentContainer;
     }
+
+    public void SetProperties(IDictionary<string, string> properties)
+    {
+        // Do nothing
+    }
 }
