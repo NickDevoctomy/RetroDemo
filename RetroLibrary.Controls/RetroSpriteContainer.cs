@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Controls.ContainerChildCompositors;
+using RetroLibrary.Controls.Interfaces;
 using RetroLibrary.Core.Base;
 
 namespace RetroLibrary.Controls;
@@ -18,6 +20,9 @@ public partial class RetroSpriteContainer : RetroSpriteBase
 
     [ObservableProperty]
     private int childrenChangeVersion;
+
+    [ObservableProperty]
+    private IContainerChildCompositor? containerChildCompositor;
 
     public RetroSpriteContainer(
         string name,
@@ -38,6 +43,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             isVisible)
     {
         InnerMargins = innerMargins ?? Rectangle.Empty;
+        ContainerChildCompositor = new ChildOwnusContainerChildCompositor();
+        ContainerChildCompositor.SetParentContainer(this);
     }
 
     protected override void OnRedraw(
@@ -99,7 +106,9 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     {
         foreach (var currentChild in Children)
         {
-            currentChild.Draw(spriteBatch, location + InnerMargins.Location);
+            var position = ContainerChildCompositor!.GetChildPosition(currentChild);
+            position += location + InnerMargins.Location; // Container offsets
+            currentChild.DrawAtPosition(spriteBatch, position);
         }
     }
 }

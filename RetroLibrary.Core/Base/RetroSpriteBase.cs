@@ -67,14 +67,24 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         RetroGameContext = retroGameContext;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Point? location = null)
+    public void Draw(SpriteBatch spriteBatch)
     {
         if (!IsVisible)
         {
             return;
         }
 
-        OnRedraw(spriteBatch, (location ?? Point.Zero) + Position);
+        OnRedraw(spriteBatch, Position);
+    }
+
+    public void DrawAtPosition(SpriteBatch spriteBatch, Point position)
+    {
+        if (!IsVisible)
+        {
+            return;
+        }
+
+        OnRedraw(spriteBatch, position);
     }
 
     public void Update(
