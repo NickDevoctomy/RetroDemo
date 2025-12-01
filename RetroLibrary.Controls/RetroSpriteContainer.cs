@@ -54,19 +54,19 @@ public partial class RetroSpriteContainer : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         var graphicsDevice = spriteBatch.GraphicsDevice;
         var previousScissor = graphicsDevice.ScissorRectangle;
         var clipRect = new Rectangle(
-            location.X + InnerPadding.X,
-            location.Y + InnerPadding.Y,
+            bounds.X + InnerPadding.X,
+            bounds.Y + InnerPadding.Y,
             Size.X - (InnerPadding.X + InnerPadding.Width),
             Size.Y - (InnerPadding.Y + InnerPadding.Height));
         clipRect = Rectangle.Intersect(previousScissor, clipRect);
         graphicsDevice.ScissorRectangle = clipRect;
 
-        DrawChildren(spriteBatch, location);
+        DrawChildren(spriteBatch, bounds.Location);
 
         graphicsDevice.ScissorRectangle = previousScissor;
     }

@@ -38,7 +38,7 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         if (Texture is null)
         {
@@ -46,8 +46,6 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
         }
 
         var source = new Rectangle(0, 0, Size.X, Size.Y);
-        var bounds = GetBounds();
-
         Texture.Draw(
             Size.X,
             Size.Y,

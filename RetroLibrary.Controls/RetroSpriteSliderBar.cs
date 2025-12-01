@@ -110,7 +110,9 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         ButtonTexture = null;
     }
 
-    protected override void OnRedraw(SpriteBatch spriteBatch, Point location)
+    protected override void OnRedraw(
+        SpriteBatch spriteBatch,
+        Rectangle bounds)
     {
         int barH = BarHeight > 0 ? BarHeight : 8;
         if (SliderBarTexture is not null)
@@ -121,8 +123,8 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
                 barH);
 
             var rect = new Rectangle(
-                location.X,
-                location.Y + (Size.Y / 2) - (sliderBarTexture.Height / 2),
+                bounds.X,
+                bounds.Y + (Size.Y / 2) - (sliderBarTexture.Height / 2),
                 Size.X,
                 sliderBarTexture.Height);
 
@@ -132,7 +134,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
                 SliderBarTint);
         }
 
-        var thumbRect = GetThumbRectangle(location);
+        var thumbRect = GetThumbRectangle(bounds.Location);
         if (ButtonTexture is not null && thumbRect.Width > 0 && thumbRect.Height > 0)
         {
             var thumbTex = ButtonTexture.BuildTexture(

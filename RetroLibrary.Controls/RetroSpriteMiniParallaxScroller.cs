@@ -55,7 +55,7 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Microsoft.Xna.Framework.Point location)
+        Microsoft.Xna.Framework.Rectangle bounds)
     {
         if (!_layerTexturesCached)
         {

@@ -52,14 +52,14 @@ public partial class RetroSpriteLabel : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         if (Font != null && !string.IsNullOrEmpty(Text?.Value))
         {
             Vector2 textSize = Font.MeasureString(Text.Value);
 
             Vector2 textPosition = textSize.Align(
-                new Rectangle(location, Size),
+                bounds,
                 HorizontalAlignment,
                 VerticalAlignment);
 

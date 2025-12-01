@@ -100,7 +100,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         var isPressed = IsToggleButton ? IsToggled : IsPressed;
         var texture = isPressed ? DownTexture : UpTexture;
@@ -112,7 +112,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
                 Size.Y);
             spriteBatch.Draw(
                 buttonTexture,
-                new Rectangle(location, Size),
+                bounds,
                 isPressed ? DownTint : UpTint);
         }
 
@@ -121,8 +121,8 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
             var yOffset = isPressed ? 2 : 0;
             var textSize = Font.MeasureString(Text);
             var textPosition = new Vector2(
-                location.X + ((Size.X - textSize.X) / 2),
-                location.Y + yOffset + ((Size.Y - textSize.Y) / 2));
+                bounds.X + ((Size.X - textSize.X) / 2),
+                bounds.Y + yOffset + ((Size.Y - textSize.Y) / 2));
 
             spriteBatch.DrawString(
                 Font,

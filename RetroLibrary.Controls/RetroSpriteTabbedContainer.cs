@@ -106,7 +106,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         var tabRects = BuildTabRects();
         var selected = SelectedIndex;
@@ -118,12 +118,12 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
                 continue;
             }
 
-            DrawSingleTab(spriteBatch, location, i, tabRects[i], i == selected);
+            DrawSingleTab(spriteBatch, bounds.Location, i, tabRects[i], i == selected);
         }
 
         var innerLocation = new Point(
-            location.X + InnerPadding.X,
-            location.Y + InnerPadding.Y - TabOverlapPixels);
+            bounds.X + InnerPadding.X,
+            bounds.Y + InnerPadding.Y - TabOverlapPixels);
         var innerSize = new Point(
             Size.X - InnerPadding.X - InnerPadding.Width,
             Size.Y - InnerPadding.Y - InnerPadding.Height + TabOverlapPixels);
@@ -136,10 +136,10 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
 
         if (selected >= 0 && selected < tabRects.Count)
         {
-            DrawSingleTab(spriteBatch, location, selected, tabRects[selected], true);
+            DrawSingleTab(spriteBatch, bounds.Location, selected, tabRects[selected], true);
         }
 
-        base.OnRedraw(spriteBatch, location);
+        base.OnRedraw(spriteBatch, bounds);
     }
 
     protected override void OnUpdate(

@@ -56,7 +56,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         // location already includes this sprite's Position from base Draw.
         if (BoxTexture != null)
@@ -69,8 +69,8 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
             spriteBatch.Draw(
                 boxTexture,
                 new Rectangle(
-                    location.X,
-                    location.Y,
+                    bounds.X,
+                    bounds.Y,
                     boxTexture.Width,
                     boxTexture.Height),
                 Color.White);
@@ -80,7 +80,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
                 spriteBatch.DrawString(
                     Font,
                     "X",
-                    new Vector2(location.X + 6, location.Y + 6),
+                    new Vector2(bounds.X + 6, bounds.Y + 6),
                     ForegroundColor);
             }
         }
@@ -88,8 +88,8 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
         if (Font != null && !string.IsNullOrEmpty(Text))
         {
             var textRect = new Rectangle(
-                location.X + 30,
-                location.Y,
+                bounds.X + 30,
+                bounds.Y,
                 Size.X - 30,
                 Size.Y);
 

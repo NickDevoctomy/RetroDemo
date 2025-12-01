@@ -68,11 +68,11 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         var locationOffset = new Point(
-            location.X + 1,
-            location.Y + 1);
+            bounds.X + 1,
+            bounds.Y + 1);
         var sizeOffset = new Point(
             Size.X - 2,
             Size.Y - 2);
@@ -89,8 +89,8 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         if (BorderTexture != null)
         {
             var borderLocation = new Point(
-                location.X,
-                location.Y);
+                bounds.X,
+                bounds.Y);
             var borderSize = new Point(
                 Size.X,
                 Size.Y);

@@ -85,7 +85,8 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             return;
         }
 
-        OnRedraw(spriteBatch, Position);
+        var bounds = GetBounds();
+        OnRedraw(spriteBatch, bounds);
     }
 
     public void DrawAtPosition(SpriteBatch spriteBatch, Point position)
@@ -95,7 +96,11 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
             return;
         }
 
-        OnRedraw(spriteBatch, position);
+        var bounds = GetBounds();
+        var offset = new Rectangle(
+            bounds.Location + position,
+            bounds.Size);
+        OnRedraw(spriteBatch, offset);
     }
 
     public void Update(
@@ -157,7 +162,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     protected virtual void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         // We don't draw anything in the base class
     }

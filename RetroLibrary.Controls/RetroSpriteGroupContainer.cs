@@ -72,13 +72,13 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
 
     protected override void OnRedraw(
         SpriteBatch spriteBatch,
-        Point location)
+        Rectangle bounds)
     {
         if (BorderTexture != null)
         {
             var borderLocation = new Point(
-                location.X,
-                location.Y + BorderOuterTopMargin);
+                bounds.X,
+                bounds.Y + BorderOuterTopMargin);
             var borderSize = new Point(
                 Size.X,
                 Size.Y - BorderOuterTopMargin);
@@ -122,6 +122,6 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
 
         base.OnRedraw(
             spriteBatch,
-            location);
+            bounds);
     }
 }
