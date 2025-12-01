@@ -34,7 +34,9 @@ namespace RetroLibrary.XmlLoader.Controls
                 ToPoint(element.Attribute("position"), gameContext, Point.Zero),
                 ToPoint(element.Attribute("size"), gameContext, Point.Zero),
                 texture: GetResource<IRetroTexture2D>(element.Attribute("textureRef")),
-                isVisible: ToBool(element.Attribute("isVisible"), true));
+                isVisible: ToBool(element.Attribute("isVisible"), true),
+                margins: ToRectangle(element.Attribute("margins"), gameContext, Rectangle.Empty),
+                padding: ToRectangle(element.Attribute("padding"), gameContext, Rectangle.Empty));
 
             return (name, panel);
         }

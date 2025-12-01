@@ -1,8 +1,7 @@
 {
   "profiles": {
     "RetroDemo": {
-      "commandName": "Project",
-      "commandLineArgs": "--width 800 --height 600 --fullscreen false"
+      "commandName": "Project"
     }
   }
 }

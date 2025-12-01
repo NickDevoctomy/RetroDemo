@@ -45,14 +45,14 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
             return;
         }
 
-        var source = new Rectangle(0, 0, Size.X, Size.Y); // full area of gradient desired subsection
-        var destination = new Rectangle(location, Size);
+        var source = new Rectangle(0, 0, Size.X, Size.Y);
+        var bounds = GetBounds();
 
         Texture.Draw(
             Size.X,
             Size.Y,
             spriteBatch,
             source,
-            destination);
+            bounds);
     }
 }

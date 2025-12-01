@@ -1,0 +1,28 @@
+﻿<Scene name="Main"
+       backgroundColor="black"
+       viewModelType="RetroDemo.GameViewModel, RetroDemo"
+       width="800"
+       height="800"
+       isFullScreen="false">
+
+    <Resources>
+        <Font id="DefaultFont" />
+        <RadialRetroGradient
+            id="sunset"
+            centrePoint="GameWidth/2,GameHeight/2"
+            radius="GameWidth"
+            fromColor="Yellow"
+            toColor="Purple"
+            gradientStops="8" />        
+    </Resources>
+
+    <Components>
+        <Sprite type="RetroLibrary.Controls.RetroSpriteTexturePanel, RetroLibrary.Controls"
+                name="Sunset"
+                position="0,0"
+                size="600,600"
+                textureRef="sunset"
+                margins="100,100,0,0"
+                padding="0,0,0,0"/>
+    </Components>
+</Scene>

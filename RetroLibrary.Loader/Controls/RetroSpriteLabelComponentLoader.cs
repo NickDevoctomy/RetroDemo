@@ -41,7 +41,9 @@ public class RetroSpriteLabelComponentLoader(
             backgroundColor: ToColor(element.Attribute("backgroundColor"), null, null),
             foregroundColor: ToColor(element.Attribute("foregroundColor"), null, null),
             horizontalAlignment: ToEnum(element.Attribute("horizontalAlignment"), HorizontalAlignment.Left),
-            verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle));
+            verticalAlignment: ToEnum(element.Attribute("verticalAlignment"), VerticalAlignment.Middle),
+            margins: ToRectangle(element.Attribute("margins"), gameContext, Rectangle.Empty),
+            padding: ToRectangle(element.Attribute("padding"), gameContext, Rectangle.Empty));
 
         ApplyBindings(label, gameContext, bindingParser);
 

@@ -16,6 +16,7 @@
     <ItemGroup>
         <None Remove="Content\Sounds\buttonClick1.wav" />
         <None Remove="Content\Sounds\buttonClick2.wav" />
+        <None Remove="Content\test.xml" />
         <None Remove="Content\Textures\border.png" />
         <None Remove="Content\Textures\grass.png" />
         <None Remove="Content\Textures\greybuttondown.png" />
@@ -40,6 +41,9 @@
         </Content>
         <Content Include="Content\Sounds\updateSound.wav">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Content\test.xml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Content\Textures\border.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
