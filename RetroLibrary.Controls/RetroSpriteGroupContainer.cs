@@ -42,9 +42,10 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
         Color? borderTint = null,
         Color? labelTint = null,
         Point? labelOffset = null,
-        Rectangle? innerMargins = null,
+        Rectangle? innerPadding = null,
         SpriteFont? font = null,
         IContainerChildCompositor? childCompositor = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -52,9 +53,10 @@ public partial class RetroSpriteGroupContainer : RetroSpriteContainer
             size,
             backgroundColor,
             foregroundColor,
-            innerMargins,
+            innerPadding,
             font,
             childCompositor,
+            margins,
             isVisible)
     {
         Text = text;

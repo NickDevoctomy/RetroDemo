@@ -16,7 +16,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
     private List<RetroSpriteBase> children = [];
 
     [ObservableProperty]
-    private Rectangle innerMargins;
+    private Rectangle innerPadding;
 
     [ObservableProperty]
     private int childrenChangeVersion;
@@ -30,9 +30,10 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
-        Rectangle? innerMargins = null,
+        Rectangle? innerPadding = null,
         SpriteFont? font = null,
         IContainerChildCompositor? childCompositor = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -41,9 +42,10 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            margins,
             isVisible)
     {
-        InnerMargins = innerMargins ?? Rectangle.Empty;
+        InnerPadding = innerPadding ?? Rectangle.Empty;
         ChildCompositor = childCompositor ?? new ChildOwnusContainerChildCompositor();
         ChildCompositor.SetParentContainer(this);
     }
@@ -55,10 +57,10 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         var graphicsDevice = spriteBatch.GraphicsDevice;
         var previousScissor = graphicsDevice.ScissorRectangle;
         var clipRect = new Rectangle(
-            location.X + InnerMargins.X,
-            location.Y + InnerMargins.Y,
-            Size.X - (InnerMargins.X + InnerMargins.Width),
-            Size.Y - (InnerMargins.Y + InnerMargins.Height));
+            location.X + InnerPadding.X,
+            location.Y + InnerPadding.Y,
+            Size.X - (InnerPadding.X + InnerPadding.Width),
+            Size.Y - (InnerPadding.Y + InnerPadding.Height));
         clipRect = Rectangle.Intersect(previousScissor, clipRect);
         graphicsDevice.ScissorRectangle = clipRect;
 
@@ -78,8 +80,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         foreach (var currentChild in Children)
         {
             var offsetMouseState = new MouseState(
-                mouseState.X - (Position.X + InnerMargins.X),
-                mouseState.Y - (Position.Y + InnerMargins.Y),
+                mouseState.X - (Position.X + InnerPadding.X),
+                mouseState.Y - (Position.Y + InnerPadding.Y),
                 mouseState.ScrollWheelValue,
                 mouseState.LeftButton,
                 mouseState.MiddleButton,
@@ -88,8 +90,8 @@ public partial class RetroSpriteContainer : RetroSpriteBase
                 mouseState.XButton2);
 
             var offsetPreviousMouseState = new MouseState(
-                previousMouseState.X - (Position.X + InnerMargins.X),
-                previousMouseState.Y - (Position.Y + InnerMargins.Y),
+                previousMouseState.X - (Position.X + InnerPadding.X),
+                previousMouseState.Y - (Position.Y + InnerPadding.Y),
                 previousMouseState.ScrollWheelValue,
                 previousMouseState.LeftButton,
                 previousMouseState.MiddleButton,
@@ -108,7 +110,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         foreach (var currentChild in Children)
         {
             var position = ChildCompositor!.GetChildPosition(currentChild);
-            position += location + InnerMargins.Location; // Container offsets
+            position += location + InnerPadding.Location; // Container offsets
             currentChild.DrawAtPosition(spriteBatch, position);
         }
     }

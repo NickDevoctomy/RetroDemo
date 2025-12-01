@@ -17,6 +17,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     private Point size;
 
     [ObservableProperty]
+    private Rectangle margins;
+
+    [ObservableProperty]
     private Color backgroundColor;
 
     [ObservableProperty]
@@ -43,6 +46,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? backgroundColor = null,
         Color? foregroundColor = null,
         SpriteFont? font = null,
+        Rectangle? margins = null,
         bool isVisible = true)
     {
         Name = name;
@@ -51,6 +55,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         BackgroundColor = backgroundColor ?? Color.Transparent;
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
+        Margins = margins ?? Rectangle.Empty;
         IsVisible = isVisible;
     }
 
@@ -164,5 +169,10 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     protected virtual void OnReleased()
     {
         Released?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected Rectangle GetBounds()
+    {
+        return new Rectangle(Position + Margins.Location, Size - Margins.Size);
     }
 }

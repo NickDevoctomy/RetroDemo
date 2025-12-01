@@ -52,6 +52,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
         RelayCommand? clickCommand = null,
         SoundEffect? clickSound = null,
         SpriteFont? font = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -60,6 +61,7 @@ public partial class RetroSpriteNineSliceButton : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            margins,
             isVisible)
     {
         Text = text;

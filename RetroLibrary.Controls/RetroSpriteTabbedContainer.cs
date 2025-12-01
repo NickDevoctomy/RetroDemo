@@ -65,7 +65,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         Point size,
         Color? backgroundColor = null,
         Color? foregroundColor = null,
-        Rectangle? innerMargins = null,
+        Rectangle? innerPadding = null,
         Color? tabUpTint = null,
         Color? tabDownTint = null,
         Color? tabPageTint = null,
@@ -74,6 +74,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         NineSliceTexture2D? tabPageTexture = null,
         SpriteFont? font = null,
         IContainerChildCompositor? childCompositor = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -81,9 +82,10 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             size,
             backgroundColor,
             foregroundColor,
-            innerMargins,
+            innerPadding,
             font,
             childCompositor,
+            margins,
             isVisible)
     {
         TabUpTint = tabUpTint ?? Color.White;
@@ -93,7 +95,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         TabDownTexture = tabDownTexture;
         TabPageTexture = tabPageTexture;
 
-        ContentMargins = innerMargins ?? Rectangle.Empty;
+        ContentMargins = innerPadding ?? Rectangle.Empty;
         UpdateEffectiveInnerMargins();
 
         TabPages.CollectionChanged += TabPages_CollectionChanged;
@@ -118,11 +120,11 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         }
 
         var innerLocation = new Point(
-            location.X + InnerMargins.X,
-            location.Y + InnerMargins.Y - TabOverlapPixels);
+            location.X + InnerPadding.X,
+            location.Y + InnerPadding.Y - TabOverlapPixels);
         var innerSize = new Point(
-            Size.X - InnerMargins.X - InnerMargins.Width,
-            Size.Y - InnerMargins.Y - InnerMargins.Height + TabOverlapPixels);
+            Size.X - InnerPadding.X - InnerPadding.Width,
+            Size.Y - InnerPadding.Y - InnerPadding.Height + TabOverlapPixels);
 
         if (TabPageTexture != null && innerSize.X > 0 && innerSize.Y > 0)
         {
@@ -337,7 +339,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             ContentMargins.Y + TabHeaderHeight,
             ContentMargins.Width,
             ContentMargins.Height);
-        InnerMargins = effective;
+        InnerPadding = effective;
     }
 
     private void DrawSingleTab(

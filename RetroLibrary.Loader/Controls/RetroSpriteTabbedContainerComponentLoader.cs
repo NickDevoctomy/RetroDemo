@@ -44,7 +44,7 @@ public class RetroSpriteTabbedContainerComponentLoader(
             ToPoint(element.Attribute("position"), gameContext, Point.Zero),
             size,
             ToColor(element.Attribute("foregroundColor"), null, Color.Black),
-            innerMargins: ToRectangle(element.Attribute("innerMargins"), gameContext, Rectangle.Empty),
+            innerPadding: ToRectangle(element.Attribute("innerPadding"), gameContext, Rectangle.Empty),
             tabUpTint: ToColor(element.Attribute("tabUpTint"), element.Attribute("tabUpTintAlpha"), Color.White),
             tabDownTint: ToColor(element.Attribute("tabDownTint"), element.Attribute("tabDownTintAlpha"), Color.White),
             tabPageTint: ToColor(element.Attribute("tabPageTint"), element.Attribute("tabPageTintAlpha"), Color.White),

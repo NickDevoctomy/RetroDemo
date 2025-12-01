@@ -37,6 +37,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
         Color? fromColor = null,
         Color? toColor = null,
         SpriteFont? font = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -45,6 +46,7 @@ public partial class RetroSpriteProgressBar : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            margins,
             isVisible)
     {
         Value = value;

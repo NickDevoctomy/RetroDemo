@@ -25,6 +25,7 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
         Microsoft.Xna.Framework.Color? foregroundColor = null,
         List<MiniParallaxScrollerMiniParallaxScrollerLayer>? layers = null,
         SpriteFont? font = null,
+        Microsoft.Xna.Framework.Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -33,6 +34,7 @@ public partial class RetroSpriteMiniParallaxScroller : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            margins,
             isVisible)
     {
         Layers = layers ?? [];

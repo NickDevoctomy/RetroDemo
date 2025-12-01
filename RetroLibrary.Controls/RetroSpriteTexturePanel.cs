@@ -19,6 +19,7 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
         Color? foregroundColor = null,
         IRetroTexture2D? texture = null,
         SpriteFont? font = null,
+        Rectangle? margins = null,
         bool isVisible = true)
         : base(
             name,
@@ -27,6 +28,7 @@ public partial class RetroSpriteTexturePanel : RetroSpriteBase
             backgroundColor,
             foregroundColor,
             font,
+            margins,
             isVisible)
     {
         Texture = texture;
