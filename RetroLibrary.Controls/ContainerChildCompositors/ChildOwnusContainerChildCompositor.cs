@@ -11,7 +11,8 @@ public class ChildOwnusContainerChildCompositor : IContainerChildCompositor
 
     public Point GetChildPosition(RetroSpriteBase retroSpriteBase)
     {
-        return retroSpriteBase.Position;
+        var bounds = retroSpriteBase.GetBounds();
+        return bounds.Location;
     }
 
     public void SetParentContainer(RetroSpriteContainer parentContainer)

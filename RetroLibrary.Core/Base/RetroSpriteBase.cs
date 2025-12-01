@@ -98,7 +98,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
         var bounds = GetBounds();
         var offset = new Rectangle(
-            bounds.Location + position,
+            position,
             bounds.Size);
         OnRedraw(spriteBatch, offset);
     }
@@ -121,6 +121,12 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
         _offscreenRenderTarget?.Dispose();
         _offscreenRenderTarget = null;
+    }
+
+    public Rectangle GetBounds()
+    {
+        var source = new Rectangle(Position, Size);
+        return source.GetBounds(Margins, Padding);
     }
 
     protected virtual void OnUpdate(
@@ -180,11 +186,5 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
     protected virtual void OnReleased()
     {
         Released?.Invoke(this, EventArgs.Empty);
-    }
-
-    protected Rectangle GetBounds()
-    {
-        var source = new Rectangle(Position, Size);
-        return source.GetBounds(Margins, Padding);
     }
 }
