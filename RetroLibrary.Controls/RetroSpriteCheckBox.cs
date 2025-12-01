@@ -30,6 +30,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
         bool isChecked = false,
         SpriteFont? font = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
         : base(
             name,
@@ -39,6 +40,7 @@ public partial class RetroSpriteCheckBox : RetroSpriteBase
             foregroundColor,
             font,
             margins,
+            padding,
             isVisible)
     {
         Text = text;

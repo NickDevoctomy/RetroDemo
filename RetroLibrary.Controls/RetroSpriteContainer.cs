@@ -34,6 +34,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
         SpriteFont? font = null,
         IContainerChildCompositor? childCompositor = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
         : base(
             name,
@@ -43,6 +44,7 @@ public partial class RetroSpriteContainer : RetroSpriteBase
             foregroundColor,
             font,
             margins,
+            padding,
             isVisible)
     {
         InnerPadding = innerPadding ?? Rectangle.Empty;

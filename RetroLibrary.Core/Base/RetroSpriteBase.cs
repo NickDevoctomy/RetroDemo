@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RetroLibrary.Core.Extensions;
 
 namespace RetroLibrary.Core.Base;
 
@@ -18,6 +19,9 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     [ObservableProperty]
     private Rectangle margins;
+
+    [ObservableProperty]
+    private Rectangle padding;
 
     [ObservableProperty]
     private Color backgroundColor;
@@ -47,6 +51,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         Color? foregroundColor = null,
         SpriteFont? font = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
     {
         Name = name;
@@ -56,6 +61,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
         ForegroundColor = foregroundColor ?? Color.Black;
         Font = font;
         Margins = margins ?? Rectangle.Empty;
+        Padding = padding ?? Rectangle.Empty;
         IsVisible = isVisible;
     }
 
@@ -173,6 +179,7 @@ public partial class RetroSpriteBase : ObservableObject, IDisposable
 
     protected Rectangle GetBounds()
     {
-        return new Rectangle(Position + Margins.Location, Size - Margins.Size);
+        var source = new Rectangle(Position, Size);
+        return source.GetBounds(Margins, Padding);
     }
 }

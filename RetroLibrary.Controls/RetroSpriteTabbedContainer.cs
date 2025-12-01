@@ -75,6 +75,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
         SpriteFont? font = null,
         IContainerChildCompositor? childCompositor = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
         : base(
             name,
@@ -86,6 +87,7 @@ public partial class RetroSpriteTabbedContainer : RetroSpriteContainer
             font,
             childCompositor,
             margins,
+            padding,
             isVisible)
     {
         TabUpTint = tabUpTint ?? Color.White;

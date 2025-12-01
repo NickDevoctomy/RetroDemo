@@ -32,6 +32,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
         VerticalAlignment verticalAlignment = VerticalAlignment.Middle,
         SpriteFont? font = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
         : base(
             name,
@@ -41,6 +42,7 @@ public partial class RetroSpriteLabel : RetroSpriteBase
             foregroundColor,
             font,
             margins,
+            padding,
             isVisible)
     {
         Text = text ?? new BindingValue<string>(string.Empty);

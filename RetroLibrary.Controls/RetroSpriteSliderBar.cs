@@ -75,6 +75,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
         ValueFrequency valueFrequency = ValueFrequency.Integer,
         SpriteFont? font = null,
         Rectangle? margins = null,
+        Rectangle? padding = null,
         bool isVisible = true)
         : base(
             name,
@@ -84,6 +85,7 @@ public partial class RetroSpriteSliderBar : RetroSpriteBase
             foregroundColor,
             font,
             margins,
+            padding,
             isVisible)
     {
         Value = value ?? new BindingValue<float>(50);
